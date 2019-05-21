@@ -7,7 +7,7 @@
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
-    "type": "git",
+        "type": "git",
         "url": "git+https://github.com/ZTMowrer947/LibraryManager.git"
     },
     "author": "Zackery Mowrer",
@@ -15,5 +15,14 @@
     "bugs": {
         "url": "https://github.com/ZTMowrer947/LibraryManager/issues"
     },
-    "homepage": "https://github.com/ZTMowrer947/LibraryManager#readme"
+    "homepage": "https://github.com/ZTMowrer947/LibraryManager#readme",
+    "dependencies": {
+        "express": "^4.17.0",
+        "pug": "^2.0.3",
+        "sequelize": "^5.8.6",
+        "sqlite3": "^4.0.8"
+    },
+    "devDependencies": {
+        "sequelize-cli": "^5.4.0"
+    }
 }
