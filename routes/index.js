@@ -60,7 +60,7 @@ router.route("/books/new")
             title: req.body.title,
             author: req.body.author,
             genre: req.body.genre,
-            year: Number(req.body.year),
+            year: parseInt(req.body.year),
         });
 
         // Save to database
@@ -92,7 +92,43 @@ router.route("/books/:id")
         // Render update book form
         res.render("update-book");
     }).post((req, res) => {
-        // TODO: Validate form and update book
+        // TODO: Validate form
+
+        // Update each book property if non-empty and updated
+        if (req.body.title && req.body.title !== req.book.title)
+            req.book.title = req.body.title;
+
+        if (req.body.author && req.body.author !== req.book.author)
+            req.book.author = req.body.author;
+
+        if (req.body.genre && req.body.genre !== req.book.title)
+            req.book.genre = req.body.genre;
+
+        if (req.body.year && parseInt(req.body.year) !== req.book.title)
+            req.book.year = parseInt(req.body.year);
+
+        // Save to database
+        req.book.save()
+            // If successful,
+            .then((book) => {
+                // Attach book to locals form
+                res.locals.book = book;
+
+                // TODO: Display flash message indicating that update was successful
+
+                // Redirect to book detail page
+                res.redirect(`/books/${book.id}`);
+            })
+            // If an error occurs,
+            .catch((errors) => {
+                // Attach errors to view locals
+                res.locals.errors = errors;
+
+                // TODO: Display flash message indicating validation errors
+
+                // Rerender new book form
+                res.render("new-book");
+            });
     });
 
 // /books/:id/delete: Delete book with given ID
