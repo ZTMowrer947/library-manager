@@ -20,8 +20,8 @@ router.param("id", (req, res, next, id) => {
             next(new Error(`Book not found with ID ${req.params.id}.`));
         }
 
-        // Attach book to view locals
-        res.locals.book = book;
+        // Attach book to request
+        req.book = book;
 
         // Pass control to next middleware or route
         next();
@@ -86,6 +86,9 @@ router.route("/books/new")
 // /books/:id: Get/Update book details
 router.route("/books/:id")
     .get((req, res, next) => {
+        // Attach book to view locals
+        res.locals.book = req.book;
+
         // Render update book form
         res.render("update-book");
     }).post((req, res) => {
