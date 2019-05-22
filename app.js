@@ -11,6 +11,7 @@ app.set("view engine", "pug");  // Set view engine to Pug
 
 // Middleware
 app.use("/public", express.static(`${__dirname}/public`));  // Provide static assets
+app.use(express.urlencoded({ extended: true }));            // Parse urlencoded request body
 
 // Routes
 app.use(routes);
