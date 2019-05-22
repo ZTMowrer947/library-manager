@@ -3,7 +3,10 @@ const Sequelize = require("sequelize");
 
 // Database connection setup
 const sequelize = new Sequelize({
-    dialect: "sqlite3",
+    // Use SQLite dialect
+    dialect: "sqlite",
+
+    // Path to database file
     storage: `${__dirname}/library.db`,
 });
 
