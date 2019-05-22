@@ -44,7 +44,7 @@ class BookService {
 
     async delete(book) {
         // Delete book
-        return book;
+        return book.destroy();
     }
 }
 
