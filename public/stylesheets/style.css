@@ -29,7 +29,6 @@ a.button-red {
 }
 
 form a.button, input[type=submit] {
-  margin-left: 140px;
   transition: 0.4s;
 }
 
@@ -98,6 +97,19 @@ input {
 input[type=text] {
   margin-left: 7px;
   width: 300px;
+}
+
+.button-group {
+  display: flex;
+}
+
+.button-group :not(:first-child) {
+  margin: 0 0.5rem;
+}
+
+.button-group :first-child {
+  margin-left: 140px;
+  margin-right: 0.5rem;
 }
 
 .error {
