@@ -2,3 +2,7 @@ extends partials/form
 
 block heading
     h1 Update Book
+
+append form
+    p
+        a.button.button-red(href=`/books/${book.id}/delete`) Delete Book

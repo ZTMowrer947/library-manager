@@ -24,6 +24,10 @@ a.button, input[type=submit] {
   cursor: pointer;
 }
 
+a.button-red {
+  background: #d71a1a;
+}
+
 form a.button, input[type=submit] {
   margin-left: 140px;
   transition: 0.4s;
@@ -33,9 +37,13 @@ input[type=submit] {
   border: 0;
 }
 
-  a.button:hover, input[type=submit]:hover {
-    background-color: #01b189;
-  }
+a.button:hover, input[type=submit]:hover {
+  background-color: #01b189;
+}
+
+a.button-red:hover {
+  background: #ea3f3f;
+}
 
 p {
   margin: 20px auto;
