@@ -1,5 +1,6 @@
 // Imports
 const { Router } = require("express");
+const asyncHandler = require("express-async-handler");
 const Book = require("../models/Book");
 const BookService = require("../services/BookService");
 
@@ -17,17 +18,18 @@ router.use((req, res, next) => {
 });
 
 // Handle ID param
-router.param("id", (req, res, next, id) => {
-    // Get book by id
-    Book.findByPk(id)
-    .then(book => {
+router.param("id", async (req, res, next, id) => {
+    try {
+        // Get book by id
+        const book = await Book.findByPk(id)
+
         // If no book was found with this ID,
         if (!book) {
             // Set status to 404
             res.status(404);
 
-            // Create error and pass to error handlers
-            next(new Error(`Book not found with ID ${id}.`));
+            // Create error and throw it
+            throw new Error(`Book not found with ID ${id}.`);
         }
 
         // Attach book to request
@@ -35,7 +37,10 @@ router.param("id", (req, res, next, id) => {
 
         // Pass control to next middleware or route
         next();
-    });
+    } catch (error) {
+        // Pass error to error handlers
+        next(error);
+    }
 });
 
 // Routes
@@ -46,109 +51,83 @@ router.get("/", (req, res) => {
 });
 
 // /books: Book listing
-router.get("/books", (req, res) => {
+router.get("/books", asyncHandler(async (req, res) => {
     // Get list of books
-    Book.findAll().then((books) => {
-        // Store book data in locals
-        res.locals.books = books;
+    const books = await req.bookService.getList();
 
-        // Render index template
-        res.render("index");
-    });
-});
+    // Store book data in locals
+    res.locals.books = books;
+
+    // Render index template
+    res.render("index");
+}));
 
 // /books/new: Create a new book
 router.route("/books/new")
     .get((req, res) => {
         // Render new book form
         res.render("new-book");
-    }).post((req, res) => {
-        // TODO: Validate form
+    }).post(async (req, res) => {
+        try {
+            // TODO: Validate form
 
-        // Create book
-        const newBook = Book.build({
-            title: req.body.title,
-            author: req.body.author,
-            genre: req.body.genre,
-            year: parseInt(req.body.year),
-        });
+            // Create book
+            const newBook = await req.bookService.create(req.body);
 
-        // Save to database
-        newBook.save()
-            // If successful,
-            .then((book) => {
-                // Attach book to locals form
-                res.locals.book = book;
+            // Attach book to locals form
+            res.locals.book = newBook;
 
-                // Redirect to book detail page
-                res.redirect(`/books/${book.id}`);
-            })
-            // If an error occurs,
-            .catch((errors) => {
-                // Attach errors to view locals
-                res.locals.errors = errors;
+            // Redirect to book detail page
+            res.redirect(`/books/${newBook.id}`);
 
-                // Rerender new book form
-                res.render("new-book");
-            });
+        } catch (errors) {
+            // Attach errors to view locals
+            res.locals.errors = errors;
+
+            console.log(errors);
+
+            // Rerender new book form
+            res.render("new-book");
+        }
     });
 
 // /books/:id: Get/Update book details
 router.route("/books/:id")
-    .get((req, res, next) => {
+    .get((req, res) => {
         // Attach book to view locals
         res.locals.book = req.book;
 
         // Render update book form
         res.render("update-book");
-    }).post((req, res) => {
-        // TODO: Validate form
+    }).post(async (req, res) => {
+        try {
+            // TODO: Validate form
 
-        // Update each book property if non-empty and updated
-        if (req.body.title && req.body.title !== req.book.title)
-            req.book.title = req.body.title;
+            // Create book
+            const updatedBook = await req.bookService.update(req.book, req.body);
 
-        if (req.body.author && req.body.author !== req.book.author)
-            req.book.author = req.body.author;
+            // Attach book to locals form
+            res.locals.book = updatedBook;
 
-        if (req.body.genre && req.body.genre !== req.book.title)
-            req.book.genre = req.body.genre;
+            // Redirect to book detail page
+            res.redirect(`/books/${updatedBook.id}`);
+        } catch (error) {
+            // Attach errors to view locals
+            res.locals.errors = errors;
 
-        if (req.body.year && parseInt(req.body.year) !== req.book.title)
-            req.book.year = parseInt(req.body.year);
-
-        // Save to database
-        req.book.save()
-            // If successful,
-            .then((book) => {
-                // Attach book to locals form
-                res.locals.book = book;
-
-                // TODO: Display flash message indicating that update was successful
-
-                // Redirect to book detail page
-                res.redirect(`/books/${book.id}`);
-            })
-            // If an error occurs,
-            .catch((errors) => {
-                // Attach errors to view locals
-                res.locals.errors = errors;
-
-                // TODO: Display flash message indicating validation errors
-
-                // Rerender new book form
-                res.render("new-book");
-            });
+            // Rerender new book form
+            res.render("new-book");
+        }
     });
 
 // /books/:id/delete: Delete book with given ID
-router.post("/books/:id/delete", (req, res) => {
+router.post("/books/:id/delete", asyncHandler(async (req, res) => {
     // Delete book
-    req.book.destroy();
+    req.bookService.delete(req.book);
 
     // Redirect to book listing
     res.redirect("/books");
-});
+}));
 
 // Export
 module.exports = router;
