@@ -1,0 +1,18 @@
+extends partials/layout
+
+block content
+    h1 Confirm Deletion
+
+    p.warning
+        strong WARNING! Once you delete a book, it cannot be undone.
+
+    p If you still want to delete the book "#{book.title}", enter the book title below to confirm the deletion.
+
+    form(method="post")
+        p
+            label(for="title") Title:
+            input#title(type="text" name="title")
+
+        div.button-group
+            a.button.button-red(href=`/books/${book.id}`) Cancel
+            input(type="submit", value="DELETE")
