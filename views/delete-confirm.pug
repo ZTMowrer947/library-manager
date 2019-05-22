@@ -9,9 +9,14 @@ block content
     p If you still want to delete the book "#{book.title}", enter the book title below to confirm the deletion.
 
     form(method="post")
+        if error
+            h2.error Validation Errors
+            ul.error
+                li= error.message
+
         p
             label(for="title") Title:
-            input#title(type="text" name="title")
+            input#title(type="text" name="title" value=`${title || ""}`)
 
         div.button-group
             a.button.button-red(href=`/books/${book.id}`) Cancel

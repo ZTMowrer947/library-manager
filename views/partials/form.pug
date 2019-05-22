@@ -4,6 +4,12 @@ block content
     block heading
 
     form(method="post")
+        if errors
+            h2.error Validation Errors
+            ul.error
+                each error in errors
+                    li= error.message
+
         p
             //- Set value to book title if book is present, otherwise empty
             - let value = book ? book.title : ""
