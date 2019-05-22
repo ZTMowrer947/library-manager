@@ -24,30 +24,25 @@ class BookService {
     }
 
     // Update a new book
-    async update(id, updateBookData) {
-        const book = await this.get(id);
-
+    async update(book, updateBookData) {
         // Update each book property if non-empty and different
-        if (req.body.title && req.body.title !== book.title)
-            book.title = req.body.title;
+        if (updateBookData.title && updateBookData.title !== book.title)
+            book.title = updateBookData.title;
 
-        if (req.body.author && req.body.author !== book.author)
-            book.author = req.body.author;
+        if (updateBookData.author && updateBookData.author !== book.author)
+            book.author = updateBookData.author;
 
-        if (req.body.genre && req.body.genre !== book.title)
-            book.genre = req.body.genre;
+        if (updateBookData.genre && updateBookData.genre !== book.title)
+            book.genre = updateBookData.genre;
 
-        if (req.body.year && parseInt(req.body.year) !== book.title)
-            book.year = parseInt(req.body.year);
+        if (updateBookData.year && parseInt(updateBookData.year) !== book.title)
+            book.year = parseInt(updateBookData.year);
 
         // Save changes to database
         return book.save();
     }
 
-    async delete(id) {
-        // Get book by ID
-        const book = await this.get(id);
-
+    async delete(book) {
         // Delete book
         return book;
     }
