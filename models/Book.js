@@ -18,15 +18,40 @@ Book.init({
     title: {
         type: Sequelize.STRING,
         
-        // Ensure that this column has a value before being saved
-        allowNull: false,
+        // Validation
+        validate: {
+            // Do not allow null values
+            allowNull: false,
+
+            // Don't allow empty strings
+            notEmpty: true,
+        },
     },
     author: {
         type: Sequelize.STRING,
-        allowNull: false,
+        
+        // Validation
+        validate: {
+            // Do not allow null values
+            allowNull: false,
+
+            // Don't allow empty strings
+            notEmpty: true,
+        },
     },
     genre: Sequelize.STRING,
-    year: Sequelize.INTEGER,
+    year: {
+        type: Sequelize.INTEGER,
+
+        // Validation
+        validate: {
+            // Do not allow null values
+            allowNull: false,
+
+            // Ensure value is a valid integer
+            isInt: true,
+        },
+    },
 }, {
     sequelize,
     modelName: "Books",
