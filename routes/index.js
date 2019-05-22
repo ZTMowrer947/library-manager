@@ -84,8 +84,6 @@ router.route("/books/new")
             // Attach errors to view locals
             res.locals.errors = errors;
 
-            console.log(errors);
-
             // Rerender new book form
             res.render("new-book");
         }
@@ -121,13 +119,20 @@ router.route("/books/:id")
     });
 
 // /books/:id/delete: Delete book with given ID
-router.post("/books/:id/delete", asyncHandler(async (req, res) => {
-    // Delete book
-    req.bookService.delete(req.book);
+router.route("/books/:id/delete")
+    .get((req, res) => {
+        // Attach book to view locals
+        res.locals.book = req.book;
 
-    // Redirect to book listing
-    res.redirect("/books");
-}));
+        // Render delete confirmation view
+        res.render("delete-confirm");
+    }).post(asyncHandler(async (req, res) => {
+        // Delete book
+        await req.bookService.delete(req.book);
+
+        // Redirect to book listing
+        res.redirect("/books");
+    }));
 
 // Export
 module.exports = router;
