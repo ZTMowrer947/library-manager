@@ -1,11 +1,21 @@
 // Imports
 const { Router } = require("express");
 const Book = require("../models/Book");
+const BookService = require("../services/BookService");
 
 // Router setup
 const router = Router();
 
 // Middleware
+// Add book service to request
+router.use((req, res, next) => {
+    // Instantiate new book service and attach to request object
+    req.bookService = new BookService();
+
+    // Pass control to next middleware or route
+    next();
+});
+
 // Handle ID param
 router.param("id", (req, res, next, id) => {
     // Get book by id
