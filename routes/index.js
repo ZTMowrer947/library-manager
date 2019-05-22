@@ -111,7 +111,7 @@ router.route("/books/:id")
 
             // Redirect to book detail page
             res.redirect(`/books/${updatedBook.id}`);
-        } catch (error) {
+        } catch (errors) {
             // Attach errors to view locals
             res.locals.errors = errors;
 
