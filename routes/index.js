@@ -133,7 +133,8 @@ router.route("/books/:id")
 
 // /books/:id/delete: Delete book with given ID
 router.post("/books/:id/delete", (req, res) => {
-    // TODO: Delete book
+    // Delete book
+    req.book.destroy();
 
     // Redirect to book listing
     res.redirect("/books");
