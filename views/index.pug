@@ -12,4 +12,10 @@ block content
                 th Genre
                 th Year
         tbody
-            //- TODO: Iterate over book data and format into table
+            each book in books
+                tr
+                    td
+                        a(href=`/books/${book.id}`)= book.title
+                    td= book.author
+                    td= book.genre
+                    td= book.year
