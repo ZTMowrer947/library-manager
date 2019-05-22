@@ -17,16 +17,7 @@ router.get("/books", (req, res) => {
     // Get list of books
     Book.findAll().then((books) => {
         // Store book data in locals
-        res.locals.books = books.map((book) => {
-            // Map each book to the data required by the view
-            return {
-                id: book.id,
-                title: book.title,
-                author: book.author,
-                genre: book.genre,
-                year: book.year,
-            };
-        });
+        res.locals.books = books;
 
         // Render index template
         res.render("index");
@@ -39,7 +30,34 @@ router.route("/books/new")
         // Render new book form
         res.render("new-book");
     }).post((req, res) => {
-        // TODO: Validate form and create book
+        // TODO: Validate form
+
+        // Create book
+        const newBook = Book.build({
+            title: req.body.title,
+            author: req.body.author,
+            genre: req.body.genre,
+            year: Number(req.body.year),
+        });
+
+        // Save to database
+        newBook.save()
+            // If successful,
+            .then((book) => {
+                // Attach book to locals form
+                res.locals.book = book;
+
+                // Redirect to book detail page
+                res.redirect(`/books/${book.id}`);
+            })
+            // If an error occurs,
+            .catch((errors) => {
+                // Attach errors to view locals
+                res.locals.errors = errors;
+
+                // Rerender new book form
+                res.render("new-book");
+            });
     });
 
 // /books/:id: Get/Update book details
