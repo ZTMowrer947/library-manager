@@ -5,6 +5,29 @@ const Book = require("../models/Book");
 // Router setup
 const router = Router();
 
+// Middleware
+// Handle ID param
+router.param("id", (req, res, next, id) => {
+    // Get book by id
+    Book.findByPk(req.params.id)
+    .then(book => {
+        // If no book was found with this ID,
+        if (!book) {
+            // Set status to 404
+            res.status(404);
+
+            // Create error and pass to error handlers
+            next(new Error(`Book not found with ID ${req.params.id}.`));
+        }
+
+        // Attach book to view locals
+        res.locals.book = book;
+
+        // Pass control to next middleware or route
+        next();
+    });
+});
+
 // Routes
 // /: Index route
 router.get("/", (req, res) => {
@@ -63,24 +86,8 @@ router.route("/books/new")
 // /books/:id: Get/Update book details
 router.route("/books/:id")
     .get((req, res, next) => {
-        // Get book by id
-        Book.findByPk(req.params.id)
-            .then(book => {
-                // If no book was found with this ID,
-                if (!book) {
-                    // Set status to 404
-                    res.status(404);
-
-                    // Create error and pass to error handlers
-                    next(new Error(`Book not found with ID ${req.params.id}.`));
-                }
-
-                // Attach book to view locals
-                res.locals.book = book;
-
-                // Render update book form
-                res.render("update-book");
-            });
+        // Render update book form
+        res.render("update-book");
     }).post((req, res) => {
         // TODO: Validate form and update book
     });
