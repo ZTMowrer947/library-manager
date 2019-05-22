@@ -19,7 +19,7 @@ class BookService {
             title: newBookData.title,
             author: newBookData.author,
             genre: newBookData.genre,
-            year: parseInt(newBookDate.year),
+            year: parseInt(newBookData.year),
         });
     }
 
