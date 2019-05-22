@@ -9,7 +9,7 @@ const router = Router();
 // Handle ID param
 router.param("id", (req, res, next, id) => {
     // Get book by id
-    Book.findByPk(req.params.id)
+    Book.findByPk(id)
     .then(book => {
         // If no book was found with this ID,
         if (!book) {
@@ -17,7 +17,7 @@ router.param("id", (req, res, next, id) => {
             res.status(404);
 
             // Create error and pass to error handlers
-            next(new Error(`Book not found with ID ${req.params.id}.`));
+            next(new Error(`Book not found with ID ${id}.`));
         }
 
         // Attach book to request
