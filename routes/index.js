@@ -1,5 +1,6 @@
 // Imports
 const { Router } = require("express");
+const Book = require("../models/Book");
 
 // Router setup
 const router = Router();
@@ -13,10 +14,23 @@ router.get("/", (req, res) => {
 
 // /books: Book listing
 router.get("/books", (req, res) => {
-    // TODO: Get list of books
+    // Get list of books
+    Book.findAll().then((books) => {
+        // Store book data in locals
+        res.locals.books = books.map((book) => {
+            // Map each book to the data required by the view
+            return {
+                id: book.id,
+                title: book.title,
+                author: book.author,
+                genre: book.genre,
+                year: book.year,
+            };
+        });
 
-    // Render index template
-    res.render("index");
+        // Render index template
+        res.render("index");
+    });
 });
 
 // /books/new: Create a new book
