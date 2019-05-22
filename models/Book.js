@@ -17,11 +17,14 @@ Book.init({
     },
     title: {
         type: Sequelize.STRING,
-        
+
+        // Do not allow null values
+        allowNull: false,
+
         // Validation
         validate: {
             // Do not allow null values
-            allowNull: false,
+            notNull: true,
 
             // Don't allow empty strings
             notEmpty: true,
@@ -29,11 +32,14 @@ Book.init({
     },
     author: {
         type: Sequelize.STRING,
-        
+
+        // Do not allow null values
+        allowNull: false,
+
         // Validation
         validate: {
             // Do not allow null values
-            allowNull: false,
+            notNull: true,
 
             // Don't allow empty strings
             notEmpty: true,
@@ -43,10 +49,13 @@ Book.init({
     year: {
         type: Sequelize.INTEGER,
 
+        // Do not allow null values
+        allowNull: false,
+
         // Validation
         validate: {
             // Do not allow null values
-            allowNull: false,
+            notNull: true,
 
             // Ensure value is a valid integer
             isInt: true,
