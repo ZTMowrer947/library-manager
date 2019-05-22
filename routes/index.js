@@ -23,7 +23,7 @@ router.get("/books", (req, res) => {
 router.route("/books/new")
     .get((req, res) => {
         // Render new book form
-        res.redirect("new-book.pug");
+        res.render("new-book");
     }).post((req, res) => {
         // TODO: Validate form and create book
     });
@@ -32,7 +32,7 @@ router.route("/books/new")
 router.route("/books/:id")
     .get((req, res) => {
         // Render update book form
-        res.redirect("update-book.pug");
+        res.render("update-book");
     }).post((req, res) => {
         // TODO: Validate form and update book
     });
