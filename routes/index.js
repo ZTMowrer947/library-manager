@@ -1,6 +1,6 @@
 // Imports
 const { Router } = require("express");
-const asyncHandler = require("express-async-handler");
+const asyncHandler = require("express-async-handler");  // Handles Promise rejections by passing them to express error handlers
 const BookService = require("../services/BookService");
 
 // Router setup
