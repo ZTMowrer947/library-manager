@@ -19,3 +19,13 @@ block content
                     td= book.author
                     td= book.genre
                     td= book.year
+
+    ul.pages
+        span Pages:
+        each page in pages
+            li
+                - const pageIsSelected = page === selectedPage
+                if pageIsSelected
+                    a.button.selected(href=`/books?page=${page}`)= page
+                else
+                    a.button(href=`/books?page=${page}`)= page

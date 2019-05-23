@@ -115,3 +115,19 @@ input[type=text] {
 .error {
   color: rgb(236, 15, 15);
 }
+
+ul.pages {
+  display: flex;
+}
+
+ul.pages span {
+  margin-right: 0.25rem;
+}
+
+ul.pages li {
+  margin: 0 0.125rem;
+}
+
+ul.pages a.selected {
+  background: #007855;
+}

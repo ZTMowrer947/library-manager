@@ -41,6 +41,9 @@ router.get("/books", asyncHandler(async (req, res) => {
     // Generate range of page numbers (1 to number of pages)
     res.locals.pages = [...Array(pageCount).keys()].map(num => num + 1);
 
+    // Set selected page number (page 1 if page number was greater than page count, page number otherwise)
+    res.locals.selectedPage = page > pageCount ? 1 : page;
+
     // Render index template
     res.render("index");
 }));
