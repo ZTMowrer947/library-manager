@@ -131,3 +131,22 @@ ul.pages li {
 ul.pages a.selected {
   background: #007855;
 }
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+header .search {
+  display: flex;
+  align-items: stretch;
+}
+
+header p {
+  margin-left: 0;
+}
+
+header .search input[type="text"], header .search select {
+  margin-right: 0.25rem;
+}

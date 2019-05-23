@@ -1,0 +1,10 @@
+form.search(method="get")
+    input#search-term(type="text" name="search" placeholder="Search...")
+    
+    select(name="search-for")
+        option(value="title") Search by Title
+        option(value="author") Search by Author
+        option(value="genre") Search by Genre
+        option(value="year") Search by Year
+
+    input(type="submit", value="Search!")
