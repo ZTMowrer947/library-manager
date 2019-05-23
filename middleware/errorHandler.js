@@ -25,6 +25,9 @@ const errorHandler = (error, req, res, next) => {
         res.locals.message = "Sorry! An unexpected error occurred on the server.";
     }
 
+    // Log error to console
+    console.error(error);
+
     // Render error page
     res.render("error");
 }
