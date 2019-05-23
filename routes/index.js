@@ -28,8 +28,8 @@ router.get("/books", asyncHandler(async (req, res) => {
     // Get page number from query string
     let page = parseInt(req.query.page);
 
-    // If page number is NaN (not a number) or is negative, reset to 1
-    if (isNaN(page) || page < 0) page = 1;
+    // If page number is NaN (not a number) or is less than 1, reset to 1
+    if (isNaN(page) || page < 1) page = 1;
 
     // Get list of books and total number of pages
     const [books, pageCount] = await req.bookService.getList(page);
@@ -37,7 +37,7 @@ router.get("/books", asyncHandler(async (req, res) => {
     // Store book data in locals
     res.locals.books = books;
     res.locals.title = "Book Listing";
-    
+
     // Generate range of page numbers (1 to number of pages)
     res.locals.pages = [...Array(pageCount).keys()].map(num => num + 1);
 
