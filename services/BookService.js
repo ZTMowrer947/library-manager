@@ -5,9 +5,7 @@ const { Op } = require("sequelize");
 // Service
 class BookService {
     // Get list of books
-    async getList(page = 1, search = "", propToSearchFor = "title") {
-        console.log(propToSearchFor);
-
+    async getList(page = 1, search = "", propToSearchFor = "title", sortBy = "") {
         // Set limit of records for each page
         const pageLimit = 10;
 
@@ -34,6 +32,16 @@ class BookService {
         } else {
             // Otherwise, count total number of books in database
             bookCount = await Book.count();
+        }
+
+        // Add sorting order if provided
+        if (sortBy) {
+            const sortProp = sortBy.substring(0, sortBy.indexOf("desc"));
+
+            bookFindOptions.order = [
+                // Order in descending order if sort condition ends with "desc", ordering in ascending order otherwise
+                [sortProp, sortBy.endsWith("desc") ? "DESC" : "ASC"],
+            ];
         }
 
         // Calculate total number of pages

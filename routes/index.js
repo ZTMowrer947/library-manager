@@ -29,9 +29,11 @@ router.get("/books", asyncHandler(async (req, res) => {
     let page = parseInt(req.query.page);
     let searchTerm = req.query.search;
     let propToSearchFor = req.query["search-for"];
+    let propToSortBy = req.query["sort-by"];
 
-    // Define array of valid props to search for
+    // Define array of valid props to search for and sort by
     const validPropsToSearchFor = ["title", "author", "genre", "year"];
+    const validSortProps = ["", ...validPropsToSearchFor, ...validPropsToSearchFor.map(prop => prop += "desc")]; // Include valid search for props and their descending-order counterparts
 
     // If page number is NaN (not a number) or is less than 1, reset to 1
     if (isNaN(page) || page < 1) page = 1;
@@ -39,8 +41,13 @@ router.get("/books", asyncHandler(async (req, res) => {
     // If prop to search for is invalid, reset to title
     if (!validPropsToSearchFor.includes(propToSearchFor)) propToSearchFor = "title";
 
+    // If sort prop is invalid, reset to no sorting
+    if (!validSortProps.includes(propToSortBy)) {
+        propToSortBy = "";
+    }
+
     // Get list of books and total number of pages
-    const [books, pageCount] = await req.bookService.getList(page, searchTerm, propToSearchFor);
+    const [books, pageCount] = await req.bookService.getList(page, searchTerm, propToSearchFor, propToSortBy);
 
     // Store book data in locals
     res.locals.books = books;
@@ -54,9 +61,10 @@ router.get("/books", asyncHandler(async (req, res) => {
     // Set selected page number (page 1 if page number was greater than page count, page number otherwise)
     res.locals.selectedPage = page > pageCount ? 1 : page;
 
-    // Store search term in view locals
+    // Store search term and sort prop in view locals
     res.locals.searchTerm = searchTerm;
     res.locals.searchProp = propToSearchFor;
+    res.locals.sortProp = propToSortBy;
 
     // Render index template
     res.render("index");

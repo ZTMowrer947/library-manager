@@ -1,10 +1,21 @@
 form.search(method="get")
     input#search-term(type="text" name="search" placeholder="Search...")
-    
+
     select(name="search-for")
         option(value="title") Search by Title
         option(value="author") Search by Author
         option(value="genre") Search by Genre
         option(value="year") Search by Year
+
+    select(name="sort-by")
+        option(value="") Don't sort
+        option(value="title") Sort by Title
+        option(value="titledesc") Sort by Title (descending)
+        option(value="author") Sort by Author
+        option(value="authordesc") Sort by Author (descending)
+        option(value="genre") Sort by Genre
+        option(value="genredesc") Sort by Genre (descending)
+        option(value="year") Sory by Year
+        option(value="yeardesc") Sort by Year (descending)
 
     input(type="submit", value="Search!")
