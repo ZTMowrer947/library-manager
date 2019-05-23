@@ -7,6 +7,7 @@ This project is about creating a library manager for a book database using Expre
 ## Features
 - Create, Read, Update, and Delete book entries
 - Model validation for book creations and modification
+- Client-side Validation
 - Pagination for book listing
 - Ability to search for books by title, author, genre, and year
 
