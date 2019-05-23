@@ -1,6 +1,7 @@
 // Imports
 const express = require("express");
 const routes = require("./routes");
+const errorHandler = require("./middleware/errorHandler");
 
 // App setup
 const app = express();
@@ -15,6 +16,9 @@ app.use(express.urlencoded({ extended: true }));            // Parse urlencoded 
 
 // Routes
 app.use(routes);
+
+// Error handlers
+app.use(errorHandler);
 
 // Export
 module.exports = app;
