@@ -7,28 +7,44 @@ block content
             a.button(href="/books/new") Create New Book
         include includes/search
 
-    table
-        thead
-            tr
-                th Title
-                th Author
-                th Genre
-                th Year
-        tbody
-            each book in books
-                tr
-                    td
-                        a(href=`/books/${book.id}`)= book.title
-                    td= book.author
-                    td= book.genre
-                    td= book.year
+    - const noResults = books.length === 0;
 
-    ul.pages
-        span Pages:
-        each page in pages
-            li
-                - const pageIsSelected = page === selectedPage
-                if pageIsSelected
-                    a.button.selected(href=`/books?page=${page}`)= page
-                else
-                    a.button(href=`/books?page=${page}`)= page
+    //- If no results were found,
+    if noResults
+        //- Display "no results" div
+        .no-results
+            //- If a search term was provided,
+            if searchTerm
+                //- Display the search term in message
+                p Sorry, we couldn't find any books with the #{searchProp} including the term "#{searchTerm}".
+            else
+                //- Otherwise, display message indicating that no records exist in the database
+                p Sorry, there are no books in the database. Create one using the "Create new book" button above.
+
+    else
+        //- Otherwise, display book listing
+        table
+            thead
+                tr
+                    th Title
+                    th Author
+                    th Genre
+                    th Year
+            tbody
+                each book in books
+                    tr
+                        td
+                            a(href=`/books/${book.id}`)= book.title
+                        td= book.author
+                        td= book.genre
+                        td= book.year
+
+        ul.pages
+            span Pages:
+            each page in pages
+                li
+                    - const pageIsSelected = page === selectedPage
+                    if pageIsSelected
+                        a.button.selected(href=`/books?page=${page}`)= page
+                    else
+                        a.button(href=`/books?page=${page}`)= page

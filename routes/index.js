@@ -54,6 +54,10 @@ router.get("/books", asyncHandler(async (req, res) => {
     // Set selected page number (page 1 if page number was greater than page count, page number otherwise)
     res.locals.selectedPage = page > pageCount ? 1 : page;
 
+    // Store search term in view locals
+    res.locals.searchTerm = searchTerm;
+    res.locals.searchProp = propToSearchFor;
+
     // Render index template
     res.render("index");
 }));
