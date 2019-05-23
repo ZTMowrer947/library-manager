@@ -25,12 +25,21 @@ router.get("/", (req, res) => {
 
 // /books: Book listing
 router.get("/books", asyncHandler(async (req, res) => {
-    // Get list of books
-    const books = await req.bookService.getList();
+    // Get page number from query string
+    let page = parseInt(req.query.page);
+
+    // If page number is NaN (not a number) or is negative, reset to 1
+    if (isNaN(page) || page < 0) page = 1;
+
+    // Get list of books and total number of pages
+    const [books, pageCount] = await req.bookService.getList(page);
 
     // Store book data in locals
     res.locals.books = books;
     res.locals.title = "Book Listing";
+    
+    // Generate range of page numbers (1 to number of pages)
+    res.locals.pages = [...Array(pageCount).keys()].map(num => num + 1);
 
     // Render index template
     res.render("index");

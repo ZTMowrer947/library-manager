@@ -4,8 +4,24 @@ const Book = require("../models/Book");
 // Service
 class BookService {
     // Get list of books
-    async getList() {
-        return Book.findAll();
+    async getList(page = 1) {
+        // Count number of books in database
+        const bookCount = await Book.count();
+
+        // Set limit of records for each page
+        const pageLimit = 10;
+
+        // Calculate total number of pages
+        const pageCount = Math.ceil(bookCount / pageLimit);
+
+        // Calculate offset of records
+        let pageOffset = (page - 1) * pageLimit;
+
+        // Reset offset to 0 if page offset exceeds book count
+        if (pageOffset > bookCount) pageOffset = 0;
+
+        // Return page of books and total number of pages
+        return [await Book.findAll({ limit: pageLimit, offset: pageOffset }), pageCount];
     }
 
     // Get single book by its ID
