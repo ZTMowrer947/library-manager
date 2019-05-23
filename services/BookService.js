@@ -1,15 +1,38 @@
 // Imports
 const Book = require("../models/Book");
+const { Op } = require("sequelize");
 
 // Service
 class BookService {
     // Get list of books
-    async getList(page = 1) {
-        // Count number of books in database
-        const bookCount = await Book.count();
-
+    async getList(page = 1, search = "", propToSearchFor = "title") {
         // Set limit of records for each page
         const pageLimit = 10;
+        
+        // Book find options
+        const bookFindOptions = {
+            limit: pageLimit,
+        };
+
+        let bookCount;
+
+        // Add search to options if a search was provided
+        if (search) {
+            // Add WHERE condition
+            bookFindOptions.where = {
+                // Set conditions for prop being searched for
+                [propToSearchFor]: {
+                    // Search term appears anywhere within book property
+                    [Op.like]: `%${search.toLowerCase()}%`,
+                },
+            };
+
+            // Count total number of books matching search term
+            bookCount = await Book.count({ where: bookFindOptions.where });
+        } else {
+            // Otherwise, count total number of books in database
+            bookCount = await Book.count();
+        }
 
         // Calculate total number of pages
         const pageCount = Math.ceil(bookCount / pageLimit);
@@ -20,8 +43,11 @@ class BookService {
         // Reset offset to 0 if page offset exceeds book count
         if (pageOffset > bookCount) pageOffset = 0;
 
+        // Store offset in find options
+        bookFindOptions.offset = pageOffset;
+
         // Return page of books and total number of pages
-        return [await Book.findAll({ limit: pageLimit, offset: pageOffset }), pageCount];
+        return [await Book.findAll(bookFindOptions), pageCount];
     }
 
     // Get single book by its ID
