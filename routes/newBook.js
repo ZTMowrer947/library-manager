@@ -14,8 +14,6 @@ router.route("/")
         res.render("new-book");
     }).post(async (req, res) => {
         try {
-            // TODO: Validate form
-
             // Create book
             const newBook = await req.bookService.create(req.body);
 

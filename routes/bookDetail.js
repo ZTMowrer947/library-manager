@@ -18,8 +18,6 @@ router.route("/")
         res.render("update-book");
     }).post(async (req, res) => {
         try {
-            // TODO: Validate form
-
             // Create book
             const updatedBook = await req.bookService.update(req.book, req.body);
 
