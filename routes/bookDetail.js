@@ -26,18 +26,21 @@ router.route("/")
 
             // Redirect to book listing
             res.redirect("/books");
-        } catch (errors) {
+        } catch (error) {
             // Set status to 400 Bad Request
             res.status(400);
 
             // Attach errors to view locals
-            res.locals.errors = errors;
+            res.locals.errors = error.errors;
 
             // Set page title for view
             res.locals.title = "Book Details";
 
-            // Rerender new book form
-            res.render("new-book");
+            // Attach book to locals form
+            res.locals.book = req.book;
+
+            // Rerender update book form
+            res.render("update-book");
         }
     });
 

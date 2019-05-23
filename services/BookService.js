@@ -78,17 +78,17 @@ class BookService {
 
     // Update a new book
     async update(book, updateBookData) {
-        // Update each book property if non-empty and different
-        if (updateBookData.title && updateBookData.title !== book.title)
+        // Update each book property if different
+        if (updateBookData.title !== book.title)
             book.title = updateBookData.title;
 
-        if (updateBookData.author && updateBookData.author !== book.author)
+        if (updateBookData.author !== book.author)
             book.author = updateBookData.author;
 
-        if (updateBookData.genre && updateBookData.genre !== book.title)
+        if (updateBookData.genre !== book.title)
             book.genre = updateBookData.genre;
 
-        if (updateBookData.year && parseInt(updateBookData.year) !== book.title)
+        if (parseInt(updateBookData.year) !== book.title)
             book.year = parseInt(updateBookData.year);
 
         // Save changes to database
