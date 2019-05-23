@@ -25,18 +25,28 @@ router.get("/", (req, res) => {
 
 // /books: Book listing
 router.get("/books", asyncHandler(async (req, res) => {
-    // Get page number from query string
+    // Get parameters from query string
     let page = parseInt(req.query.page);
+    let searchTerm = req.query.search;
+    let propToSearchFor = req.query["search-for"];
+
+    // Define array of valid props to search for
+    const validPropsToSearchFor = ["title", "author", "genre", "year"];
 
     // If page number is NaN (not a number) or is less than 1, reset to 1
     if (isNaN(page) || page < 1) page = 1;
 
+    // If prop to search for is invalid, reset to title
+    if (!validPropsToSearchFor.includes(propToSearchFor)) propToSearchFor = "title";
+
     // Get list of books and total number of pages
-    const [books, pageCount] = await req.bookService.getList(page);
+    const [books, pageCount] = await req.bookService.getList(page, searchTerm, propToSearchFor);
 
     // Store book data in locals
     res.locals.books = books;
-    res.locals.title = "Book Listing";
+
+    // Set title to "Search Results" if searching, "Book Listing" otherwise
+    res.locals.title = searchTerm ? "Search Results" : "Book Listing";
 
     // Generate range of page numbers (1 to number of pages)
     res.locals.pages = [...Array(pageCount).keys()].map(num => num + 1);

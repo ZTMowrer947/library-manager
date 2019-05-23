@@ -6,9 +6,11 @@ const { Op } = require("sequelize");
 class BookService {
     // Get list of books
     async getList(page = 1, search = "", propToSearchFor = "title") {
+        console.log(propToSearchFor);
+
         // Set limit of records for each page
         const pageLimit = 10;
-        
+
         // Book find options
         const bookFindOptions = {
             limit: pageLimit,
