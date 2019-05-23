@@ -24,10 +24,14 @@ Book.init({
         // Validation
         validate: {
             // Do not allow null values
-            notNull: true,
+            notNull: {
+                msg: "Book title must contain a value",
+            },
 
             // Don't allow empty strings
-            notEmpty: true,
+            notEmpty: {
+                msg: "Book title must not be empty",
+            },
         },
     },
     author: {
@@ -39,10 +43,14 @@ Book.init({
         // Validation
         validate: {
             // Do not allow null values
-            notNull: true,
+            notNull: {
+                msg: "Book author must contain a value",
+            },
 
             // Don't allow empty strings
-            notEmpty: true,
+            notEmpty: {
+                msg: "Book author must not be empty",
+            },
         },
     },
     genre: Sequelize.STRING,
@@ -55,10 +63,14 @@ Book.init({
         // Validation
         validate: {
             // Do not allow null values
-            notNull: true,
+            notNull: {
+                msg: "Book year must contain a value",
+            },
 
             // Ensure value is a valid integer
-            isInt: true,
+            isInt: {
+                msg: "Book year must be a valid integer",
+            },
         },
     },
 }, {
