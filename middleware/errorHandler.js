@@ -16,19 +16,17 @@ const errorHandler = (error, req, res, next) => {
 
     // If the error is a 404 error,
     if (res.statusCode === 404) {
-        // Set page title
+        // Set view locals for 404
         res.locals.title = "Page Not Found";
-
-        // Render the 404 Error page
-        res.render("not-found");
+        res.locals.message = "Sorry! The page you're looking for doesn't exist.";
     } else {
-        // Otherwise, set view locals
+        // Otherwise, set view locals for generic error
         res.locals.title = "Server Error";
-        res.locals.error = error;
-
-        // Render error page
-        res.render("error");
+        res.locals.message = "Sorry! An unexpected error occurred on the server.";
     }
+
+    // Render error page
+    res.render("error");
 }
 
 // Export
