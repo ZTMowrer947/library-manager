@@ -43,8 +43,17 @@ block content
             span Pages:
             each page in pages
                 li
+                    - let queryString = `?page=${page}`;
+                    //- Add search term and search prop to query string if searching
+                    if searchTerm
+                        - queryString += `&search=${searchTerm}&search-for=${searchProp}`;
+
+                    //- Add sorting prop to query string if we are sorting
+                    if sortProp
+                        - queryString += `&sort-by=${sortProp}`    
+
                     - const pageIsSelected = page === selectedPage
                     if pageIsSelected
-                        a.button.selected(href=`/books?page=${page}`)= page
+                        a.button.selected(href=`/books${queryString}`)= page
                     else
-                        a.button(href=`/books?page=${page}`)= page
+                        a.button(href=`/books${queryString}`)= page

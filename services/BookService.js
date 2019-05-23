@@ -36,7 +36,8 @@ class BookService {
 
         // Add sorting order if provided
         if (sortBy) {
-            const sortProp = sortBy.substring(0, sortBy.indexOf("desc"));
+            // Trim "desc" from the end if present
+            const sortProp = sortBy.substring(0, sortBy.indexOf("desc")) || sortBy;
 
             bookFindOptions.order = [
                 // Order in descending order if sort condition ends with "desc", ordering in ascending order otherwise
