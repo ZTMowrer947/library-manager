@@ -16,7 +16,7 @@ block content
 
         p
             label(for="title") Title:
-            input#title(type="text" name="title" value=`${title || ""}`)
+            input#title(type="text" name="title" value=`${titleInput || ""}`)
 
         div.button-group
             a.button.button-red(href=`/books/${book.id}`) Cancel

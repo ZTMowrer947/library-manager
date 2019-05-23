@@ -11,6 +11,9 @@ router.route("/")
         // Attach book to view locals
         res.locals.book = req.book;
 
+        // Set page title for view
+        res.locals.title = "Delete Confirmation";
+
         // Render delete confirmation view
         res.render("delete-confirm");
     }).post(asyncHandler(async (req, res) => {
@@ -28,11 +31,17 @@ router.route("/")
             // Otherwise, set status to 400 Bad Request
             res.status(400);
 
+            // Set previous title input
+            res.locals.titleInput = req.body.title;
+
             // Attach error to view locals
             res.locals.error = new Error("Request body title does not match book title.");
 
             // Attach book to view locals
             res.locals.book = req.book;
+
+            // Set page title for view
+            res.locals.title = "Delete Confirmation";
 
             // Re-render delete confirmation view
             res.render("delete-confirm");

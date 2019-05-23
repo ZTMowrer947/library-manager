@@ -7,6 +7,9 @@ const router = Router();
 // Routes
 router.route("/")
     .get((req, res) => {
+        // Set page title for view
+        res.locals.title = "Create Book";
+
         // Render new book form
         res.render("new-book");
     }).post(async (req, res) => {
@@ -28,6 +31,9 @@ router.route("/")
 
             // Attach errors to view locals
             res.locals.errors = error.errors;
+
+            // Set page title for view
+            res.locals.title = "Create Book";
 
             // Rerender new book form
             res.render("new-book");

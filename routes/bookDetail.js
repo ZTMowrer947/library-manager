@@ -11,6 +11,9 @@ router.route("/")
         // Attach book to view locals
         res.locals.book = req.book;
 
+        // Set page title for view
+        res.locals.title = "Book Details";
+
         // Render update book form
         res.render("update-book");
     }).post(async (req, res) => {
@@ -31,6 +34,9 @@ router.route("/")
 
             // Attach errors to view locals
             res.locals.errors = errors;
+
+            // Set page title for view
+            res.locals.title = "Book Details";
 
             // Rerender new book form
             res.render("new-book");

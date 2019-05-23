@@ -30,6 +30,7 @@ router.get("/books", asyncHandler(async (req, res) => {
 
     // Store book data in locals
     res.locals.books = books;
+    res.locals.title = "Book Listing";
 
     // Render index template
     res.render("index");
