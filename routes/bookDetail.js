@@ -26,8 +26,8 @@ router.route("/")
             // Attach book to locals form
             res.locals.book = updatedBook;
 
-            // Redirect to book detail page
-            res.redirect(`/books/${updatedBook.id}`);
+            // Redirect to book listing
+            res.redirect("/books");
         } catch (errors) {
             // Set status to 400 Bad Request
             res.status(400);
