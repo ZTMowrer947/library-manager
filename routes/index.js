@@ -94,5 +94,14 @@ router.param("id", async (req, res, next, id) => {
 // /books/:id: Get/Update book details
 router.use("/books/:id", require("./bookDetail"));
 
+// All other routes are a 404
+router.all("*", (req, res, next) => {
+    // Set status to 404 Not Found
+    res.status(404);
+
+    // Create error and pass to error handlers
+    next(new Error(`Route ${req.path} does not exist.`));
+});
+
 // Export
 module.exports = router;
