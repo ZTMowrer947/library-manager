@@ -3,6 +3,18 @@ extends partials/layout
 block content
     h1= "Books"
 
+    if searchTerm
+        h3 Search results for books with #{searchProp} including "#{searchTerm}"
+
+    if sortProp
+        - const descendingOrder = sortProp.endsWith("desc");
+
+        //- Trim "desc" from sort prop if in descending order
+        - const normalizedSortProp = descendingOrder ? sortProp.substring(0, sortProp.indexOf("desc")) : sortProp;
+
+        h3 Sorting by #{normalizedSortProp} in #{descendingOrder ? "descending" : "ascending"} order
+
+
     header
         p
             a.button(href="/books/new") Create New Book
