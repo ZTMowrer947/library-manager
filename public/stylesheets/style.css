@@ -118,6 +118,7 @@ input[type=text] {
 
 ul.pages {
   display: flex;
+  margin-bottom: 1.5rem;
 }
 
 ul.pages span {

@@ -72,3 +72,7 @@ block content
                         a.button.selected(href=`/books${queryString}`)= page
                     else
                         a.button(href=`/books${queryString}`)= page
+        
+        //- Add link to full book listing if we are doing any searching
+        if searchTerm
+            a.full-listing.button(href="/") Full Book Listing
