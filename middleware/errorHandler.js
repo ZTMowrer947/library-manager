@@ -14,22 +14,24 @@ const errorHandler = (error, req, res, next) => {
         // Set it to 500 Internal Server Error
         res.status(500);
 
+    // Log error to console
+    console.error(error);
+
     // If the error is a 404 error,
     if (res.statusCode === 404) {
         // Set view locals for 404
         res.locals.title = "Page Not Found";
-        res.locals.message = "Sorry! The page you're looking for doesn't exist.";
+
+        // Render not-found page
+        res.render("page-not-found");
     } else {
         // Otherwise, set view locals for generic error
         res.locals.title = "Server Error";
         res.locals.message = "Sorry! An unexpected error occurred on the server.";
+
+        // Render error page
+        res.render("error");
     }
-
-    // Log error to console
-    console.error(error);
-
-    // Render error page
-    res.render("error");
 }
 
 // Export
