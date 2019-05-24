@@ -2,6 +2,7 @@ extends partials/layout
 
 block content
     h1= "Books"
+
     header
         p
             a.button(href="/books/new") Create New Book
@@ -20,6 +21,8 @@ block content
             else
                 //- Otherwise, display message indicating that no records exist in the database
                 p Sorry, there are no books in the database. Create one using the "Create new book" button above.
+
+            a.button(href="/") Return to Book Listing
 
     else
         //- Otherwise, display book listing
