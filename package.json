@@ -21,7 +21,7 @@
         "express": "^4.17.0",
         "express-async-handler": "^1.1.4",
         "pug": "^2.0.3",
-        "sequelize": "^5.8.6",
+        "sequelize": "^5.15.1",
         "sqlite3": "^4.0.8"
     },
     "devDependencies": {
