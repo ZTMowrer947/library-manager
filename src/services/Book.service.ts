@@ -40,8 +40,14 @@ export default class BookService {
     }
 
     public async update(book: Book, bookData: BookDTO): Promise<void> {
-        // TODO: Implement update functionality
-        throw new Error("Not implemented yet");
+        // Fill out new data
+        book.title = bookData.title;
+        book.author = bookData.author;
+        book.genre = bookData.genre ?? null;
+        book.year = bookData.year ?? null;
+
+        // Save updated book to database
+        await this.repository.save(book);
     }
 
     public async delete(book: Book): Promise<void> {
