@@ -1,6 +1,12 @@
 {
     "restartable": "rs",
-    "ignore": [".git", "./node_modules/**"],
+    "ignore": [
+        ".git",
+        "./node_modules/**",
+        "__tests__/**",
+        "*.spec.*",
+        "*.test.*"
+    ],
     "watch": ["src"],
     "verbose": false,
     "env": {
