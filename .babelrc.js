@@ -35,6 +35,9 @@ module.exports = api => {
 
         // Class properties
         ["@babel/plugin-proposal-class-properties", { loose: true }],
+
+        // Optional chaining
+        "@babel/plugin-proposal-optional-chaining",
     ];
 
     // If not in production, transform babel runtime
