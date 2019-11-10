@@ -16,7 +16,15 @@
         "url": "https://github.com/ZTMowrer947/LibraryManager/issues"
     },
     "homepage": "https://github.com/ZTMowrer947/LibraryManager#readme",
-    "dependencies": {},
+    "dependencies": {
+        "@types/koa": "^2.0.52",
+        "@types/koa-router": "^7.0.42",
+        "@types/koa-views": "^2.0.3",
+        "koa": "^2.11.0",
+        "koa-router": "^7.4.0",
+        "koa-views": "^6.2.1",
+        "pug": "^2.0.4"
+    },
     "devDependencies": {
         "@babel/cli": "^7.7.0",
         "@babel/core": "^7.7.2",
