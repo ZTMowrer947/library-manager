@@ -26,7 +26,7 @@ const basePath = path.resolve(
     "database"
 );
 const dbFile =
-    env === "testing" ? ":memory" : path.resolve(basePath, "library.db");
+    env === "testing" ? ":memory:" : path.resolve(basePath, "library.db");
 const migrationsRun = env === "production";
 const synchronize = !migrationsRun;
 const entityPath = path.resolve(basePath, "entities");
