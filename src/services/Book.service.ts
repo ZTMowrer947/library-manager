@@ -23,8 +23,20 @@ export default class BookService {
     }
 
     public async create(bookData: BookDTO): Promise<string> {
-        // TODO: Implement create functionality
-        throw new Error("Not implemented yet");
+        // Create Book instance
+        const book = new Book();
+
+        // Fill out data
+        book.title = bookData.title;
+        book.author = bookData.author;
+        book.genre = bookData.genre ?? null;
+        book.year = bookData.year ?? null;
+
+        // Save book to database
+        await this.repository.save(book);
+
+        // Return id of new book
+        return book.id;
     }
 
     public async update(book: Book, bookData: BookDTO): Promise<void> {
