@@ -47,5 +47,21 @@ module.exports = {
                 "@typescript-eslint/explicit-function-return-type": ["off"],
             },
         },
+        {
+            // Test Files
+            files: [
+                "**/__tests__/**/*.[jt]s?(x)",
+                "**/?(*.)+(spec|test).[tj]s?(x)",
+            ],
+            env: {
+                node: true,
+                es6: true,
+                jest: true,
+            },
+            rules: {
+                // Disable no-extraneous-dependencies for tests
+                "import/no-extraneous-dependencies": ["off"],
+            },
+        },
     ],
 };
