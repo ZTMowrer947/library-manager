@@ -3,6 +3,7 @@ import { Service } from "typedi";
 import { Repository } from "typeorm";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import Book from "../database/entities/Book.entity";
+import BookDTO from "../models/BookDTO";
 
 // Service
 @Service()
@@ -21,12 +22,12 @@ export default class BookService {
         return this.repository.findOne(id);
     }
 
-    public async create(bookData: unknown): Promise<string> {
+    public async create(bookData: BookDTO): Promise<string> {
         // TODO: Implement create functionality
         throw new Error("Not implemented yet");
     }
 
-    public async update(book: Book, bookData: unknown): Promise<void> {
+    public async update(book: Book, bookData: BookDTO): Promise<void> {
         // TODO: Implement update functionality
         throw new Error("Not implemented yet");
     }
