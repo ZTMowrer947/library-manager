@@ -1,6 +1,7 @@
 // Import
 import http from "http";
 import app from "./app";
+import ormBootstrap from "./database";
 
 // HTTP server setup
 const server = http.createServer(app.callback());
@@ -13,5 +14,10 @@ server.once("listening", () => {
     console.log(`Library Manager now running on port ${port}...`);
 });
 
-// Listen on given port
-server.listen(port);
+// Setup database connection
+ormBootstrap().then(() => {
+    console.log("Database connection successful.");
+
+    // Configure HTTP server to listen on given port
+    server.listen(port);
+});
