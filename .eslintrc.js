@@ -52,6 +52,7 @@ module.exports = {
             files: [
                 "**/__tests__/**/*.[jt]s?(x)",
                 "**/?(*.)+(spec|test).[tj]s?(x)",
+                "testSetup.ts",
             ],
             env: {
                 node: true,
