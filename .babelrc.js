@@ -38,6 +38,9 @@ module.exports = api => {
 
         // Optional chaining
         "@babel/plugin-proposal-optional-chaining",
+
+        // Nullish coalescing operator
+        "@babel/plugin-proposal-nullish-coalescing-operator",
     ];
 
     // If not in production, transform babel runtime
