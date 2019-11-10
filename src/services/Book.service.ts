@@ -19,7 +19,10 @@ export default class BookService {
     }
 
     public async getById(id: string): Promise<Book | undefined> {
-        return this.repository.findOne(id);
+        return this.repository
+            .createQueryBuilder("book") // Create query
+            .where("book.id = :id", { id }) // Get book with matching id
+            .getOne(); // Return only one entry
     }
 
     public async create(bookData: BookDTO): Promise<string> {
