@@ -4,7 +4,7 @@
     "description": "Treehouse FSJS Techdegree Unit 8 Project: A SQL-based Library Manager",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "jest",
         "start": "nodemon",
         "typecheck": "tsc --noEmit",
         "typecheck:watch": "tsc --noEmit -w",
