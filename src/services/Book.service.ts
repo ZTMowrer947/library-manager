@@ -51,7 +51,7 @@ export default class BookService {
     }
 
     public async delete(book: Book): Promise<void> {
-        // TODO: Implement delete functionality
-        throw new Error("Not implemented yet");
+        // Delete book
+        await this.repository.remove(book);
     }
 }
