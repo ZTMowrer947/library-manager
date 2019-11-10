@@ -27,6 +27,7 @@
         "koa-router": "^7.4.0",
         "koa-views": "^6.2.1",
         "pug": "^2.0.4",
+        "reflect-metadata": "^0.1.13",
         "sqlite3": "^4.1.0",
         "typeorm": "^0.2.20"
     },
