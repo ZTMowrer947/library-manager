@@ -1,8 +1,13 @@
 // Import
 import "reflect-metadata";
 import http from "http";
+import { Container } from "typedi";
+import { useContainer } from "typeorm";
 import app from "./app";
 import ormBootstrap from "./database";
+
+// TypeDI Container setup
+useContainer(Container);
 
 // HTTP server setup
 const server = http.createServer(app.callback());
