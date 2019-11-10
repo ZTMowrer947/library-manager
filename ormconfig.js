@@ -42,7 +42,7 @@ const connectionOptions = {
     database: dbFile,
 
     // Directory paths
-    entities: [path.resolve(basePath, "entities", "**", "*.ts")],
+    entities: [path.resolve(basePath, "entities", "**", "*.entity.ts")],
     migrations: [path.resolve(basePath, "migrations", "**", "*.ts")],
 
     cli: {
