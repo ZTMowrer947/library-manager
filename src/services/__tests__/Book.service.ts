@@ -114,11 +114,6 @@ describe("BookService", () => {
             expect(book?.author).toBe(updateData.author);
             expect(book?.genre).toBe(updateData.genre);
             expect(book?.year).toBe(updateData.year);
-
-            // Expect update timestamp to differ from creation timestamp
-            expect(book?.updatedAt.getTime()).not.toBe(
-                book?.createdAt.getTime()
-            );
         });
     });
 
