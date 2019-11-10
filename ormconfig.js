@@ -29,6 +29,8 @@ const dbFile =
     env === "testing" ? ":memory" : path.resolve(basePath, "library.db");
 const migrationsRun = env === "production";
 const synchronize = !migrationsRun;
+const entityPath = path.resolve(basePath, "entities");
+const migrationPath = path.resolve(basePath, "migrations");
 
 // Configuration
 /**
@@ -42,12 +44,12 @@ const connectionOptions = {
     database: dbFile,
 
     // Directory paths
-    entities: [path.resolve(basePath, "entities", "**", "*.entity.ts")],
-    migrations: [path.resolve(basePath, "migrations", "**", "*.ts")],
+    entities: [path.resolve(entityPath, "**", "*.entity.ts")],
+    migrations: [path.resolve(migrationPath, "**", "*.ts")],
 
     cli: {
-        entitiesDir: path.resolve(basePath, "entities"),
-        migrationsDir: path.resolve(basePath, "migrations"),
+        entitiesDir: path.relative(__dirname, entityPath),
+        migrationsDir: path.relative(__dirname, migrationPath),
     },
 
     // Database sync options
