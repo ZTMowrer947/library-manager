@@ -2,6 +2,7 @@
 import path from "path";
 import Koa from "koa";
 import views from "koa-views";
+import router from "./routes";
 
 // Paths
 const viewsPath = path.resolve(__dirname, "..", "views");
@@ -16,10 +17,9 @@ app.use(
     })
 );
 
-// Test route
-app.use(async ctx => {
-    await ctx.render("index");
-});
+// Routes
+app.use(router.routes());
+app.use(router.allowedMethods());
 
 // Export
 export default app;
