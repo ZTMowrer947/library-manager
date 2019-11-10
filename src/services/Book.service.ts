@@ -7,8 +7,11 @@ import Book from "../database/entities/Book.entity";
 // Service
 @Service()
 export default class BookService {
-    @InjectRepository(Book)
     private repository!: Repository<Book>;
+
+    public constructor(@InjectRepository(Book) repository: Repository<Book>) {
+        this.repository = repository;
+    }
 
     public async getList(): Promise<Book[]> {
         return this.repository.find();
