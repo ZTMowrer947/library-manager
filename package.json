@@ -1,24 +1,24 @@
 {
-  "name": "library-manager",
-  "version": "0.0.0",
-  "description": "Treehouse FSJS Techdegree Unit 8 Project: A SQL-based Library Manager",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ZTMowrer947/LibraryManager.git"
-  },
-  "author": "Zackery Mowrer",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/ZTMowrer947/LibraryManager/issues"
-  },
-  "homepage": "https://github.com/ZTMowrer947/LibraryManager#readme",
-  "dependencies": {},
-  "devDependencies": {
-    "prettier": "^1.19.1",
-    "typescript": "3.7.x"
-  }
+    "name": "library-manager",
+    "version": "0.0.0",
+    "description": "Treehouse FSJS Techdegree Unit 8 Project: A SQL-based Library Manager",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ZTMowrer947/LibraryManager.git"
+    },
+    "author": "Zackery Mowrer",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/ZTMowrer947/LibraryManager/issues"
+    },
+    "homepage": "https://github.com/ZTMowrer947/LibraryManager#readme",
+    "dependencies": {},
+    "devDependencies": {
+        "prettier": "^1.19.1",
+        "typescript": "3.7.x"
+    }
 }
