@@ -1,31 +1,21 @@
 {
-    "name": "library-manager",
-    "version": "0.0.0",
-    "description": "Treehouse FSJS Techdegree Unit 8 Project: A SQL-based Library Manager",
-    "main": "index.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "nodemon -w models -w services -w routes -w . -e js ."
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/ZTMowrer947/LibraryManager.git"
-    },
-    "author": "Zackery Mowrer",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/ZTMowrer947/LibraryManager/issues"
-    },
-    "homepage": "https://github.com/ZTMowrer947/LibraryManager#readme",
-    "dependencies": {
-        "express": "^4.17.0",
-        "express-async-handler": "^1.1.4",
-        "pug": "^2.0.3",
-        "sequelize": "^5.15.1",
-        "sqlite3": "^4.0.8"
-    },
-    "devDependencies": {
-        "nodemon": "^1.19.0",
-        "sequelize-cli": "^5.4.0"
-    }
+  "name": "library-manager",
+  "version": "0.0.0",
+  "description": "Treehouse FSJS Techdegree Unit 8 Project: A SQL-based Library Manager",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZTMowrer947/LibraryManager.git"
+  },
+  "author": "Zackery Mowrer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ZTMowrer947/LibraryManager/issues"
+  },
+  "homepage": "https://github.com/ZTMowrer947/LibraryManager#readme",
+  "dependencies": {},
+  "devDependencies": {}
 }
