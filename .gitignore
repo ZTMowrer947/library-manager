@@ -62,3 +62,6 @@ typings/
 
 # Old code folder (for rewrite)
 old/
+
+# Database files
+*.db
