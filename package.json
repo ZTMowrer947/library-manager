@@ -17,5 +17,7 @@
   },
   "homepage": "https://github.com/ZTMowrer947/LibraryManager#readme",
   "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "typescript": "3.7.x"
+  }
 }
