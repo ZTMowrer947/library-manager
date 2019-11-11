@@ -4,6 +4,7 @@ import Koa from "koa";
 import views from "koa-views";
 import router from "./routes";
 import env, { EnvType } from "./env";
+import Assets from "./models/Assets";
 
 // Paths
 const basePath = path.resolve(__dirname, "..", "..");
@@ -39,7 +40,7 @@ const app = new Koa();
         app.use(middleware);
 
         // Load asset data
-        app.use(async ctx => {
+        app.use(async (ctx, next) => {
             // Create promise for reading file from memory filesystem
             const readFileAsync = (path: string): Promise<Buffer> =>
                 new Promise((resolve, reject) => {
@@ -65,8 +66,67 @@ const app = new Koa();
 
             // Attach asset data to state
             ctx.state.assets = assets;
+
+            // Continue middleware chain
+            await next();
         });
     }
+
+    // Retrieve links from asset data
+    app.use(async (ctx, next) => {
+        // Retrieve assets from state
+        const assets: Assets = ctx.state.assets;
+
+        // Reorganize assets
+        let chunks = Object.keys(assets);
+        chunks = [...chunks.slice(1), chunks[0]];
+
+        const finalAssets = chunks.map(chunk => assets[chunk]);
+
+        // Retrieve paths for each asset type
+        const scripts = finalAssets.reduce((acc: string[], asset) => {
+            if (!!asset.js) {
+                return [...acc, asset.js];
+            }
+
+            return acc;
+        }, []);
+
+        const styles = finalAssets.reduce((acc: string[], asset) => {
+            if (!!asset.css) {
+                return [...acc, asset.css];
+            }
+
+            return acc;
+        }, []);
+
+        const scriptHashes = finalAssets.reduce((acc: string[], asset) => {
+            if (!!asset.jsIntegrity) {
+                return [...acc, asset.jsIntegrity];
+            }
+
+            return acc;
+        }, []);
+
+        const styleHashes = finalAssets.reduce((acc: string[], asset) => {
+            if (!!asset.cssIntegrity) {
+                return [...acc, asset.cssIntegrity];
+            }
+
+            return acc;
+        }, []);
+
+        // Attach assets to state
+        ctx.state = {
+            scripts,
+            styles,
+            scriptHashes,
+            styleHashes,
+        };
+
+        // Continue middleware chain
+        await next();
+    });
 
     // Routes
     app.use(router.routes());
