@@ -94,7 +94,8 @@ router.post(
                 {} as SimpleValidationError
             );
 
-            // Attach validation errors to state
+            // Attach validation errors and book data to state
+            ctx.state.requestData = bookData;
             ctx.state.validationErrors = validationErrors;
 
             // Set status to 400
@@ -151,7 +152,8 @@ router.post(
                 {} as SimpleValidationError
             );
 
-            // Attach validation errors to state
+            // Attach validation errors and book data to state
+            ctx.state.requestData = bookData;
             ctx.state.validationErrors = validationErrors;
 
             // Set status to 400

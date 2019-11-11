@@ -1,3 +1,5 @@
+import BookDTO from "./BookDTO";
+
 // Types
 export interface SimpleValidationError {
     [property: string]: {
@@ -8,6 +10,7 @@ export interface SimpleValidationError {
 
 // State
 interface ValidationErrorState {
+    requestData?: BookDTO;
     validationErrors?: SimpleValidationError;
 }
 

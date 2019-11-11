@@ -2,10 +2,10 @@ extends layout
 
 block content
     //- Set default values for fields
-    - const title = !!book ? book.title : "";
-    - const author = !!book ? book.author : "";
-    - const genre = (!!book && !!book.genre) ? book.genre : ""
-    - const year = (!!book && !!book.year) ? book.year : "";
+    - const title = !!requestData ? requestData.title : (!!book ? book.title : "");
+    - const author = !!requestData ? requestData.author : (!!book ? book.author : "");
+    - const genre = !!requestData ? (requestData.genre || "") : ((!!book && !!book.genre) ? book.genre : "");
+    - const year = !!requestData ? (requestData.year || "") : ((!!book && !!book.year) ? book.year : "");
 
     block form-heading
 
@@ -13,7 +13,7 @@ block content
         div.form-group
             label(for="title") Title
             if validationErrors && validationErrors.title
-                input#title.form-control.is-invalid(type="text", name="title", value=validationErrors.title.value)
+                input#title.form-control.is-invalid(type="text", name="title", value=title)
                 .invalid-feedback
                     for error in validationErrors.title.errors
                         p= error
@@ -23,7 +23,7 @@ block content
         div.form-group
             label(for="author") Author
             if validationErrors && validationErrors.author
-                input#author.form-control.is-invalid(type="text", name="author", value=validationErrors.author.value)
+                input#author.form-control.is-invalid(type="text", name="author", value=author)
                 .invalid-feedback
                     for error in validationErrors.author.errors
                         p= error
@@ -37,7 +37,7 @@ block content
         div.form-group
             label(for="year") Year
             if validationErrors && validationErrors.year
-                input#year.form-control.is-invalid(type="text", name="year", value=validationErrors.year.value)
+                input#year.form-control.is-invalid(type="text", name="year", value=year)
                 .invalid-feedback
                     for error in validationErrors.year.errors
                         p= error
