@@ -6,7 +6,8 @@ import router from "./routes";
 import env, { EnvType } from "./env";
 
 // Paths
-const viewsPath = path.resolve(__dirname, "..", "..", "views");
+const basePath = path.resolve(__dirname, "..", "..");
+const viewsPath = path.resolve(basePath, "views");
 
 // App setup
 const app = new Koa();
@@ -36,6 +37,35 @@ const app = new Koa();
 
         // Apply middleware
         app.use(middleware);
+
+        // Load asset data
+        app.use(async ctx => {
+            // Create promise for reading file from memory filesystem
+            const readFileAsync = (path: string): Promise<Buffer> =>
+                new Promise((resolve, reject) => {
+                    middleware.devMiddleware.fileSystem.readFile(
+                        path,
+                        (error, result) => {
+                            if (error) {
+                                reject(error);
+                            } else {
+                                resolve(result);
+                            }
+                        }
+                    );
+                });
+
+            // Read asset file
+            const assetBytes = await readFileAsync(
+                path.resolve(basePath, "dist", "assets.json")
+            );
+
+            // Parse data as JSON string
+            const assets = JSON.parse(assetBytes.toString());
+
+            // Attach asset data to state
+            ctx.state.assets = assets;
+        });
     }
 
     // Routes
