@@ -1,5 +1,5 @@
 // Imports
-import { IsNotEmpty, IsInt } from "class-validator";
+import { IsNotEmpty, IsInt, ValidateIf } from "class-validator";
 
 // DTO
 export default class BookDTO {
@@ -11,6 +11,7 @@ export default class BookDTO {
 
     public genre?: string;
 
+    @ValidateIf(o => !!o.year)
     @IsInt({ message: "Year must be an integer" })
     public year?: number;
 }
