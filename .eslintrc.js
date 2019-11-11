@@ -65,4 +65,10 @@ module.exports = {
             },
         },
     ],
+
+    // Settings
+    settings: {
+        // Import resolver
+        "import/resolver": "webpack",
+    },
 };
