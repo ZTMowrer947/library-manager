@@ -1,4 +1,20 @@
 extends partials/layout
 
 block content
-    h1 Hello!
+    h1 Book Listing
+    p: a(href="/books/new") Add New Book
+    table
+        thead
+            tr
+                th Title
+                th Author
+                th Genre
+                th Year
+        tbody
+            for book in books
+                tr
+                    td
+                        a(href=`/books/${book.id}`)= book.title
+                    td= book.author
+                    td= book.genre
+                    td= book.year
