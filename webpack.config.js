@@ -1,5 +1,6 @@
 // Imports
 const path = require("path");
+const AssetsPlugin = require("assets-webpack-plugin");
 
 // Environment setup
 const mode =
@@ -10,6 +11,15 @@ const basePath = path.resolve(__dirname);
 const entryPath = path.resolve(basePath, "src", "client");
 const bundleSegment = mode === "production" ? "[contenthash]" : "bundle";
 const moduleIds = mode === "production" ? "hashed" : "named";
+
+// Plugins
+const plugins = [
+    new AssetsPlugin({
+        filename: "assets.json",
+        path: path.resolve(basePath, "dist"),
+        keepInMemory: mode === "development",
+    }),
+];
 
 // Configuration
 /**
@@ -76,6 +86,9 @@ const webpackConfig = {
             },
         },
     },
+
+    // Plugins
+    plugins,
 
     // Loader resolution
     resolveLoader: {
