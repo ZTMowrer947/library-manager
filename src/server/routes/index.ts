@@ -86,10 +86,7 @@ router.post(
             const validationErrors = errors.reduce(
                 (acc, error) =>
                     Object.assign({}, acc, {
-                        [error.property]: {
-                            value: error.value,
-                            errors: Object.values(error.constraints),
-                        },
+                        [error.property]: Object.values(error.constraints),
                     }),
                 {} as SimpleValidationError
             );

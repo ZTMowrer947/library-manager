@@ -15,7 +15,7 @@ block content
             if validationErrors && validationErrors.title
                 input#title.form-control.is-invalid(type="text", name="title", value=title)
                 .invalid-feedback
-                    for error in validationErrors.title.errors
+                    for error in validationErrors.title
                         p= error
             else
                 input#title.form-control(type="text", name="title", value=title)
@@ -25,7 +25,7 @@ block content
             if validationErrors && validationErrors.author
                 input#author.form-control.is-invalid(type="text", name="author", value=author)
                 .invalid-feedback
-                    for error in validationErrors.author.errors
+                    for error in validationErrors.author
                         p= error
             else
                 input#author.form-control(type="text", name="author", value=author)
@@ -39,7 +39,7 @@ block content
             if validationErrors && validationErrors.year
                 input#year.form-control.is-invalid(type="text", name="year", value=year)
                 .invalid-feedback
-                    for error in validationErrors.year.errors
+                    for error in validationErrors.year
                         p= error
             else
                 input#year.form-control(type="text", name="year", value=year)

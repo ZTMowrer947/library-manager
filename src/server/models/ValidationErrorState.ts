@@ -2,10 +2,7 @@ import BookDTO from "./BookDTO";
 
 // Types
 export interface SimpleValidationError {
-    [property: string]: {
-        value: string;
-        errors: string[];
-    };
+    [property: string]: string[];
 }
 
 // State
