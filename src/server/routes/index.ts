@@ -171,5 +171,26 @@ router.post(
     }
 );
 
+// GET /books/:id/delete
+router.get("/books/:id/delete", bookById, async ctx => {
+    // Render delete book form
+    await ctx.render("delete-book");
+});
+
+// POST /books/:id/delete
+router.post(
+    "/books/:id/delete",
+    bookById,
+    async (ctx: ParameterizedContext<BookState>) => {
+        // TODO: Ensure request body title matches book title
+
+        // Delete book
+        await ctx.state.bookService.delete(ctx.state.book);
+
+        // Redirect to book listing
+        ctx.redirect("/books");
+    }
+);
+
 // Export
 export default router;
