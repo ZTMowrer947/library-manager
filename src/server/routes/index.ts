@@ -49,6 +49,11 @@ router.post("/books/new", async (ctx: ParameterizedContext<BaseState>) => {
     bookData.genre = bookData.genre || undefined;
     bookData.year = bookData.year || undefined;
 
+    // Is year is string, parse it as a number
+    if (typeof bookData.year === "string") {
+        bookData.year = parseFloat(bookData.year);
+    }
+
     // Validate book data
     const errors = await validate(bookData);
 
