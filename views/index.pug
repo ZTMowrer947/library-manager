@@ -2,14 +2,14 @@ extends partials/layout
 
 block content
     h1 Book Listing
-    p: a(href="/books/new") Add New Book
-    table
+    p: a.btn.btn-primary(href="/books/new") Add New Book
+    table.table.table-striped
         thead
             tr
-                th Title
-                th Author
-                th Genre
-                th Year
+                th(scope="col") Title
+                th(scope="col") Author
+                th(scope="col") Genre
+                th(scope="col") Year
         tbody
             for book in books
                 tr

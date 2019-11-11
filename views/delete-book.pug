@@ -9,10 +9,10 @@ block content
     p If you still want to delete the book "#{book.title}", enter the book title below to confirm the deletion.
 
     form(method="post")
-        p
+        div.form-group
             label(for="title") Title:
-            input#title(type="text" name="title" value=`${titleInput || ""}`)
+            input#title.form-control(type="text" name="title" value=`${titleInput || ""}`)
 
-        div
-            a(href=`/books/${book.id}`) Cancel
-            button(type="submit") DELETE
+        div.btn-group
+            a.btn.btn-outline-danger(href=`/books/${book.id}`) Cancel
+            button.btn.btn-danger(type="submit") DELETE
