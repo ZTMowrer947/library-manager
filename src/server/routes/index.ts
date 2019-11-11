@@ -2,16 +2,20 @@
 import { plainToClass } from "class-transformer";
 import { validate } from "class-validator";
 import { ParameterizedContext } from "koa";
-import Router from "koa-router";
+import Router, { IRouterParamContext } from "koa-router";
 import BookListState from "../models/BookListState";
 import BookDTO from "../models/BookDTO";
 import BaseState from "../models/BaseState";
 import ValidationErrorState from "../models/ValidationErrorState";
+import BookState from "../models/BookState";
 
 // Custom contexts
 interface RenderContext {
     render: (view: string) => Promise<void>;
 }
+
+type BookDetailContext = IRouterParamContext<BookState, RenderContext> &
+    ParameterizedContext<BookState, RenderContext>;
 
 // Router setup
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -92,6 +96,23 @@ router.post(
         }
     }
 );
+
+// GET /books/:id: Book details and update form
+router.get("/books/:id", async (ctx: BookDetailContext) => {
+    // Get book with given id
+    const book = await ctx.state.bookService.getById(ctx.params.id);
+
+    // If book was found,
+    if (!!book) {
+        // Attach book to state
+        ctx.state.book = book;
+
+        // Render book detail page
+        await ctx.render("update-book");
+    } else {
+        // TODO: Render not found page if book was not found
+    }
+});
 
 // Export
 export default router;
