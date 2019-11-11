@@ -6,7 +6,9 @@ import Router, { IRouterParamContext } from "koa-router";
 import BookListState from "../models/BookListState";
 import BookDTO from "../models/BookDTO";
 import BaseState from "../models/BaseState";
-import ValidationErrorState from "../models/ValidationErrorState";
+import ValidationErrorState, {
+    SimpleValidationError,
+} from "../models/ValidationErrorState";
 import BookState from "../models/BookState";
 
 // Custom contexts
@@ -89,9 +91,12 @@ router.post(
             const validationErrors = errors.reduce(
                 (acc, error) =>
                     Object.assign({}, acc, {
-                        [error.property]: Object.values(error.constraints),
+                        [error.property]: {
+                            value: error.value,
+                            errors: Object.values(error.constraints),
+                        },
                     }),
-                {} as { [property: string]: string[] }
+                {} as SimpleValidationError
             );
 
             // Attach validation errors to state
@@ -148,9 +153,12 @@ router.post(
             const validationErrors = errors.reduce(
                 (acc, error) =>
                     Object.assign({}, acc, {
-                        [error.property]: Object.values(error.constraints),
+                        [error.property]: {
+                            value: error.value,
+                            errors: Object.values(error.constraints),
+                        },
                     }),
-                {} as { [property: string]: string[] }
+                {} as SimpleValidationError
             );
 
             // Attach validation errors to state
