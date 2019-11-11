@@ -1,10 +1,13 @@
 // Imports
 import path from "path";
-import Koa from "koa";
+import Koa, { ParameterizedContext } from "koa";
 import views from "koa-views";
+import { Container } from "typedi";
 import router from "./routes";
 import env, { EnvType } from "./env";
 import Assets from "./models/Assets";
+import BaseState from "./models/BaseState";
+import BookService from "./services/Book.service";
 
 // Paths
 const basePath = path.resolve(__dirname, "..", "..");
@@ -123,6 +126,15 @@ const app = new Koa();
             scriptHashes,
             styleHashes,
         };
+
+        // Continue middleware chain
+        await next();
+    });
+
+    // Attach Book service to state
+    app.use(async (ctx: ParameterizedContext<BaseState>, next) => {
+        // Attach BookService from TypeDI container
+        ctx.state.bookService = Container.get(BookService);
 
         // Continue middleware chain
         await next();
