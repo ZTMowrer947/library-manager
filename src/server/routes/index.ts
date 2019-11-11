@@ -1,7 +1,7 @@
 // Imports
 import { plainToClass } from "class-transformer";
 import { validate } from "class-validator";
-import { ParameterizedContext } from "koa";
+import { ParameterizedContext, Middleware } from "koa";
 import Router, { IRouterParamContext } from "koa-router";
 import BookListState from "../models/BookListState";
 import BookDTO from "../models/BookDTO";
@@ -16,6 +16,23 @@ interface RenderContext {
 
 type BookDetailContext = IRouterParamContext<BookState, RenderContext> &
     ParameterizedContext<BookState, RenderContext>;
+
+// Middleware definitions
+const bookById: Middleware<{}, BookDetailContext> = async (ctx, next) => {
+    // Get book with given id
+    const book = await ctx.state.bookService.getById(ctx.params.id);
+
+    // If book was found,
+    if (!!book) {
+        // Attach book to state
+        ctx.state.book = book;
+
+        // Continue middleware chain
+        await next();
+    } else {
+        // TODO: Render not found page if book was not found
+    }
+};
 
 // Router setup
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -98,21 +115,61 @@ router.post(
 );
 
 // GET /books/:id: Book details and update form
-router.get("/books/:id", async (ctx: BookDetailContext) => {
-    // Get book with given id
-    const book = await ctx.state.bookService.getById(ctx.params.id);
-
-    // If book was found,
-    if (!!book) {
-        // Attach book to state
-        ctx.state.book = book;
-
-        // Render book detail page
-        await ctx.render("update-book");
-    } else {
-        // TODO: Render not found page if book was not found
-    }
+router.get("/books/:id", bookById, async ctx => {
+    // Render book detail page
+    await ctx.render("update-book");
 });
+
+// POST /books/:id: Update existing book using request body
+router.post(
+    "/books/:id",
+    bookById,
+    async (ctx: ParameterizedContext<BookState & ValidationErrorState>) => {
+        // Transform request body into Book DTO
+        const bookData = plainToClass(BookDTO, ctx.request.body);
+
+        // Set genre and year to undefined if empty
+        bookData.genre = bookData.genre || undefined;
+        bookData.year = bookData.year || undefined;
+
+        // Is year is string, parse it as a number
+        if (typeof bookData.year === "string") {
+            bookData.year = parseFloat(bookData.year);
+        }
+
+        // Validate book data
+        const errors = await validate(bookData);
+
+        // If errors were found,
+        if (errors.length > 0) {
+            console.log(errors);
+
+            // Map validation errors into a simpler form
+            const validationErrors = errors.reduce(
+                (acc, error) =>
+                    Object.assign({}, acc, {
+                        [error.property]: Object.values(error.constraints),
+                    }),
+                {} as { [property: string]: string[] }
+            );
+
+            // Attach validation errors to state
+            ctx.state.validationErrors = validationErrors;
+
+            // Set status to 400
+            ctx.status = 400;
+
+            // Rerender book detail form with validation errors
+            await ctx.render("update-book");
+        } else {
+            // Otherwise, update book
+            await ctx.state.bookService.update(ctx.state.book, bookData);
+
+            // Redirect to home page
+            ctx.redirect(`/books`);
+        }
+    }
+);
 
 // Export
 export default router;
