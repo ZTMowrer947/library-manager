@@ -3,8 +3,14 @@ import { ParameterizedContext } from "koa";
 import Router from "koa-router";
 import BookListState from "../models/BookListState";
 
+// Custom contexts
+interface RenderContext {
+    render: (view: string) => Promise<void>;
+}
+
 // Router setup
-const router = new Router();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const router = new Router<any, RenderContext>();
 
 // Routes
 // GET /: Redirect link to /books
@@ -22,6 +28,12 @@ router.get("/books", async (ctx: ParameterizedContext<BookListState>) => {
 
     // Render index page
     await ctx.render("index");
+});
+
+// GET /books/new: New Book Form
+router.get("/books/new", async ctx => {
+    // Render new book form
+    await ctx.render("new-book");
 });
 
 // Export
