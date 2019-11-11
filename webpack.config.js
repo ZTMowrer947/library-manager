@@ -94,7 +94,7 @@ const webpackConfig = {
                     ExtractCSSChunksWebpackPlugin.loader,
                     {
                         loader: "css-loader",
-                        options: { sourceMap: true, modules: true },
+                        options: { sourceMap: true },
                     },
                     {
                         loader: "postcss-loader",
