@@ -1,6 +1,8 @@
 // Imports
 const path = require("path");
 const AssetsPlugin = require("assets-webpack-plugin");
+const ExtractCSSChunksWebpackPlugin = require("extract-css-chunks-webpack-plugin");
+const sass = require("sass");
 
 // Environment setup
 const mode =
@@ -18,6 +20,10 @@ const plugins = [
         filename: "assets.json",
         path: path.resolve(basePath, "dist"),
         keepInMemory: mode === "development",
+    }),
+
+    new ExtractCSSChunksWebpackPlugin({
+        filename: path.join("styles", `[name].${bundleSegment}.css`),
     }),
 ];
 
@@ -48,6 +54,11 @@ const webpackConfig = {
     // Devtool
     devtool: mode === "production" ? "source-map" : "cheap-module-source-map",
 
+    // Extension resolution
+    resolve: {
+        extensions: [".ts", ".tsx", ".js", ".scss", ".sass", ".css"],
+    },
+
     // Module rules
     module: {
         rules: [
@@ -57,6 +68,43 @@ const webpackConfig = {
                 options: {
                     cacheDirectory: true,
                 },
+            },
+            {
+                test: /\.module\.(sa|sc|c)ss$/,
+                use: [
+                    ExtractCSSChunksWebpackPlugin.loader,
+                    {
+                        loader: "css-loader",
+                        options: { sourceMap: true, modules: true },
+                    },
+                    {
+                        loader: "postcss-loader",
+                        options: { sourceMap: true },
+                    },
+                    {
+                        loader: "sass-loader",
+                        options: { sourceMap: true, implementation: sass },
+                    },
+                ],
+            },
+            {
+                test: /\.(sa|sc|c)ss$/,
+                exclude: /\.module\.(sa|sc|c)ss$/,
+                use: [
+                    ExtractCSSChunksWebpackPlugin.loader,
+                    {
+                        loader: "css-loader",
+                        options: { sourceMap: true, modules: true },
+                    },
+                    {
+                        loader: "postcss-loader",
+                        options: { sourceMap: true },
+                    },
+                    {
+                        loader: "sass-loader",
+                        options: { sourceMap: true, implementation: sass },
+                    },
+                ],
             },
             {
                 enforce: "pre",
