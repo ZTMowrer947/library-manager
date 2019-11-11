@@ -1,0 +1,26 @@
+extends layout
+
+block content
+    block form-heading
+
+    form(method="post")
+        div
+            label(for="title") Title
+            input#title(type="text", name="title")
+
+        div
+            label(for="author") Author
+            input#title(type="text", name="author")
+
+        div
+            label(for="genre") Genre
+            input#title(type="text", name="genre")
+
+        div
+            label(for="year") Year
+            input#title(type="text", name="year")
+
+        div
+            block form-buttons
+                a(href="/books") Cancel
+                button(type="submit") Submit
