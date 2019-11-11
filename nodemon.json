@@ -7,12 +7,12 @@
         "*.spec.*",
         "*.test.*"
     ],
-    "watch": ["src"],
+    "watch": ["src/server"],
     "verbose": false,
     "env": {
         "PORT": 8080,
         "NODE_ENV": "development"
     },
-    "exec": "babel-node --extensions '.ts' src",
+    "exec": "babel-node --extensions '.ts' src/server",
     "ext": "ts"
 }

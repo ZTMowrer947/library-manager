@@ -23,6 +23,7 @@ const env = (() => {
 const basePath = path.resolve(
     __dirname,
     env === "production" ? "dist" : "src",
+    "server",
     "database"
 );
 const dbFile =

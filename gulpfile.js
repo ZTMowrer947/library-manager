@@ -1,4 +1,5 @@
 // Imports
+const path = require("path");
 const del = require("del");
 const gulp = require("gulp");
 const babel = require("gulp-babel");
@@ -8,7 +9,9 @@ const ts = require("gulp-typescript");
 const merge = require("merge2");
 
 // TypeScript project setup
-const tsProject = ts.createProject("tsconfig.json");
+const tsProject = ts.createProject(
+    path.resolve(__dirname, "src", "server", "tsconfig.json")
+);
 
 // Tasks
 const build = () => {
@@ -22,8 +25,8 @@ const build = () => {
     const tsResult = tsProject.src().pipe(tsProject());
 
     return merge([
-        babelResult.pipe(gulp.dest("dist")),
-        tsResult.dts.pipe(gulp.dest("dist")),
+        babelResult.pipe(gulp.dest(path.join("dist", "server"))),
+        tsResult.dts.pipe(gulp.dest(path.join("dist", "server"))),
     ]);
 };
 

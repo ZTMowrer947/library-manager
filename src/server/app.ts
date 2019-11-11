@@ -5,7 +5,7 @@ import views from "koa-views";
 import router from "./routes";
 
 // Paths
-const viewsPath = path.resolve(__dirname, "..", "views");
+const viewsPath = path.resolve(__dirname, "..", "..", "views");
 
 // App setup
 const app = new Koa();
