@@ -1,6 +1,7 @@
 // Imports
 import path from "path";
 import Koa, { ParameterizedContext } from "koa";
+import bodyParser from "koa-bodyparser";
 import views from "koa-views";
 import { Container } from "typedi";
 import router from "./routes";
@@ -23,6 +24,8 @@ const app = new Koa();
             extension: "pug",
         })
     );
+
+    app.use(bodyParser());
 
     // Asset setup
 
