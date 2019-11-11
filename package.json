@@ -6,8 +6,8 @@
     "scripts": {
         "test": "jest",
         "start": "nodemon",
-        "typecheck": "tsc --noEmit",
-        "typecheck:watch": "tsc --noEmit -w",
+        "typecheck": "tsc -p src/server --noEmit",
+        "typecheck:watch": "tsc -p src/server --noEmit -w",
         "typeorm:ts": "babel-node --extensions '.ts' node_modules/typeorm/cli.js"
     },
     "repository": {
@@ -53,6 +53,7 @@
         "@typescript-eslint/eslint-plugin": "^2.6.1",
         "@typescript-eslint/parser": "^2.6.1",
         "babel-jest": "^24.9.0",
+        "babel-loader": "^8.0.6",
         "babel-plugin-transform-typescript-metadata": "^0.2.2",
         "core-js": "3",
         "del": "^5.1.0",
@@ -70,6 +71,8 @@
         "nodemon": "^1.19.4",
         "prettier": "^1.19.1",
         "regenerator-runtime": "^0.13.3",
-        "typescript": "3.7.x"
+        "source-map-loader": "^0.2.4",
+        "typescript": "3.7.x",
+        "webpack": "^4.41.2"
     }
 }
