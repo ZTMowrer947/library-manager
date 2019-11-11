@@ -80,8 +80,6 @@ router.post(
 
         // If errors were found,
         if (errors.length > 0) {
-            console.log(errors);
-
             // Map validation errors into a simpler form
             const validationErrors = errors.reduce(
                 (acc, error) =>
@@ -104,10 +102,8 @@ router.post(
             // Otherwise, create book and get id of new book
             const id = await ctx.state.bookService.create(bookData);
 
-            console.log(id);
-
-            // TODO: Redirect to book detail page for new book
-            ctx.redirect(`/books`);
+            // Redirect to book detail page for new book
+            ctx.redirect(`/books/${id}`);
         }
     }
 );
@@ -135,8 +131,6 @@ router.post(
 
         // If errors were found,
         if (errors.length > 0) {
-            console.log(errors);
-
             // Map validation errors into a simpler form
             const validationErrors = errors.reduce(
                 (acc, error) =>
