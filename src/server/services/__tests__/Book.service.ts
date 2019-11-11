@@ -26,7 +26,7 @@ describe("BookService", () => {
         bookData.title = "How to write tests using Jest";
         bookData.author = "The Jester";
         bookData.genre = "Informative";
-        bookData.year = 2019;
+        bookData.year = "2019";
 
         // Set nil id
         const nilBytes = Buffer.alloc(15);
@@ -81,7 +81,7 @@ describe("BookService", () => {
             updateData.title = "How to write tests using Jest, 2nd edition";
             updateData.author = "The Great Jester";
             updateData.genre = "Instructional";
-            updateData.year = 2022;
+            updateData.year = "2022";
         });
 
         it("should update an existing book", async () => {

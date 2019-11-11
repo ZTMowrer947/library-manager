@@ -33,7 +33,7 @@ export default class BookService {
         book.title = bookData.title;
         book.author = bookData.author;
         book.genre = bookData.genre ?? null;
-        book.year = bookData.year ?? null;
+        book.year = bookData.year ? Number.parseInt(bookData.year) : null;
 
         // Save book to database
         await this.repository.save(book);
@@ -47,7 +47,7 @@ export default class BookService {
         book.title = bookData.title;
         book.author = bookData.author;
         book.genre = bookData.genre ?? null;
-        book.year = bookData.year ?? null;
+        book.year = bookData.year ? Number.parseInt(bookData.year) : null;
 
         // Save updated book to database
         await this.repository.save(book);

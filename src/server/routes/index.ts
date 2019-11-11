@@ -73,12 +73,7 @@ router.post(
 
         // Set genre and year to undefined if empty
         bookData.genre = bookData.genre || undefined;
-        bookData.year = bookData.year || undefined;
-
-        // Is year is string, parse it as a number
-        if (typeof bookData.year === "string") {
-            bookData.year = parseFloat(bookData.year);
-        }
+        bookData.year = bookData.year ?? undefined;
 
         // Validate book data
         const errors = await validate(bookData);
@@ -136,11 +131,6 @@ router.post(
         // Set genre and year to undefined if empty
         bookData.genre = bookData.genre || undefined;
         bookData.year = bookData.year || undefined;
-
-        // Is year is string, parse it as a number
-        if (typeof bookData.year === "string") {
-            bookData.year = parseFloat(bookData.year);
-        }
 
         // Validate book data
         const errors = await validate(bookData);
