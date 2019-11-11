@@ -2,6 +2,7 @@
 import $ from "jquery";
 import "bootstrap";
 import "bootstrap/scss/bootstrap";
+import "./index.scss";
 
 // Run on page load
 $(() => {
