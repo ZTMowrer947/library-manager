@@ -41,6 +41,9 @@ module.exports = api => {
 
         // Nullish coalescing operator
         "@babel/plugin-proposal-nullish-coalescing-operator",
+
+        // Dynamic imports for Node
+        "babel-plugin-dynamic-import-node-babel-7",
     ];
 
     // If not in production, transform babel runtime
