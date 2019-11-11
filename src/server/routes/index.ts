@@ -6,6 +6,7 @@ import Router from "koa-router";
 import BookListState from "../models/BookListState";
 import BookDTO from "../models/BookDTO";
 import BaseState from "../models/BaseState";
+import ValidationErrorState from "../models/ValidationErrorState";
 
 // Custom contexts
 interface RenderContext {
@@ -41,41 +42,56 @@ router.get("/books/new", async ctx => {
 });
 
 // POST /books/new: Create new book from request body
-router.post("/books/new", async (ctx: ParameterizedContext<BaseState>) => {
-    // Transform request body into Book DTO
-    const bookData = plainToClass(BookDTO, ctx.request.body);
+router.post(
+    "/books/new",
+    async (ctx: ParameterizedContext<BaseState & ValidationErrorState>) => {
+        // Transform request body into Book DTO
+        const bookData = plainToClass(BookDTO, ctx.request.body);
 
-    // Set genre and year to undefined if empty
-    bookData.genre = bookData.genre || undefined;
-    bookData.year = bookData.year || undefined;
+        // Set genre and year to undefined if empty
+        bookData.genre = bookData.genre || undefined;
+        bookData.year = bookData.year || undefined;
 
-    // Is year is string, parse it as a number
-    if (typeof bookData.year === "string") {
-        bookData.year = parseFloat(bookData.year);
+        // Is year is string, parse it as a number
+        if (typeof bookData.year === "string") {
+            bookData.year = parseFloat(bookData.year);
+        }
+
+        // Validate book data
+        const errors = await validate(bookData);
+
+        // If errors were found,
+        if (errors.length > 0) {
+            console.log(errors);
+
+            // Map validation errors into a simpler form
+            const validationErrors = errors.reduce(
+                (acc, error) =>
+                    Object.assign({}, acc, {
+                        [error.property]: Object.values(error.constraints),
+                    }),
+                {} as { [property: string]: string[] }
+            );
+
+            // Attach validation errors to state
+            ctx.state.validationErrors = validationErrors;
+
+            // Set status to 400
+            ctx.status = 400;
+
+            // Rerender new book form with validation errors
+            await ctx.render("new-book");
+        } else {
+            // Otherwise, create book and get id of new book
+            const id = await ctx.state.bookService.create(bookData);
+
+            console.log(id);
+
+            // TODO: Redirect to book detail page for new book
+            ctx.redirect(`/books`);
+        }
     }
-
-    // Validate book data
-    const errors = await validate(bookData);
-
-    // If errors were found,
-    if (errors.length > 0) {
-        console.log(errors);
-
-        // Set status to 400
-        ctx.status = 400;
-
-        // Rerender new book form
-        await ctx.render("new-book");
-    } else {
-        // Otherwise, create book and get id of new book
-        const id = await ctx.state.bookService.create(bookData);
-
-        console.log(id);
-
-        // TODO: Redirect to book detail page for new book
-        ctx.redirect(`/books`);
-    }
-});
+);
 
 // Export
 export default router;
