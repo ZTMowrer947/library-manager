@@ -25,6 +25,9 @@ const viewsPath = path.resolve(basePath, "views");
 const app = new Koa();
 
 (async () => {
+    // Silence output during testing
+    app.silent = env === EnvType.Testing;
+
     // Signing key setup
     const secret1 =
         process.env.SECRET1 ?? crypto.randomBytes(20).toString("hex");
@@ -170,58 +173,63 @@ const app = new Koa();
 
     // Retrieve links from asset data
     app.use(async (ctx, next) => {
-        // Retrieve assets from state
-        const assets: Assets = ctx.state.assets;
+        // If in testing, simply continue middleware chain
+        if (env === EnvType.Testing) {
+            await next();
+        } else {
+            // Otherwise, retrieve assets from state
+            const assets: Assets = ctx.state.assets;
 
-        // Reorganize assets
-        let chunks = Object.keys(assets);
-        chunks = [...chunks.slice(1), chunks[0]];
+            // Reorganize assets
+            let chunks = Object.keys(assets);
+            chunks = [...chunks.slice(1), chunks[0]];
 
-        const finalAssets = chunks.map(chunk => assets[chunk]);
+            const finalAssets = chunks.map(chunk => assets[chunk]);
 
-        // Retrieve paths for each asset type
-        const scripts = finalAssets.reduce((acc: string[], asset) => {
-            if (!!asset.js) {
-                return [...acc, asset.js];
-            }
+            // Retrieve paths for each asset type
+            const scripts = finalAssets.reduce((acc: string[], asset) => {
+                if (!!asset.js) {
+                    return [...acc, asset.js];
+                }
 
-            return acc;
-        }, []);
+                return acc;
+            }, []);
 
-        const styles = finalAssets.reduce((acc: string[], asset) => {
-            if (!!asset.css) {
-                return [...acc, asset.css];
-            }
+            const styles = finalAssets.reduce((acc: string[], asset) => {
+                if (!!asset.css) {
+                    return [...acc, asset.css];
+                }
 
-            return acc;
-        }, []);
+                return acc;
+            }, []);
 
-        const scriptHashes = finalAssets.reduce((acc: string[], asset) => {
-            if (!!asset.jsIntegrity) {
-                return [...acc, asset.jsIntegrity];
-            }
+            const scriptHashes = finalAssets.reduce((acc: string[], asset) => {
+                if (!!asset.jsIntegrity) {
+                    return [...acc, asset.jsIntegrity];
+                }
 
-            return acc;
-        }, []);
+                return acc;
+            }, []);
 
-        const styleHashes = finalAssets.reduce((acc: string[], asset) => {
-            if (!!asset.cssIntegrity) {
-                return [...acc, asset.cssIntegrity];
-            }
+            const styleHashes = finalAssets.reduce((acc: string[], asset) => {
+                if (!!asset.cssIntegrity) {
+                    return [...acc, asset.cssIntegrity];
+                }
 
-            return acc;
-        }, []);
+                return acc;
+            }, []);
 
-        // Attach assets to state
-        ctx.state = {
-            scripts,
-            styles,
-            scriptHashes,
-            styleHashes,
-        };
+            // Attach assets to state
+            ctx.state = {
+                scripts,
+                styles,
+                scriptHashes,
+                styleHashes,
+            };
 
-        // Continue middleware chain
-        await next();
+            // Continue middleware chain
+            await next();
+        }
     });
 
     // Attach Book service to state
