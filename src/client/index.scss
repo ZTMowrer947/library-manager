@@ -26,6 +26,19 @@ a {
     }
 }
 
+// Pagination
+.page-item {
+    .page-link {
+        color: $primaryColor;
+    }
+
+    &.active .page-link {
+        color: $textColor;
+        background-color: $primaryColor;
+        border-color: $primaryColor;
+    }
+}
+
 // Width
 @media (min-width: 992px) {
     .w-lg-50 {
