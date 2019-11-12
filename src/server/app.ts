@@ -1,4 +1,5 @@
 // Imports
+import crypto from "crypto";
 import path from "path";
 import Koa, { ParameterizedContext } from "koa";
 import bodyParser from "koa-bodyparser";
@@ -19,6 +20,19 @@ const viewsPath = path.resolve(basePath, "views");
 const app = new Koa();
 
 (async () => {
+    // Signing key setup
+    const secret1 =
+        process.env.SECRET1 ?? crypto.randomBytes(20).toString("hex");
+    const secret2 =
+        process.env.SECRET2 ?? crypto.randomBytes(20).toString("hex");
+
+    const key = crypto
+        .createHmac("sha384", secret2)
+        .update(secret1)
+        .digest("hex");
+
+    app.keys = [key];
+
     // Middleware
     app.use(
         views(viewsPath, {
