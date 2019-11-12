@@ -172,14 +172,27 @@ router.get("/books/:id/delete", bookById, async ctx => {
 router.post(
     "/books/:id/delete",
     bookById,
-    async (ctx: ParameterizedContext<BookState>) => {
-        // TODO: Ensure request body title matches book title
+    async (ctx: ParameterizedContext<BookState & ValidationErrorState>) => {
+        // If title in request body does not match book title,
+        if (ctx.request.body.title !== ctx.state.book.title) {
+            // Attach validation error and previous request body to state
+            ctx.state.requestData = ctx.request.body;
+            ctx.state.validationErrors = {
+                title: ["Title does not match book title."],
+            };
 
-        // Delete book
-        await ctx.state.bookService.delete(ctx.state.book);
+            // Set status to 400
+            ctx.status = 400;
 
-        // Redirect to book listing
-        ctx.redirect("/books");
+            // Re-render delete book form
+            await ctx.render("delete-book");
+        } else {
+            // Otherwise, delete book
+            await ctx.state.bookService.delete(ctx.state.book);
+
+            // Redirect to book listing
+            ctx.redirect("/books");
+        }
     }
 );
 
