@@ -63,7 +63,7 @@ describe("BookService", () => {
             expect(book?.title).toBe(bookData.title);
             expect(book?.author).toBe(bookData.author);
             expect(book?.genre).toBe(bookData.genre);
-            expect(book?.year).toBe(bookData.year);
+            expect(book?.year?.toString()).toBe(bookData.year);
         });
 
         it("should resolve to undefined if no book exists with the given id", async () => {
@@ -113,7 +113,7 @@ describe("BookService", () => {
             expect(book?.title).toBe(updateData.title);
             expect(book?.author).toBe(updateData.author);
             expect(book?.genre).toBe(updateData.genre);
-            expect(book?.year).toBe(updateData.year);
+            expect(book?.year?.toString()).toBe(updateData.year);
         });
     });
 
