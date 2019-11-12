@@ -1,8 +1,9 @@
 // Imports
+import cheerio from "cheerio";
 import puppeteer from "puppeteer";
 
 // Test Suite
-describe("Home page (E2E)", () => {
+describe("Home page", () => {
     let browser: puppeteer.Browser;
     let page: puppeteer.Page;
 
@@ -11,6 +12,7 @@ describe("Home page (E2E)", () => {
         // Launch browser
         browser = await puppeteer.launch({
             headless: false,
+            slowMo: 100,
         });
     });
 
@@ -47,5 +49,31 @@ describe("Home page (E2E)", () => {
 
         // Wait for table data
         await page.waitForSelector("table.table");
+
+        // Get page content
+        const html = await page.content();
+
+        // Load into cheerio
+        const $ = cheerio.load(html);
+
+        // Expect header to have correct text
+        expect($("h1").text()).toBe("Book Listing");
+
+        // Expect "Add New Book" button to be present
+        expect($("p a.btn").text()).toBe("Add New Book");
+
+        // Get table headings
+        const $tableHeadings = $("th[scope=col]");
+
+        // Define expected headings
+        const expectedHeadings = ["Title", "Author", "Genre", "Year"];
+
+        $tableHeadings.each((index, element) => {
+            // Expect heading to match expected heading
+            expect($(element).text()).toBe(expectedHeadings[index]);
+        });
+
+        // Expect there to be 15 book entries
+        expect($("tbody tr").length).toBe(15);
     });
 });
