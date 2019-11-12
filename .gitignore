@@ -65,3 +65,6 @@ old/
 
 # Database files
 *.db
+
+# Build output
+dist/
