@@ -66,6 +66,7 @@ const app = new Koa();
     app.use(
         session(
             {
+                key: "session",
                 maxAge: "session",
             },
             app
