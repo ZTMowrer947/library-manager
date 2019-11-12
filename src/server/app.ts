@@ -58,7 +58,7 @@ const app = new Koa();
                           directives: {
                               defaultSrc: ["'self'", "https:"],
                               objectSrc: ["'none'"],
-                              requireSriFor: ["script-src", "style-src"],
+                              requireSriFor: ["script", "style"],
                           },
                       }
                     : false,
