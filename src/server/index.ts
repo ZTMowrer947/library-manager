@@ -1,10 +1,11 @@
 // Import
+import "dotenv/config";
 import "reflect-metadata";
-import http from "http";
 import { Container } from "typedi";
 import { useContainer } from "typeorm";
 import app from "./app";
 import ormBootstrap from "./database";
+import http from "http";
 
 // TypeDI Container setup
 useContainer(Container);
