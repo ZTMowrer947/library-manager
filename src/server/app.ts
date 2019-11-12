@@ -5,7 +5,9 @@ import Koa, { ParameterizedContext } from "koa";
 import bodyParser from "koa-bodyparser";
 import koaCsrf from "koa-csrf";
 import helmet from "koa-helmet";
+import mount from "koa-mount";
 import session from "koa-session";
+import serve from "koa-static";
 import views from "koa-views";
 import { Container } from "typedi";
 import env, { EnvType } from "./env";
@@ -114,6 +116,43 @@ const app = new Koa();
                 });
 
             // Read asset file
+            const assetBytes = await readFileAsync(
+                path.resolve(basePath, "dist", "assets.json")
+            );
+
+            // Parse data as JSON string
+            const assets = JSON.parse(assetBytes.toString());
+
+            // Attach asset data to state
+            ctx.state.assets = assets;
+
+            // Continue middleware chain
+            await next();
+        });
+    } else {
+        // Otherwise, import fs module
+        const { default: fs } = await import("fs");
+
+        // Serve public assets
+        app.use(
+            mount("/public", serve(path.resolve(basePath, "dist", "client")))
+        );
+
+        // Load asset data
+        app.use(async (ctx, next) => {
+            // Create promise for reading file
+            const readFileAsync = (path: string): Promise<Buffer> =>
+                new Promise((resolve, reject) => {
+                    fs.readFile(path, (error, result) => {
+                        if (error) {
+                            reject(error);
+                        } else {
+                            resolve(result);
+                        }
+                    });
+                });
+
+            // Read asset data
             const assetBytes = await readFileAsync(
                 path.resolve(basePath, "dist", "assets.json")
             );
