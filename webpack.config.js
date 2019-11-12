@@ -2,6 +2,8 @@
 const path = require("path");
 const AssetsPlugin = require("assets-webpack-plugin");
 const ExtractCSSChunksWebpackPlugin = require("extract-css-chunks-webpack-plugin");
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const SriPlugin = require("webpack-subresource-integrity");
 const sass = require("sass");
 
 // Environment setup
@@ -20,12 +22,27 @@ const plugins = [
         filename: "assets.json",
         path: path.resolve(basePath, "dist"),
         keepInMemory: mode === "development",
+        integrity: mode === "production",
     }),
 
     new ExtractCSSChunksWebpackPlugin({
         filename: path.join("styles", `[name].${bundleSegment}.css`),
     }),
+
+    new SriPlugin({
+        hashFuncNames: ["sha384"],
+        enabled: mode === "production",
+    }),
 ];
+
+if (mode === "development") {
+    plugins.push(
+        new ForkTsCheckerWebpackPlugin({
+            tsconfig: path.resolve(entryPath, "tsconfig.json"),
+            eslint: true,
+        })
+    );
+}
 
 // Configuration
 /**
