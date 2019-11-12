@@ -1,5 +1,6 @@
 // Imports
-import { getConnection } from "typeorm";
+import { Container } from "typedi";
+import { getConnection, useContainer } from "typeorm";
 import app from "./app";
 import ormBootstrap from "./database";
 import http from "http";
@@ -9,6 +10,9 @@ let server: http.Server;
 
 // Run before all tests
 beforeAll(async () => {
+    // Configure TypeDI container
+    useContainer(Container);
+
     // Setup database connection
     await ormBootstrap();
 
@@ -22,7 +26,11 @@ beforeAll(async () => {
 // Run after all tests
 afterAll(async () => {
     // Close HTTP server
-    server.close();
+    const closeAsync = new Promise((resolve, reject) =>
+        server.close(err => (err ? reject(err) : resolve()))
+    );
+
+    await closeAsync;
 
     // Get database connection
     const connection = getConnection();
