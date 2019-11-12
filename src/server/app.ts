@@ -175,6 +175,13 @@ const app = new Koa();
     app.use(async (ctx, next) => {
         // If in testing, simply continue middleware chain
         if (env === EnvType.Testing) {
+            ctx.state = {
+                scripts: [],
+                styles: [],
+                scriptHashes: [],
+                styleHashes: [],
+            };
+
             await next();
         } else {
             // Otherwise, retrieve assets from state
