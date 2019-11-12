@@ -43,7 +43,8 @@ block content
                         p= error
             else
                 input#year.form-control(type="text", name="year", value=year)
-            
+        
+        input(type="hidden", name="_csrf", value=csrfToken)
 
         div.btn-group
             block form-buttons

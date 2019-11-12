@@ -19,6 +19,8 @@ block content
             else
                 input#title.form-control(type="text" name="title")
 
+        input(type="hidden", name="_csrf", value=csrfToken)
+
         div.btn-group
             a.btn.btn-outline-danger(href=`/books/${book.id}`) Cancel
             button.btn.btn-danger(type="submit") DELETE
