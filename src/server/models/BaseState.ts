@@ -8,6 +8,7 @@ interface BaseState {
     scriptHashes: string[];
     styleHashes: string[];
     bookService: BookService;
+    csrfToken: string;
 }
 
 // Export

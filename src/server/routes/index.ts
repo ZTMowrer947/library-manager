@@ -14,6 +14,7 @@ import BookState from "../models/BookState";
 // Custom contexts
 interface RenderContext {
     render: (view: string) => Promise<void>;
+    csrf: string;
 }
 
 type BookDetailContext = IRouterParamContext<BookState, RenderContext> &
@@ -60,6 +61,9 @@ router.get("/books", async (ctx: ParameterizedContext<BookListState>) => {
 
 // GET /books/new: New Book Form
 router.get("/books/new", async ctx => {
+    // Attach CSRF token to state
+    ctx.state.csrfToken = ctx.csrf;
+
     // Render new book form
     await ctx.render("new-book");
 });
@@ -89,6 +93,9 @@ router.post(
                 {} as SimpleValidationError
             );
 
+            // Attach new CSRF token to state
+            ctx.state.csrfToken = ctx.csrf;
+
             // Attach validation errors and book data to state
             ctx.state.requestData = bookData;
             ctx.state.validationErrors = validationErrors;
@@ -110,6 +117,9 @@ router.post(
 
 // GET /books/:id: Book details and update form
 router.get("/books/:id", bookById, async ctx => {
+    // Attach CSRF token to state
+    ctx.state.csrfToken = ctx.csrf;
+
     // Render book detail page
     await ctx.render("update-book");
 });
@@ -143,6 +153,9 @@ router.post(
                 {} as SimpleValidationError
             );
 
+            // Attach new CSRF token to state
+            ctx.state.csrfToken = ctx.csrf;
+
             // Attach validation errors and book data to state
             ctx.state.requestData = bookData;
             ctx.state.validationErrors = validationErrors;
@@ -164,6 +177,9 @@ router.post(
 
 // GET /books/:id/delete
 router.get("/books/:id/delete", bookById, async ctx => {
+    // Attach CSRF token to state
+    ctx.state.csrfToken = ctx.csrf;
+
     // Render delete book form
     await ctx.render("delete-book");
 });
@@ -175,6 +191,9 @@ router.post(
     async (ctx: ParameterizedContext<BookState & ValidationErrorState>) => {
         // If title in request body does not match book title,
         if (ctx.request.body.title !== ctx.state.book.title) {
+            // Attach new CSRF token to state
+            ctx.state.csrfToken = ctx.csrf;
+
             // Attach validation error and previous request body to state
             ctx.state.requestData = ctx.request.body;
             ctx.state.validationErrors = {
