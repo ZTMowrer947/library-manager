@@ -33,7 +33,11 @@ const bookById: Middleware<{}, BookDetailContext> = async (ctx, next) => {
         // Continue middleware chain
         await next();
     } else {
-        // TODO: Render not found page if book was not found
+        // Otherwise, set status to 404
+        ctx.status = 404;
+
+        // Throw error
+        throw new Error(`No book exists with ID "${ctx.params.id}"`);
     }
 };
 
