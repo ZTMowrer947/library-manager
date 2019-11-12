@@ -8,10 +8,11 @@ import helmet from "koa-helmet";
 import session from "koa-session";
 import views from "koa-views";
 import { Container } from "typedi";
-import router from "./routes";
 import env, { EnvType } from "./env";
+import errorHandler from "./middleware/errorHandler";
 import Assets from "./models/Assets";
 import BaseState from "./models/BaseState";
+import router from "./routes";
 import BookService from "./services/Book.service";
 
 // Paths
@@ -36,6 +37,8 @@ const app = new Koa();
     app.keys = [key];
 
     // Middleware
+    app.use(errorHandler);
+
     app.use(
         views(viewsPath, {
             extension: "pug",
