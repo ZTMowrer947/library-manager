@@ -2,6 +2,7 @@
 import path from "path";
 import Koa, { ParameterizedContext } from "koa";
 import bodyParser from "koa-bodyparser";
+import helmet from "koa-helmet";
 import views from "koa-views";
 import { Container } from "typedi";
 import router from "./routes";
@@ -26,6 +27,25 @@ const app = new Koa();
     );
 
     app.use(bodyParser());
+
+    app.use(
+        helmet({
+            hsts: false,
+            contentSecurityPolicy:
+                env === EnvType.Production
+                    ? {
+                          directives: {
+                              defaultSrc: ["'self'", "https:"],
+                              objectSrc: ["'none'"],
+                              requireSriFor: ["script-src", "style-src"],
+                          },
+                      }
+                    : false,
+            referrerPolicy: {
+                policy: "same-origin",
+            },
+        })
+    );
 
     // Asset setup
 
