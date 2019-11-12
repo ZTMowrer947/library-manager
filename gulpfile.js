@@ -7,6 +7,9 @@ const sm = require("gulp-sourcemaps");
 const terser = require("gulp-terser");
 const ts = require("gulp-typescript");
 const merge = require("merge2");
+const webpack = require("webpack");
+const webpackStream = require("webpack-stream");
+const webpackConfig = require("./webpack.config");
 
 // TypeScript project setup
 const tsProject = ts.createProject(
@@ -14,7 +17,7 @@ const tsProject = ts.createProject(
 );
 
 // Tasks
-const build = () => {
+const buildServer = () => {
     const babelResult = tsProject
         .src()
         .pipe(sm.init())
@@ -29,6 +32,17 @@ const build = () => {
         tsResult.dts.pipe(gulp.dest(path.join("dist", "server"))),
     ]);
 };
+
+const buildClient = () => {
+    return gulp
+        .src(path.resolve(__dirname, "src", "client", "index.ts"))
+        .pipe(sm.init())
+        .pipe(webpackStream(webpackConfig, webpack))
+        .pipe(sm.write("."))
+        .pipe(gulp.dest(path.join("dist", "client")));
+};
+
+const build = gulp.series(buildClient, buildServer);
 
 const clean = () => {
     return del(["dist"]);
