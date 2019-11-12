@@ -32,6 +32,7 @@ const migrationsRun = env === "production";
 const synchronize = !migrationsRun;
 const entityPath = path.resolve(basePath, "entities");
 const migrationPath = path.resolve(basePath, "migrations");
+const fileExtension = env === "production" ? "js" : "ts";
 
 // Configuration
 /**
@@ -45,8 +46,8 @@ const connectionOptions = {
     database: dbFile,
 
     // Directory paths
-    entities: [path.resolve(entityPath, "**", "*.entity.ts")],
-    migrations: [path.resolve(migrationPath, "**", "*.ts")],
+    entities: [path.resolve(entityPath, "**", `*.entity.${fileExtension}`)],
+    migrations: [path.resolve(migrationPath, "**", `*.${fileExtension}`)],
 
     cli: {
         entitiesDir: path.relative(__dirname, entityPath),
