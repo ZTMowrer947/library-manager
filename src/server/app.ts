@@ -3,7 +3,9 @@ import crypto from "crypto";
 import path from "path";
 import Koa, { ParameterizedContext } from "koa";
 import bodyParser from "koa-bodyparser";
+import koaCsrf from "koa-csrf";
 import helmet from "koa-helmet";
+import session from "koa-session";
 import views from "koa-views";
 import { Container } from "typedi";
 import router from "./routes";
@@ -60,6 +62,17 @@ const app = new Koa();
             },
         })
     );
+
+    app.use(
+        session(
+            {
+                maxAge: "session",
+            },
+            app
+        )
+    );
+
+    app.use(new koaCsrf());
 
     // Asset setup
 
