@@ -5,6 +5,7 @@
     "main": "index.js",
     "scripts": {
         "test": "jest",
+        "e2e": "jest --testMatch '**/e2e/*.e2e.[jt]s?(x)'",
         "start": "nodemon",
         "typecheck": "tsc -p src/server --noEmit",
         "typecheck:watch": "tsc -p src/server --noEmit -w",
