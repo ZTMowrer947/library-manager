@@ -1,5 +1,6 @@
 // Imports
 import $ from "jquery";
+import * as Yup from "yup";
 import "bootstrap";
 import "bootstrap/scss/bootstrap";
 import "./index.scss";
@@ -90,11 +91,68 @@ function appendPagination(): void {
         .trigger("click");
 }
 
+function handleBookFormSubmit(event: Event): void {
+    // Define form schema
+    const schema = Yup.object().shape({
+        title: Yup.string().required("Title is a required field."),
+        author: Yup.string().required("Author is a required field."),
+        genre: Yup.string().notRequired(),
+        year: Yup.number()
+            .integer("Year must be a valid integer")
+            .typeError("Year must be a valid number")
+            .notRequired(),
+    });
+
+    // Get form data
+    const formData = {
+        title: $("input#title").val() || undefined,
+        author: $("input#author").val() || undefined,
+        genre: $("input#genre").val() || undefined,
+        year: $("input#year").val() || undefined,
+    };
+
+    try {
+        // Remove validation errors from DOM
+        $(".is-invalid").removeClass("is-invalid");
+        $(".invalid-feedback").remove();
+
+        // Validate form data using schema
+        schema.validateSync(formData, { abortEarly: false });
+    } catch (error) {
+        // If validation error occurred, cast to appropriate type
+        const validationError: Yup.ValidationError = error;
+
+        // Stop form submission
+        event.preventDefault();
+
+        // For each validation error
+        validationError.inner.forEach(err => {
+            // Add invalid class
+            $(`input#${err.path}`).addClass("is-invalid");
+
+            // Create feedback div
+            const $feedback = $("<div>").addClass("invalid-feedback");
+
+            // Create validation error message
+            const $message = $("<p>").text(err.message);
+
+            // Append message to feedback div
+            $feedback.append($message);
+
+            // Insert feedback div after failed input
+            $feedback.insertAfter($(`input#${err.path}`));
+        });
+    }
+}
+
 // Run on page load
 $(() => {
     switch (document.location.pathname) {
         case "/books":
             appendPagination();
             break;
+
+        case "/books/new":
+            $("form").on("submit", handleBookFormSubmit);
     }
 });
