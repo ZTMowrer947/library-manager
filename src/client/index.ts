@@ -184,6 +184,101 @@ function addBookFormValidation(): void {
     });
 }
 
+function addDeleteFormValidation(): void {
+    // Get book title
+    const bookTitle = $("span#book-title")
+        .text()
+        .replace(/"/g, "");
+
+    // Define form schema
+    const schema = Yup.object().shape({
+        title: Yup.string()
+            .required("Title is a required field.")
+            .test(
+                "matches-book-title",
+                "Title does not match book title.",
+                value => value === bookTitle
+            ),
+    });
+
+    $("form input").on("blur", function() {
+        // Get field id
+        const id = $(this).attr("id") ?? "";
+
+        // Remove validation errors from DOM
+        $(this).removeClass("is-invalid");
+        $(this)
+            .siblings(".invalid-feedback")
+            .remove();
+
+        // Get schema for field
+        const fieldSchema = Yup.reach(schema, id);
+
+        try {
+            // Validate field
+            fieldSchema.validateSync($(this).val() || undefined);
+        } catch (error) {
+            // If validation error occurred, cast to appropriate type
+            const validationError: Yup.ValidationError = error;
+
+            // Add invalid class
+            $(this).addClass("is-invalid");
+
+            // Create feedback div
+            const $feedback = $("<div>").addClass("invalid-feedback");
+
+            // Create validation error message
+            const $message = $("<p>").text(validationError.message);
+
+            // Append message to feedback div
+            $feedback.append($message);
+
+            // Insert feedback div after failed input
+            $feedback.insertAfter($(this));
+        }
+    });
+
+    $("form").on("submit", function(event) {
+        // Get form data
+        const formData = {
+            title: $("input#title").val() || undefined,
+        };
+
+        // Remove validation errors from DOM
+        $(".is-invalid").removeClass("is-invalid");
+        $(".invalid-feedback").remove();
+
+        try {
+            // Validate form data using schema
+            schema.validateSync(formData, { abortEarly: false });
+        } catch (error) {
+            // If validation error occurred, cast to appropriate type
+            const validationError: Yup.ValidationError = error;
+
+            // Stop form submission
+            event.preventDefault();
+
+            // For each validation error
+            validationError.inner.forEach(err => {
+                // Add invalid class
+                $(`input#${err.path}`).addClass("is-invalid");
+
+                // Create feedback div
+                const $feedback = $("<div>").addClass("invalid-feedback");
+
+                // Create validation error message
+                const $message = $("<p>").text(err.message);
+
+                // Append message to feedback div
+                $feedback.append($message);
+
+                // Insert feedback div after failed input
+                $feedback.insertAfter($(`input#${err.path}`));
+            });
+        }
+    });
+}
+
 // Run on page load
 $(() => {
     const path = document.location.pathname;
@@ -191,4 +286,6 @@ $(() => {
     if (path === "/books") appendPagination();
     else if (/^\/books\/(new|[A-Z2-7]{24})$/.test(path))
         addBookFormValidation();
+    else if (/^\/books\/[A-Z2-7]{24}\/delete$/.test(path))
+        addDeleteFormValidation();
 });
