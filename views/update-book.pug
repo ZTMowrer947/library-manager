@@ -1,7 +1,7 @@
-extends partials/form
+extends partials/book-form
 
-block heading
+block form-heading
     h1 Update Book
 
 append form-buttons
-    a.button.button-red(href=`/books/${book.id}/delete`) Delete Book
+    a.btn.btn-danger(href=`/books/${book.id}/delete`) Delete Book

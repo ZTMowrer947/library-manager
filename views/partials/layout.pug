@@ -1,9 +1,9 @@
 doctype html
 
-html
+html(lang="en", dir="ltr")
     include ../includes/head
 
     body
-        block content
-        block scripts
-            script(src="/public/scripts/jquery-3.4.1.slim.min.js" type="application/javascript")
+        .container-fluid
+            block content
+        include ../includes/scripts

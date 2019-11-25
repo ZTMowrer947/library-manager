@@ -1,78 +1,22 @@
 extends partials/layout
 
 block content
-    h1= "Books"
-
-    if searchTerm
-        h3 Search results for books with #{searchProp} including "#{searchTerm}"
-
-    if sortProp
-        - const descendingOrder = sortProp.endsWith("desc");
-
-        //- Trim "desc" from sort prop if in descending order
-        - const normalizedSortProp = descendingOrder ? sortProp.substring(0, sortProp.indexOf("desc")) : sortProp;
-
-        h3 Sorting by #{normalizedSortProp} in #{descendingOrder ? "descending" : "ascending"} order
-
-
-    header
-        p
-            a.button(href="/books/new") Create New Book
-        include includes/search
-
-    - const noResults = books.length === 0;
-
-    //- If no results were found,
-    if noResults
-        //- Display "no results" div
-        .no-results
-            //- If a search term was provided,
-            if searchTerm
-                //- Display the search term in message
-                p Sorry, we couldn't find any books with the #{searchProp} including the term "#{searchTerm}".
-            else
-                //- Otherwise, display message indicating that no records exist in the database
-                p Sorry, there are no books in the database. Create one using the "Create new book" button above.
-
-            a.button(href="/") Return to Book Listing
-
-    else
-        //- Otherwise, display book listing
-        table
+    h1 Book Listing
+    p: a.btn.btn-green(href="/books/new") Add New Book
+    
+    .d-flex.flex-column.align-items-center.align-items-lg-start   
+        table.w-75.w-lg-50.table.table-striped
             thead
                 tr
-                    th Title
-                    th Author
-                    th Genre
-                    th Year
+                    th(scope="col") Title
+                    th(scope="col") Author
+                    th(scope="col") Genre
+                    th(scope="col") Year
             tbody
-                each book in books
+                for book in books
                     tr
                         td
                             a(href=`/books/${book.id}`)= book.title
                         td= book.author
                         td= book.genre
                         td= book.year
-
-        ul.pages
-            span Pages:
-            each page in pages
-                li
-                    - let queryString = `?page=${page}`;
-                    //- Add search term and search prop to query string if searching
-                    if searchTerm
-                        - queryString += `&search=${searchTerm}&search-for=${searchProp}`;
-
-                    //- Add sorting prop to query string if we are sorting
-                    if sortProp
-                        - queryString += `&sort-by=${sortProp}`    
-
-                    - const pageIsSelected = page === selectedPage
-                    if pageIsSelected
-                        a.button.selected(href=`/books${queryString}`)= page
-                    else
-                        a.button(href=`/books${queryString}`)= page
-        
-        //- Add link to full book listing if we are doing any searching
-        if searchTerm
-            a.full-listing.button(href="/") Full Book Listing

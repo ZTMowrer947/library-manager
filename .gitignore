@@ -59,3 +59,12 @@ typings/
 
 # next.js build output
 .next
+
+# Old code folder (for rewrite)
+old/
+
+# Database files
+*.db
+
+# Build output
+dist/

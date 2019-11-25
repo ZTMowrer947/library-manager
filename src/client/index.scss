@@ -1,0 +1,47 @@
+// Variables
+$primaryColor: #019875;
+$textColor: #fff;
+
+// Links
+a {
+    color: $primaryColor;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.4s;
+
+    &:hover {
+        color: #000;
+    }
+}
+
+// Buttons
+.btn-green {
+    color: $textColor;
+    background-color: $primaryColor;
+    border-color: $primaryColor;
+
+    &:hover {
+        color: $textColor;
+        background: darken($primaryColor, 5%);
+    }
+}
+
+// Pagination
+.page-item {
+    .page-link {
+        color: $primaryColor;
+    }
+
+    &.active .page-link {
+        color: $textColor;
+        background-color: $primaryColor;
+        border-color: $primaryColor;
+    }
+}
+
+// Width
+@media (min-width: 992px) {
+    .w-lg-50 {
+        width: 50% !important;
+    }
+}
