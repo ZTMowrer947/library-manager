@@ -1,0 +1,22 @@
+extends partials/layout
+
+block content
+    h1 Book Listing
+    p: a.btn.btn-green(href="/books/new") Add New Book
+    
+    .d-flex.flex-column.align-items-center.align-items-lg-start   
+        table.w-75.w-lg-50.table.table-striped
+            thead
+                tr
+                    th(scope="col") Title
+                    th(scope="col") Author
+                    th(scope="col") Genre
+                    th(scope="col") Year
+            tbody
+                for book in books
+                    tr
+                        td
+                            a(href=`/books/${book.id}`)= book.title
+                        td= book.author
+                        td= book.genre
+                        td= book.year

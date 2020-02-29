@@ -1,0 +1,5 @@
+for js, index in scripts
+    if scriptHashes[index]
+        script(type="application/javascript", src=js, integrity=scriptHashes[index], crossorigin="anonymous")
+    else
+        script(type="application/javascript", src=js)
