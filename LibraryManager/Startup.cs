@@ -1,7 +1,9 @@
+using LibraryManager.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -20,6 +22,13 @@ namespace LibraryManager
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			// Register database context
+			services.AddDbContextPool<LibraryContext>(options =>
+			{
+				// Use in-memory database
+				options.UseInMemoryDatabase("library");
+			});
+
 			services.AddControllersWithViews();
 			// In production, the Angular files will be served from this directory
 			services.AddSpaStaticFiles(configuration =>
@@ -31,6 +40,16 @@ namespace LibraryManager
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
+			// Create service scope
+			using (var scope = app.ApplicationServices.CreateScope())
+			{
+				// Get database context
+				var context = scope.ServiceProvider.GetRequiredService<LibraryContext>();
+
+				// Ensure database is created
+				context.Database.EnsureCreated();
+			}
+
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
