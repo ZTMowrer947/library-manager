@@ -1,4 +1,5 @@
-﻿using LibraryManager.Models;
+﻿#nullable enable
+using LibraryManager.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@ namespace LibraryManager.Services
 		where TEntity : Entity<TIdType>
 	{
 		Task<ICollection<TEntity>> GetList();
-		Task<TEntity> GetById(TIdType id);
+		Task<TEntity?> GetById(TIdType id);
 		Task Create(TEntity entity);
 		Task Update(TEntity entity);
 		Task Delete(TIdType id);

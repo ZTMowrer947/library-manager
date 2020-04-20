@@ -40,6 +40,7 @@ namespace LibraryManager.Services.Tests
 					.Where(book => book.Id == id)
 					.SingleOrDefault()
 				);
+
 			RepositoryMock.Setup(repo => repo.Create(It.IsAny<Book>()))
 				.Callback((Book book) =>
 				{
@@ -48,27 +49,33 @@ namespace LibraryManager.Services.Tests
 
 					// Add book to list
 					_books.Add(book);
-				});
+				})
+				.Returns(Task.FromResult(false));
+
 			RepositoryMock.Setup(repo => repo.Update(It.IsAny<Book>()))
 				.Callback((Book updateData) =>
 				{
-					// Get book to update
-					var bookToUpdate = _books
-						.Where(book => book.Id == updateData.Id)
-						.SingleOrDefault();
+					// Find index of book with matching ID
+					var index = _books.FindIndex(book => book.Id == updateData.Id);
 
-					// Update book data
+					// Get book at index
+					var bookToUpdate = _books.ElementAt(index);
+
+					// Update properties on book
 					bookToUpdate.Title = updateData.Title;
 					bookToUpdate.Author = updateData.Author;
 					bookToUpdate.Genre = updateData.Genre;
 					bookToUpdate.Year = updateData.Year;
-				});
+				})
+				.Returns(Task.FromResult(false));
+
 			RepositoryMock.Setup(repo => repo.Delete(It.IsAny<Book>()))
 				.Callback((Book bookToDelete) =>
 				{
 					// Remove book from list
 					_books.Remove(bookToDelete);
-				});
+				})
+				.Returns(Task.FromResult(false));
 
 			// Initialize service
 			Service = new BookService(Repository);

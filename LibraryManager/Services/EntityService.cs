@@ -1,4 +1,5 @@
-﻿using LibraryManager.Models;
+﻿#nullable enable
+using LibraryManager.Models;
 using LibraryManager.Repos;
 using System;
 using System.Collections.Generic;
@@ -19,27 +20,35 @@ namespace LibraryManager.Services
 
 		public virtual async Task<ICollection<TEntity>> GetList()
 		{
-			throw new NotImplementedException();
+			return await _repository.FindAll();
 		}
 
-		public virtual async Task<TEntity> GetById(TIdType id)
+		public virtual async Task<TEntity?> GetById(TIdType id)
 		{
-			throw new NotImplementedException();
+			return await _repository.FindById(id);
 		}
 
 		public virtual async Task Create(TEntity entity)
 		{
-			throw new NotImplementedException();
+			await _repository.Create(entity);
 		}
 
 		public virtual async Task Update(TEntity entity)
 		{
-			throw new NotImplementedException();
+			await _repository.Update(entity);
 		}
 
 		public virtual async Task Delete(TIdType id)
 		{
-			throw new NotImplementedException();
+			// Attempt to find entity with given ID
+			var entity = await _repository.FindById(id);
+
+			// If the entity was found,
+			if (entity != null)
+			{
+				// Delete it
+				await _repository.Delete(entity);
+			}
 		}
 	}
 }
