@@ -17,27 +17,27 @@ namespace LibraryManager.Services
 			_repository = repository ?? throw new ArgumentNullException(nameof(repository));
 		}
 
-		public ICollection<TEntity> GetList()
+		public virtual async Task<ICollection<TEntity>> GetList()
 		{
 			throw new NotImplementedException();
 		}
 
-		public TEntity GetById(TIdType id)
+		public virtual async Task<TEntity> GetById(TIdType id)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void Create(TEntity entity)
+		public virtual async Task Create(TEntity entity)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void Update(TIdType id, TEntity entity)
+		public virtual async Task Update(TEntity entity)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void Delete(TIdType id)
+		public virtual async Task Delete(TIdType id)
 		{
 			throw new NotImplementedException();
 		}
