@@ -14,7 +14,7 @@ namespace LibraryManagerTests.Utils
 			var title = string.Join(" ", Faker.Lorem.Words(3));
 			var author = Faker.Name.FullName();
 			var genre = "Testing";
-			var currentYear = new DateTime().Year;
+			var currentYear = DateTime.Now.Year;
 			var bookYear = currentYear - Faker.RandomNumber.Next(1, 50);
 
 			// Build and return book
