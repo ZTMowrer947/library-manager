@@ -18,35 +18,35 @@ namespace LibraryManager.Repos
 			_context = context ?? throw new ArgumentNullException(nameof(context));
 		}
 
-		public abstract ICollection<TEntity> FindAll();
+		public abstract Task<ICollection<TEntity>> FindAll();
 
-		public abstract TEntity? FindById(TIdType id);
+		public abstract Task<TEntity?> FindById(TIdType id);
 
-		public virtual void Create(TEntity entity)
+		public virtual async Task Create(TEntity entity)
 		{
 			// Add entity to context
 			_context.Set<TEntity>().Add(entity);
 
 			// Persist changes to database
-			_context.SaveChanges();
+			await _context.SaveChangesAsync();
 		}
 
-		public virtual void Update(TEntity entity)
+		public virtual async Task Update(TEntity entity)
 		{
 			// Update entity
 			_context.Set<TEntity>().Update(entity);
 
 			// Persist changes to database
-			_context.SaveChanges();
+			await _context.SaveChangesAsync();
 		}
 
-		public virtual void Delete(TEntity entity)
+		public virtual async Task Delete(TEntity entity)
 		{
 			// Delete entity
 			_context.Set<TEntity>().Remove(entity);
 
 			// Persist changes to database
-			_context.SaveChanges();
+			await _context.SaveChangesAsync();
 		}
 	}
 }

@@ -1,16 +1,17 @@
 ﻿#nullable enable
 using LibraryManager.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace LibraryManager.Repos
 {
 	public interface IRepository<TEntity, TIdType>
 		where TEntity : Entity<TIdType>
 	{
-		public ICollection<TEntity> FindAll();
-		public TEntity? FindById(TIdType id);
-		public void Create(TEntity entity);
-		public void Update(TEntity entity);
-		public void Delete(TEntity entity);
+		public Task<ICollection<TEntity>> FindAll();
+		public Task<TEntity?> FindById(TIdType id);
+		public Task Create(TEntity entity);
+		public Task Update(TEntity entity);
+		public Task Delete(TEntity entity);
 	}
 }

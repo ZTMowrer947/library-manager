@@ -4,6 +4,7 @@ using LibraryManager.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace LibraryManager.Repos
 {
@@ -13,17 +14,17 @@ namespace LibraryManager.Repos
 		{
 		}
 
-		public override ICollection<Book> FindAll()
+		public override async Task<ICollection<Book>> FindAll()
 		{
-			return _context.Books.AsNoTracking().ToList();
+			return await _context.Books.AsNoTracking().ToListAsync();
 		}
 
-		public override Book? FindById(ulong id)
+		public override async Task<Book?> FindById(ulong id)
 		{
-			return _context.Books
+			return await _context.Books
 				.Where(book => book.Id == id)
 				.AsNoTracking()
-				.SingleOrDefault();
+				.SingleOrDefaultAsync();
 		}
 	}
 }

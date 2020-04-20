@@ -4,6 +4,7 @@ using LibraryManagerTests.Utils;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace LibraryManager.Repos.Tests
@@ -49,36 +50,36 @@ namespace LibraryManager.Repos.Tests
 		}
 
 		[Fact()]
-		public void FindAll_ShouldReturnNonEmptyBookListing()
+		public async Task FindAll_ShouldReturnNonEmptyBookListing()
 		{
 			// Get listing from repository
-			var books = _fixture.Repository.FindAll();
+			var books = await _fixture.Repository.FindAll();
 
 			// Assert that collection has nonzero size
 			Assert.True(books.Count > 0, "FindAll method should return non-empty book listing");
 		}
 
 		[Fact()]
-		public void FindById_ShouldReturnNullIfCourseIsNotFound()
+		public async Task FindById_ShouldReturnNullIfCourseIsNotFound()
 		{
 			// Define ID of nonexistent book
 			var id = ulong.MaxValue;
 
 			// Attempt to get book from repository
-			var book = _fixture.Repository.FindById(id);
+			var book = await _fixture.Repository.FindById(id);
 
 			// Assert that book is null
 			Assert.Null(book);
 		}
 
 		[Fact()]
-		public void Create_ShouldPersistBook()
+		public async Task Create_ShouldPersistBook()
 		{
 			// Generate fake book data
 			var newBook = BookUtils.GetFakeBook();
 
 			// Save book using repository
-			_fixture.Repository.Create(newBook);
+			await _fixture.Repository.Create(newBook);
 
 			// Retrieve new book using context
 			var retrievedBook = _fixture.Context.Books
@@ -92,7 +93,7 @@ namespace LibraryManager.Repos.Tests
 		}
 
 		[Fact()]
-		public void Update_ShouldModifyExistingBook()
+		public async Task Update_ShouldModifyExistingBook()
 		{
 			// Get test ID
 			var testId = _fixture.TestBookId;
@@ -117,14 +118,14 @@ namespace LibraryManager.Repos.Tests
 			bookToUpdate.Year = updateData.Year;
 
 			// Update book using repository
-			_fixture.Repository.Update(bookToUpdate);
+			await _fixture.Repository.Update(bookToUpdate);
 
 			// Assert that books are not equal
 			Assert.NotStrictEqual(currentBook, bookToUpdate);
 		}
 
 		[Fact()]
-		public void Delete_ShouldRemoveBook()
+		public async Task Delete_ShouldRemoveBook()
 		{
 			// Get test ID
 			var testId = _fixture.TestBookId;
@@ -135,7 +136,7 @@ namespace LibraryManager.Repos.Tests
 				.SingleOrDefault();
 
 			// Delete book using repository
-			_fixture.Repository.Delete(bookToDelete);
+			await _fixture.Repository.Delete(bookToDelete);
 
 			// Attempt to fetch book again using context
 			var deletedBook = _fixture.Context.Books
