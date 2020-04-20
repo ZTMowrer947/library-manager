@@ -46,8 +46,9 @@ namespace LibraryManager
 				// Get database context
 				var context = scope.ServiceProvider.GetRequiredService<LibraryContext>();
 
-				// Ensure database is created
+				// Ensure database is created and seeded
 				context.Database.EnsureCreated();
+				context.EnsureSeeded();
 			}
 
 			if (env.IsDevelopment())
