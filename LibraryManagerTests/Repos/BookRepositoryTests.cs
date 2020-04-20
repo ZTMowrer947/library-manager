@@ -60,19 +60,6 @@ namespace LibraryManager.Repos.Tests
 		}
 
 		[Fact()]
-		public async Task FindById_ShouldReturnNullIfCourseIsNotFound()
-		{
-			// Define ID of nonexistent book
-			var id = ulong.MaxValue;
-
-			// Attempt to get book from repository
-			var book = await _fixture.Repository.FindById(id);
-
-			// Assert that book is null
-			Assert.Null(book);
-		}
-
-		[Fact()]
 		public async Task Create_ShouldPersistBook()
 		{
 			// Generate fake book data
@@ -90,6 +77,39 @@ namespace LibraryManager.Repos.Tests
 			// Assert that retrieved book is non-null and matches created book
 			Assert.NotNull(retrievedBook);
 			Assert.StrictEqual(newBook, retrievedBook);
+		}
+
+		[Fact()]
+		public async Task FindById_ShouldReturnCorrectCourseData()
+		{
+			// Get test ID
+			var testId = _fixture.TestBookId;
+
+			// Get book from context to compare against
+			var expectedBook = await _fixture.Context.Books
+				.Where(book => book.Id == testId)
+				.AsNoTracking()
+				.SingleOrDefaultAsync();
+
+			// Get book from repository
+			var actualBook = await _fixture.Repository.FindById(testId);
+
+			// Assert that book from repository is non-null and matches book from context
+			Assert.NotNull(actualBook);
+			Assert.StrictEqual(expectedBook, actualBook);
+		}
+
+		[Fact()]
+		public async Task FindById_ShouldReturnNullIfCourseIsNotFound()
+		{
+			// Define ID of nonexistent book
+			var id = ulong.MaxValue;
+
+			// Attempt to get book from repository
+			var book = await _fixture.Repository.FindById(id);
+
+			// Assert that book is null
+			Assert.Null(book);
 		}
 
 		[Fact()]
