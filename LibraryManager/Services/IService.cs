@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace LibraryManager.Services
 {
-	interface IService<TEntity, TIdType>
+	public interface IService<TEntity, TIdType>
 		where TEntity : Entity<TIdType>
 	{
 		Task<ICollection<TEntity>> GetList();

@@ -1,6 +1,8 @@
 ﻿using LibraryManager.Models;
 using LibraryManager.Models.Builders;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LibraryManagerTests.Utils
 {
@@ -22,6 +24,22 @@ namespace LibraryManagerTests.Utils
 				.WithGenre(genre)
 				.WithYear(bookYear)
 				.Build();
+		}
+
+		public static IEnumerable<Book> GetFakeBooks(int count = 10) {
+			// Generate given number of fake books
+			return Enumerable.Range(1, count)
+				.Select(id =>
+				{
+					// Generate fake book
+					var book = GetFakeBook();
+
+					// Set book ID
+					book.Id = (ulong)id;
+
+					// Return book data
+					return book;
+				});
 		}
 	}
 }
