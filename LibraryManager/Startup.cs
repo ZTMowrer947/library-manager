@@ -1,9 +1,9 @@
 using LibraryManager.Data;
 using LibraryManager.Models;
 using LibraryManager.Repos;
+using LibraryManager.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -33,6 +33,7 @@ namespace LibraryManager
 
 			// Register repositories and services
 			services.AddScoped<IRepository<Book, ulong>, BookRepository>();
+			services.AddScoped<IService<Book, ulong>, BookService>();
 
 			services.AddControllersWithViews();
 			// In production, the Angular files will be served from this directory
