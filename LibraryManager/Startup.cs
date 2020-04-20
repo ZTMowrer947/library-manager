@@ -1,4 +1,6 @@
 using LibraryManager.Data;
+using LibraryManager.Models;
+using LibraryManager.Repos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,6 +30,9 @@ namespace LibraryManager
 				// Use in-memory database
 				options.UseInMemoryDatabase("library");
 			});
+
+			// Register repositories and services
+			services.AddScoped<IRepository<Book, ulong>, BookRepository>();
 
 			services.AddControllersWithViews();
 			// In production, the Angular files will be served from this directory
