@@ -1,4 +1,5 @@
-﻿using LibraryManager.Data;
+﻿#nullable enable
+using LibraryManager.Data;
 using LibraryManager.Models;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace LibraryManager.Repos
 
 		public abstract ICollection<TEntity> FindAll();
 
-		public abstract TEntity FindById(TIdType id);
+		public abstract TEntity? FindById(TIdType id);
 
 		public virtual void Create(TEntity entity)
 		{

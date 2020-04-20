@@ -1,4 +1,5 @@
-﻿using LibraryManager.Models;
+﻿#nullable enable
+using LibraryManager.Models;
 using System.Collections.Generic;
 
 namespace LibraryManager.Repos
@@ -7,7 +8,7 @@ namespace LibraryManager.Repos
 		where TEntity : Entity<TIdType>
 	{
 		public ICollection<TEntity> FindAll();
-		public TEntity FindById(TIdType id);
+		public TEntity? FindById(TIdType id);
 		public void Create(TEntity entity);
 		public void Update(TEntity entity);
 		public void Delete(TEntity entity);
