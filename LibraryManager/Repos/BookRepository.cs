@@ -1,10 +1,9 @@
 ﻿#nullable enable
 using LibraryManager.Data;
 using LibraryManager.Models;
-using System;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace LibraryManager.Repos
 {
@@ -16,12 +15,15 @@ namespace LibraryManager.Repos
 
 		public override ICollection<Book> FindAll()
 		{
-			throw new NotImplementedException();
+			return _context.Books.AsNoTracking().ToList();
 		}
 
 		public override Book? FindById(ulong id)
 		{
-			throw new NotImplementedException();
+			return _context.Books
+				.Where(book => book.Id == id)
+				.AsNoTracking()
+				.SingleOrDefault();
 		}
 	}
 }

@@ -24,17 +24,29 @@ namespace LibraryManager.Repos
 
 		public virtual void Create(TEntity entity)
 		{
-			throw new NotImplementedException();
+			// Add entity to context
+			_context.Set<TEntity>().Add(entity);
+
+			// Persist changes to database
+			_context.SaveChanges();
 		}
 
 		public virtual void Update(TEntity entity)
 		{
-			throw new NotImplementedException();
+			// Update entity
+			_context.Set<TEntity>().Update(entity);
+
+			// Persist changes to database
+			_context.SaveChanges();
 		}
 
 		public virtual void Delete(TEntity entity)
 		{
-			throw new NotImplementedException();
+			// Delete entity
+			_context.Set<TEntity>().Remove(entity);
+
+			// Persist changes to database
+			_context.SaveChanges();
 		}
 	}
 }

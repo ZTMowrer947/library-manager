@@ -1,13 +1,10 @@
-﻿using Xunit;
-using LibraryManager.Repos;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using LibraryManager.Data;
-using Microsoft.EntityFrameworkCore;
+﻿using LibraryManager.Data;
 using LibraryManager.Models;
 using LibraryManagerTests.Utils;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
+using Xunit;
 
 namespace LibraryManager.Repos.Tests
 {
@@ -100,24 +97,30 @@ namespace LibraryManager.Repos.Tests
 			// Get test ID
 			var testId = _fixture.TestBookId;
 
-			// Retrieve current book with ID using context
-			var currentBook = _fixture.Context.Books
-				.Where(book => book.Id == testId)
-				.AsNoTracking()
-				.SingleOrDefault();
+			// Construct query to fetch book with ID
+			var bookByIdQuery = _fixture.Context.Books
+				.Where(book => book.Id == testId);
+
+			// Retrieve non-tracked copy of book to compare against later
+			var currentBook = bookByIdQuery.AsNoTracking().SingleOrDefault();
+
+			// Retrieve tracked copy to apply update to
+			var bookToUpdate = bookByIdQuery.SingleOrDefault();
 
 			// Generate fake book update data
-			var updatedBook = BookUtils.GetFakeBook();
+			var updateData = BookUtils.GetFakeBook();
 
-			// Attach test book Id to book update data
-			updatedBook.Id = testId;
+			// Attach update data to book
+			bookToUpdate.Title = updateData.Title;
+			bookToUpdate.Author = updateData.Author;
+			bookToUpdate.Genre = updateData.Genre;
+			bookToUpdate.Year = updateData.Year;
 
 			// Update book using repository
-			_fixture.Repository.Update(updatedBook);
+			_fixture.Repository.Update(bookToUpdate);
 
-			// Assert that books share the same ID, but are not equal
-			Assert.StrictEqual(currentBook.Id, updatedBook.Id);
-			Assert.NotStrictEqual(currentBook, updatedBook);
+			// Assert that books are not equal
+			Assert.NotStrictEqual(currentBook, bookToUpdate);
 		}
 
 		[Fact()]
@@ -129,7 +132,6 @@ namespace LibraryManager.Repos.Tests
 			// Retrieve book to delete with ID using context
 			var bookToDelete = _fixture.Context.Books
 				.Where(book => book.Id == testId)
-				.AsNoTracking()
 				.SingleOrDefault();
 
 			// Delete book using repository
@@ -138,7 +140,6 @@ namespace LibraryManager.Repos.Tests
 			// Attempt to fetch book again using context
 			var deletedBook = _fixture.Context.Books
 				.Where(book => book.Id == testId)
-				.AsNoTracking()
 				.SingleOrDefault();
 
 			// Assert that post-delete fetch returned null
