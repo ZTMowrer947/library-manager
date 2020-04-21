@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LibraryManagerTests.Utils
+namespace LibraryManagerTestUtils
 {
-	class BookUtils
+	public class BookUtils
 	{
 		public static Book GetFakeBook()
 		{

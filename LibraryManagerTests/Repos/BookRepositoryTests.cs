@@ -1,6 +1,6 @@
 ﻿using LibraryManager.Data;
 using LibraryManager.Models;
-using LibraryManagerTests.Utils;
+using LibraryManagerTestUtils;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;

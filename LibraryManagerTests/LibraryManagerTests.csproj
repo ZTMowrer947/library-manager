@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LibraryManagerTestUtils\LibraryManagerTestUtils.csproj" />
     <ProjectReference Include="..\LibraryManager\LibraryManager.csproj" />
   </ItemGroup>
 
