@@ -82,13 +82,19 @@ namespace LibraryManager.Services.Tests
 		}
 	}
 
-	public class BookServiceTests : IClassFixture<BookRepositoryFixture>
+	public class BookServiceTests : IClassFixture<BookRepositoryFixture>, IDisposable
 	{
 		private readonly BookRepositoryFixture _fixture;
 
 		public BookServiceTests(BookRepositoryFixture fixture)
 		{
 			_fixture = fixture ?? throw new ArgumentNullException(nameof(fixture));
+		}
+
+		public void Dispose()
+		{
+			// Clear mock invocations
+			_fixture.RepositoryMock.Invocations.Clear();
 		}
 
 		[Fact()]
@@ -99,6 +105,9 @@ namespace LibraryManager.Services.Tests
 
 			// Assert that collection has nonzero size
 			Assert.True(books.Count > 0, "Book listing should be non-empty");
+
+			// Verify that FindAll method on Repository was called
+			_fixture.RepositoryMock.Verify(repo => repo.FindAll(), Times.Once);
 		}
 
 		[Fact()]
@@ -116,6 +125,9 @@ namespace LibraryManager.Services.Tests
 			// Assert that retrieved book is non-null and matches created book
 			Assert.NotNull(retrievedBook);
 			Assert.StrictEqual(newBook, retrievedBook);
+
+			// Verify that Create method on Repository was called
+			_fixture.RepositoryMock.Verify(repo => repo.Create(It.IsAny<Book>()), Times.Once);
 		}
 
 		[Fact()]
@@ -131,6 +143,9 @@ namespace LibraryManager.Services.Tests
 			// Assert that book from service is non-null and matches book from repository
 			Assert.NotNull(actualBook);
 			Assert.StrictEqual(expectedBook, actualBook);
+
+			// Verify that FindById method on Repository was called exactly twice
+			_fixture.RepositoryMock.Verify(repo => repo.FindById(It.IsAny<ulong>()), Times.Exactly(2));
 		}
 
 		[Fact()]
@@ -139,8 +154,8 @@ namespace LibraryManager.Services.Tests
 			// Get ID of book to update
 			var testId = _fixture.TestId;
 
-			// Retrieve current book with ID to compare against later
-			var currentBook = await _fixture.Repository.FindById(testId);
+			// Retrieve book being update with ID
+			var bookBeingUpdated = await _fixture.Repository.FindById(testId);
 
 			// Generate book data for update
 			var updateData = BookUtils.GetFakeBook();
@@ -151,8 +166,11 @@ namespace LibraryManager.Services.Tests
 			// Update book using service
 			await _fixture.Service.Update(updateData);
 
-			// Assert that books are not equal
-			Assert.NotStrictEqual(currentBook, updateData);
+			// Assert that books are made equal
+			Assert.StrictEqual(bookBeingUpdated, updateData);
+
+			// Verify that Update method on Repository was called
+			_fixture.RepositoryMock.Verify(repo => repo.Update(It.IsAny<Book>()), Times.Once);
 		}
 
 		[Fact()]
@@ -169,6 +187,9 @@ namespace LibraryManager.Services.Tests
 
 			// Assert that post-delete fetch returned null
 			Assert.Null(deletedBook);
+
+			// Verify that Delete method on Repository was called
+			_fixture.RepositoryMock.Verify(repo => repo.Delete(It.IsAny<Book>()), Times.Once);
 		}
 	}
 }
