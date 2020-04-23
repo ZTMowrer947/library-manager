@@ -1,17 +1,23 @@
-﻿using System;
+﻿#nullable enable
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace LibraryManager.Models
 {
 	public class Book : Entity<ulong>, IEquatable<Book>
 	{
-		public string Title { get; set; }
-		public string Author { get; set; }
-		public string Genre { get; set; }
-		public int Year { get; set; }
+		[Required(AllowEmptyStrings = false, ErrorMessage = "Title is required.")]
+		public string Title { get; set; } = "";
 
-		public override bool Equals(object obj)
+		[Required(AllowEmptyStrings = false, ErrorMessage = "Author is required.")]
+		public string Author { get; set; } = "";
+
+		public string? Genre { get; set; }
+		public int? Year { get; set; }
+
+		public override bool Equals(object? obj)
 		{
-			return Equals(obj as Book);
+			return obj != null && Equals((Book)obj);
 		}
 
 		public bool Equals(Book other)
