@@ -1,11 +1,26 @@
 ﻿#nullable enable
+using LibraryManager.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace LibraryManager.Models
+namespace LibraryManager.DTOs
 {
-	public class Book : Entity<ulong>, IEquatable<Book?>
+	public class BookDto : IEquatable<BookDto?>
 	{
+		public static BookDto FromModel(Book model)
+		{
+			return new BookDto
+			{
+				Id = model.Id,
+				Title = model.Title,
+				Author = model.Author,
+				Genre = model.Genre,
+				Year = model.Year
+			};
+		}
+
+		public ulong Id { get; set; }
+
 		[Required(AllowEmptyStrings = false, ErrorMessage = "Title is required.")]
 		public string Title { get; set; } = "";
 
@@ -15,12 +30,24 @@ namespace LibraryManager.Models
 		public string? Genre { get; set; }
 		public int? Year { get; set; }
 
-		public override bool Equals(object? obj)
+		public Book ToModel()
 		{
-			return Equals(obj as Book);
+			return new Book
+			{
+				Id = Id,
+				Title = Title,
+				Author = Author,
+				Genre = Genre,
+				Year = Year
+			};
 		}
 
-		public bool Equals(Book? other)
+		public override bool Equals(object? obj)
+		{
+			return Equals(obj as BookDto);
+		}
+
+		public bool Equals(BookDto? other)
 		{
 			return other != null &&
 				   Id == other.Id &&

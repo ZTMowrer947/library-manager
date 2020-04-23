@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿#nullable enable
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LibraryManager.Models
 {

@@ -1,10 +1,12 @@
 ﻿#nullable enable
+using LibraryManager.DTOs;
 using LibraryManager.Models;
 using LibraryManager.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LibraryManager.Controllers
@@ -21,13 +23,22 @@ namespace LibraryManager.Controllers
         }
 
         [HttpGet]
-        public async Task<ICollection<Book>> Get()
+        public async Task<ICollection<BookDto>> Get()
         {
-            return await _service.GetList();
+            // Get book listing from service
+            var bookListing = await _service.GetList();
+
+            // Map each book model into a DTO
+            var books = bookListing
+                .Select(book => BookDto.FromModel(book))
+                .ToList();
+
+            // Return book data
+            return books;
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Book bookData)
+        public async Task<ActionResult> Post([FromBody] BookDto bookData)
         {
             // If request body has invalid data,
             if (!ModelState.IsValid)
@@ -36,8 +47,14 @@ namespace LibraryManager.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Otherwise, save book
-            await _service.Create(bookData);
+            // Otherwise, convert DTO to book model
+            var bookModel = bookData.ToModel();
+
+            // Save book
+            await _service.Create(bookModel);
+
+            // Attach new ID to DTO
+            bookData.Id = bookModel.Id;
 
             // Return Created response
             return CreatedAtAction(nameof(Get), new { id = bookData.Id }, bookData);
@@ -56,12 +73,15 @@ namespace LibraryManager.Controllers
                 return NotFound();
             }
 
-            // Otherwise, return book data
-            return Ok(book);
+            // Otherwise, convert book model to DTO
+            var bookData = BookDto.FromModel(book);
+
+            // Return DTO data
+            return Ok(bookData);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(ulong id, [FromBody] Book updatedData)
+        public async Task<ActionResult> Put(ulong id, [FromBody] BookDto updatedData)
         {
             // Attempt to fetch book with ID
             var book = await _service.GetById(id);
@@ -87,8 +107,11 @@ namespace LibraryManager.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Otherwise, update book
-            await _service.Update(updatedData);
+            // Otherwise, convert DTO to book model
+            var bookModel = updatedData.ToModel();
+
+            // Update book
+            await _service.Update(bookModel);
 
             // Return No Content response
             return NoContent();
