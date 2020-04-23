@@ -1,4 +1,5 @@
 ﻿#nullable enable
+using LibraryManager.DTOs;
 using LibraryManager.Models;
 using LibraryManager.Tests.Integration.Setup;
 using LibraryManagerTestUtils;
@@ -23,16 +24,16 @@ namespace LibraryManager.Controllers.Tests.Integration
 			_client = factory.CreateClient();
 		}
 
-		private async Task<Book> CreateTestBook()
+		private async Task<BookDto> CreateTestBookData()
 		{
 			// Define regex for location header
 			var locationRegex = new Regex(@"/api/[Bb]ooks/(?<id>\d+)$");
 
-			// Generate test book
-			var book = BookUtils.GetFakeBook();
+			// Generate test book DTO
+			var bookData = BookUtils.GetFakeBookDto();
 
 			// Serialize book for request body
-			var bookJson = JsonConvert.SerializeObject(book);
+			var bookJson = JsonConvert.SerializeObject(bookData);
 
 			// Create request body
 			var reqData = new StringContent(bookJson, Encoding.UTF8, "application/json");
@@ -50,10 +51,10 @@ namespace LibraryManager.Controllers.Tests.Integration
 			var locationMatch = locationRegex.Match(location);
 
 			// Attach ID to book data
-			book.Id = ulong.Parse(locationMatch.Groups[1].Value);
+			bookData.Id = ulong.Parse(locationMatch.Groups[1].Value);
 
 			// Return book
-			return book;
+			return bookData;
 		}
 
 		[Fact()]
@@ -67,7 +68,7 @@ namespace LibraryManager.Controllers.Tests.Integration
 
 			// Deserialize response body into book collection
 			var bodyString = await response.Content.ReadAsStringAsync();
-			var books = JsonConvert.DeserializeObject<ICollection<Book>>(bodyString);
+			var books = JsonConvert.DeserializeObject<ICollection<BookDto>>(bodyString);
 
 			// Assert that book collection is non-empty
 			Assert.True(books.Count > 0, "Book collection should be non-empty");
@@ -77,10 +78,10 @@ namespace LibraryManager.Controllers.Tests.Integration
 		public async Task PostToCollection_ShouldReturnCreatedStatusAndLinkToNewCourse()
 		{
 			// Generate test book data
-			var book = BookUtils.GetFakeBook();
+			var bookDto = BookUtils.GetFakeBookDto();
 
 			// Serialize book for request body
-			var bookJson = JsonConvert.SerializeObject(book);
+			var bookJson = JsonConvert.SerializeObject(bookDto);
 
 			// Create request body
 			var reqData = new StringContent(bookJson, Encoding.UTF8, "application/json");
@@ -117,21 +118,21 @@ namespace LibraryManager.Controllers.Tests.Integration
 		[Fact()]
 		public async Task GetToResource_ShouldReturnBookData()
 		{
-			// Create a book for test
-			var book = await CreateTestBook();
+			// Create book data for test
+			var bookData = await CreateTestBookData();
 
 			// Make GET request to book resource
-			var response = await _client.GetAsync($"/api/Books/{book.Id}");
+			var response = await _client.GetAsync($"/api/Books/{bookData.Id}");
 
 			// Ensure response has successful status code
 			response.EnsureSuccessStatusCode();
 
 			// Deserialize response body into book data
 			var bodyString = await response.Content.ReadAsStringAsync();
-			var resultBook = JsonConvert.DeserializeObject<Book>(bodyString);
+			var resultBook = JsonConvert.DeserializeObject<BookDto>(bodyString);
 
 			// Assert that book matches previously created book data
-			Assert.StrictEqual(book, resultBook);
+			Assert.StrictEqual(bookData, resultBook);
 		}
 
 		[Fact()]
@@ -150,12 +151,12 @@ namespace LibraryManager.Controllers.Tests.Integration
 		[Fact()]
 		public async Task PutToResource_ShouldReturnNoContentStatusCode()
 		{
-			// Create test book
-			var book = await CreateTestBook();
+			// Create test book data
+			var bookData = await CreateTestBookData();
 
 			// Create book update data
-			var updateData = BookUtils.GetFakeBook();
-			updateData.Id = book.Id;
+			var updateData = BookUtils.GetFakeBookDto();
+			updateData.Id = bookData.Id;
 
 			// Serialize update data for request body
 			var updateJson = JsonConvert.SerializeObject(updateData);
@@ -163,11 +164,23 @@ namespace LibraryManager.Controllers.Tests.Integration
 			// Create request body
 			var reqData = new StringContent(updateJson, Encoding.UTF8, "application/json");
 
-			// Make PUT request to book resource
-			var response = await _client.PutAsync($"/api/Books/{updateData.Id}", reqData);
+			// Make PUT request to book resource, followed by GET request
+			var putResponse = await _client.PutAsync($"/api/Books/{updateData.Id}", reqData);
+			var getResponse = await _client.GetAsync($"/api/Books/{updateData.Id}");
 
-			// Assert that response has 204 status code
-			Assert.StrictEqual(HttpStatusCode.NoContent, response.StatusCode);
+			// Assert that PUT response has 204 status code
+			Assert.StrictEqual(HttpStatusCode.NoContent, putResponse.StatusCode);
+
+			// Assert that GET response has successful status code
+			getResponse.EnsureSuccessStatusCode();
+
+			// Deserialize GET response body into book data
+			var bodyString = await getResponse.Content.ReadAsStringAsync();
+			var resultBook = JsonConvert.DeserializeObject<BookDto>(bodyString);
+
+			// Assert that book matches update data, but not original book data
+			Assert.StrictEqual(updateData, resultBook);
+			Assert.NotStrictEqual(bookData, resultBook);
 		}
 
 		[Fact()]
@@ -177,7 +190,7 @@ namespace LibraryManager.Controllers.Tests.Integration
 			var id = ulong.MaxValue;
 
 			// Create book update data
-			var updateData = BookUtils.GetFakeBook();
+			var updateData = BookUtils.GetFakeBookDto();
 			updateData.Id = id;
 
 			// Serialize update data for request body
@@ -198,11 +211,11 @@ namespace LibraryManager.Controllers.Tests.Integration
 		public async Task PutToResourceWithMismatchingIds_ShouldReturnBadRequestStatus()
 		{
 			// Create test book
-			var book = await CreateTestBook();
+			var bookData = await CreateTestBookData();
 
 			// Create book update data
-			var updateData = BookUtils.GetFakeBook();
-			updateData.Id = book.Id + 1;
+			var updateData = BookUtils.GetFakeBookDto();
+			updateData.Id = bookData.Id + 1;
 
 			// Serialize update data for request body
 			var updateJson = JsonConvert.SerializeObject(updateData);
@@ -211,7 +224,7 @@ namespace LibraryManager.Controllers.Tests.Integration
 			var reqData = new StringContent(updateJson, Encoding.UTF8, "application/json");
 
 			// Make PUT request to book resource
-			var response = await _client.PutAsync($"/api/Books/{book.Id}", reqData);
+			var response = await _client.PutAsync($"/api/Books/{bookData.Id}", reqData);
 
 			// Assert that response has 400 status code
 			Assert.StrictEqual(HttpStatusCode.BadRequest, response.StatusCode);
@@ -221,7 +234,7 @@ namespace LibraryManager.Controllers.Tests.Integration
 		public async Task PutToResourceWithInvalidData_ShouldReturnBadRequestStatus()
 		{
 			// Create test book
-			var book = await CreateTestBook();
+			var book = await CreateTestBookData();
 
 			// Create object to serialize
 			var bodyObject = new {
@@ -242,16 +255,20 @@ namespace LibraryManager.Controllers.Tests.Integration
 		}
 
 		[Fact()]
-		public async Task DeleteToResource_ShouldReturnNoContentStatusCode()
+		public async Task DeleteToResource_ShouldReturnNoContentAndRenderBookUnfindable()
 		{
 			// Create test book for deletion
-			var bookToDelete = await CreateTestBook();
+			var bookToDelete = await CreateTestBookData();
 
-			// Make DELETE request to book resource
-			var response = await _client.DeleteAsync($"/api/Books/{bookToDelete.Id}");
+			// Make DELETE request to book resource, followed by GET request
+			var delResponse = await _client.DeleteAsync($"/api/Books/{bookToDelete.Id}");
+			var getResponse = await _client.GetAsync($"/api/Books/{bookToDelete.Id}");
 
-			// Assert that response has 204 status code
-			Assert.StrictEqual(HttpStatusCode.NoContent, response.StatusCode);
+			// Assert that DELETE response has 204 status code
+			Assert.StrictEqual(HttpStatusCode.NoContent, delResponse.StatusCode);
+
+			// Assert that GET response has 404 status code
+			Assert.StrictEqual(HttpStatusCode.NotFound, getResponse.StatusCode);
 		}
 
 		[Fact()]
@@ -261,7 +278,7 @@ namespace LibraryManager.Controllers.Tests.Integration
 			var id = ulong.MaxValue;
 
 			// Make DELETE request to book resource
-			var response = await _client.GetAsync($"/api/Books/{id}");
+			var response = await _client.DeleteAsync($"/api/Books/{id}");
 
 			// Assert that response has 404 status code
 			Assert.StrictEqual(HttpStatusCode.NotFound, response.StatusCode);

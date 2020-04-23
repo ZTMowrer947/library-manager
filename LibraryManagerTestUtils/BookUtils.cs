@@ -1,4 +1,5 @@
-﻿using LibraryManager.Models;
+﻿using LibraryManager.DTOs;
+using LibraryManager.Models;
 using LibraryManager.Models.Builders;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,8 @@ namespace LibraryManagerTestUtils
 				.WithYear(bookYear)
 				.Build();
 		}
+
+		public static BookDto GetFakeBookDto() => BookDto.FromModel(GetFakeBook());
 
 		public static IEnumerable<Book> GetFakeBooks(int count = 10) {
 			// Generate given number of fake books
