@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryManagerTests", "Libr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryManagerTestUtils", "LibraryManagerTestUtils\LibraryManagerTestUtils.csproj", "{0B998C8A-3E3D-4A75-8DDE-12F51C535DDF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryManagerIntegrationTests", "LibraryManagerIntegrationTests\LibraryManagerIntegrationTests.csproj", "{F2F7ECDC-36E9-4EFD-88F8-4F4B11CC2C02}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{0B998C8A-3E3D-4A75-8DDE-12F51C535DDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B998C8A-3E3D-4A75-8DDE-12F51C535DDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B998C8A-3E3D-4A75-8DDE-12F51C535DDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2F7ECDC-36E9-4EFD-88F8-4F4B11CC2C02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2F7ECDC-36E9-4EFD-88F8-4F4B11CC2C02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2F7ECDC-36E9-4EFD-88F8-4F4B11CC2C02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2F7ECDC-36E9-4EFD-88F8-4F4B11CC2C02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
