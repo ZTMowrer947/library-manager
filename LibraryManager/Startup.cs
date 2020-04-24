@@ -1,4 +1,3 @@
-#nullable enable
 using LibraryManager.Data;
 using LibraryManager.Models;
 using LibraryManager.Repos;

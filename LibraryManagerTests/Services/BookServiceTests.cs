@@ -1,5 +1,4 @@
-﻿#nullable enable
-using LibraryManager.Models;
+﻿using LibraryManager.Models;
 using LibraryManager.Repos;
 using LibraryManagerTestUtils;
 using Moq;

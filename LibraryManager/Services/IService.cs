@@ -1,5 +1,4 @@
-﻿#nullable enable
-using LibraryManager.Models;
+﻿using LibraryManager.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

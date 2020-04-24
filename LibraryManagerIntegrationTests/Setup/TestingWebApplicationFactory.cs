@@ -1,5 +1,4 @@
-﻿#nullable enable
-using LibraryManager.Data;
+﻿using LibraryManager.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;

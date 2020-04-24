@@ -1,5 +1,4 @@
-﻿#nullable enable
-using LibraryManager.DTOs;
+﻿using LibraryManager.DTOs;
 using LibraryManager.Tests.Integration.Setup;
 using LibraryManagerTestUtils;
 using Newtonsoft.Json;

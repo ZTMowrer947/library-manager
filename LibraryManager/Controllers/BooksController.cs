@@ -1,5 +1,4 @@
-﻿#nullable enable
-using LibraryManager.DTOs;
+﻿using LibraryManager.DTOs;
 using LibraryManager.Models;
 using LibraryManager.Services;
 using Microsoft.AspNetCore.Mvc;

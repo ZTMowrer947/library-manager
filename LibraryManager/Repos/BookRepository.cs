@@ -1,5 +1,4 @@
-﻿#nullable enable
-using LibraryManager.Data;
+﻿using LibraryManager.Data;
 using LibraryManager.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;

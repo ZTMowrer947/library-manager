@@ -1,5 +1,4 @@
-﻿#nullable enable
-using LibraryManager.Data;
+﻿using LibraryManager.Data;
 using LibraryManager.Models;
 using LibraryManagerTestUtils;
 using Microsoft.EntityFrameworkCore;

@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-namespace LibraryManager.Models.Builders
+﻿namespace LibraryManager.Models.Builders
 {
 	public class BookBuilder
 	{
