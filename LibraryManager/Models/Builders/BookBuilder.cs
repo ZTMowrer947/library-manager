@@ -1,15 +1,13 @@
-﻿namespace LibraryManager.Models.Builders
+﻿#nullable enable
+
+namespace LibraryManager.Models.Builders
 {
 	public class BookBuilder
 	{
-		private string _title;
-		private string _author;
-		private string _genre;
-		private int _year;
-
-		public BookBuilder()
-		{
-		}
+		private string _title = "";
+		private string _author = "";
+		private string? _genre;
+		private int? _year;
 
 		public BookBuilder WithTitle(string title)
 		{
@@ -23,13 +21,13 @@
 			return this;
 		}
 
-		public BookBuilder WithGenre(string genre)
+		public BookBuilder WithGenre(string? genre)
 		{
 			_genre = genre;
 			return this;
 		}
 
-		public BookBuilder WithYear(int year)
+		public BookBuilder WithYear(int? year)
 		{
 			_year = year;
 			return this;

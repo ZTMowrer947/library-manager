@@ -1,4 +1,5 @@
-﻿using LibraryManager.DTOs;
+﻿#nullable enable
+using LibraryManager.DTOs;
 using LibraryManager.Models;
 using LibraryManager.Models.Builders;
 using System;

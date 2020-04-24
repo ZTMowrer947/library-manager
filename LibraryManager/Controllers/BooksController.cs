@@ -2,7 +2,6 @@
 using LibraryManager.DTOs;
 using LibraryManager.Models;
 using LibraryManager.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
