@@ -13,26 +13,30 @@ namespace LibraryManager.Controllers
     [ApiController]
     public class BooksController : ControllerBase
     {
-        private IService<Book, ulong> _service;
+        private IPagedService<Book, ulong> _service;
 
-        public BooksController(IService<Book, ulong> service)
+        public BooksController(IPagedService<Book, ulong> service)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
         [HttpGet]
-        public async Task<ICollection<BookDto>> Get()
+        public async Task<Page<BookDto>> Get([FromQuery(Name = "page")] int pageNumber = 1, [FromQuery] int itemsPerPage = 10)
         {
-            // Get book listing from service
-            var bookListing = await _service.GetList();
+            // Get page of book data from service
+            var modelPage = await _service.GetPage(pageNumber, itemsPerPage);
 
             // Map each book model into a DTO
-            var books = bookListing
+            var books = modelPage
+                .Data
                 .Select(book => BookDto.FromModel(book))
                 .ToList();
 
+            // Create page of DTO data
+            var bookPage = new Page<BookDto>(modelPage.PageNumber, modelPage.TotalPages, modelPage.ItemsPerPage, books);
+
             // Return book data
-            return books;
+            return bookPage;
         }
 
         [HttpPost]

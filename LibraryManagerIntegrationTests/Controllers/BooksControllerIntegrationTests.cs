@@ -1,4 +1,5 @@
 ﻿using LibraryManager.DTOs;
+using LibraryManager.Models;
 using LibraryManager.Tests.Integration.Setup;
 using LibraryManagerTestUtils;
 using Newtonsoft.Json;
@@ -55,21 +56,31 @@ namespace LibraryManager.Controllers.Tests.Integration
 			return bookData;
 		}
 
-		[Fact()]
-		public async Task GetToCollection_ShouldReturnNonEmptyBookListing()
+		[Theory()]
+		[InlineData(5, 3)]
+		[InlineData(10, 2)]
+		[InlineData(20, 1)]
+		[InlineData(50, 1)]
+		public async Task GetToCollection_ShouldReturnNonEmptyBookListing(int itemsPerPage, int expectedTotalPages)
 		{
 			// Make GET request to books collection
-			var response = await _client.GetAsync("/api/Books");
+			var response = await _client.GetAsync($"/api/Books?itemsPerPage={itemsPerPage}");
 
 			// Ensure response has successful status code
 			response.EnsureSuccessStatusCode();
 
-			// Deserialize response body into book collection
+			// Deserialize response body into page of book data
 			var bodyString = await response.Content.ReadAsStringAsync();
-			var books = JsonConvert.DeserializeObject<ICollection<BookDto>>(bodyString);
+			var books = JsonConvert.DeserializeObject<Page<BookDto>>(bodyString);
 
-			// Assert that book collection is non-empty
-			Assert.True(books.Count > 0, "Book collection should be non-empty");
+			// Expect that page data count is less than or equal to number of items for each page
+			Assert.True(books.Data.Count <= itemsPerPage);
+
+			// Expect that the total number of pages are accurate
+			Assert.StrictEqual(expectedTotalPages, books.TotalPages);
+
+			// Expect page number to default to page 1
+			Assert.StrictEqual(expected: 1, books.PageNumber);
 		}
 
 		[Fact()]

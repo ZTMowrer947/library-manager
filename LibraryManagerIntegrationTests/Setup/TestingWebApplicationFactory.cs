@@ -38,9 +38,8 @@ namespace LibraryManager.Tests.Integration.Setup
 				// Get database context from scope
 				var context = scope.ServiceProvider.GetRequiredService<LibraryContext>();
 
-				// Ensure database is created and seeded
+				// Ensure database is created
 				context.Database.EnsureCreated();
-				context.EnsureSeeded();
 			});
 		}
 	}
