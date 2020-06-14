@@ -12,7 +12,7 @@ namespace LibraryManager.Repos.Tests
 	public class LibraryContextFixture : IDisposable
 	{
 		public LibraryContext Context { get; private set; }
-		public IRepository<Book, ulong> Repository { get; private set; }
+		public IPagedRepository<Book, ulong> Repository { get; private set; }
 		public ulong TestBookId => Context.Books.AsNoTracking().Last().Id;
 
 		public LibraryContextFixture()
@@ -110,6 +110,26 @@ namespace LibraryManager.Repos.Tests
 
 			// Assert that book is null
 			Assert.Null(book);
+		}
+
+		[Theory()]
+		[InlineData(5, 3)]
+		[InlineData(10, 2)]
+		[InlineData(20, 1)]
+		[InlineData(50, 1)]
+		public async Task FindPage_ShouldReturnPageOfData(int itemsPerPage, int expectedTotalPages)
+		{
+			// Define page number for retrieval
+			var pageNumber = 1;
+
+			// Get page of book data from repository
+			var page = await _fixture.Repository.FindPage(pageNumber, itemsPerPage);
+
+			// Expect that page data count is less than or equal to number of items for each page
+			Assert.True(page.Data.Count <= itemsPerPage);
+
+			// Expect that the total number of pages are accurate
+			Assert.StrictEqual(expectedTotalPages, page.TotalPages);
 		}
 
 		[Fact()]
