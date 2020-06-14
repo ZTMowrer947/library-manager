@@ -15,24 +15,42 @@ namespace LibraryManager.Services.Tests
 		private List<Book> _books;
 		private ulong _nextId;
 
-		public Mock<IRepository<Book, ulong>> RepositoryMock { get; private set; }
-		public IRepository<Book, ulong> Repository => RepositoryMock.Object;
-		public IService<Book, ulong> Service { get; private set; }
+		public Mock<IPagedRepository<Book, ulong>> RepositoryMock { get; private set; }
+		public IPagedRepository<Book, ulong> Repository => RepositoryMock.Object;
+		public IPagedService<Book, ulong> Service { get; private set; }
 		public ulong TestId => _nextId - 1;
 
 		public BookRepositoryFixture()
 		{
 			// Populate book listing with fake book data
-			_books = BookUtils.GetFakeBooks().ToList();
+			_books = BookUtils.GetFakeBooks(20).ToList();
 
 			// Calculate ID of next book
 			_nextId = _books.Select(book => book.Id).Max() + 1;
 
 			// Create mock for repository
-			RepositoryMock = new Mock<IRepository<Book, ulong>>(MockBehavior.Strict);
+			RepositoryMock = new Mock<IPagedRepository<Book, ulong>>(MockBehavior.Strict);
 
 			// Setup mocks for repository methods
 			RepositoryMock.Setup(repo => repo.FindAll()).ReturnsAsync(_books);
+
+			RepositoryMock.Setup(repo => repo.FindPage(It.IsAny<int>(), It.IsAny<int>()))
+				.ReturnsAsync((int pageNumber, int itemsPerPage) =>
+				{
+					// Calculate pagination parameters
+					var skip = itemsPerPage * (pageNumber - 1);
+					var totalPages = (int)Math.Ceiling((decimal)_books.Count / itemsPerPage);
+
+					// Get page of book data
+					var data = _books
+						.Skip(skip)
+						.Take(itemsPerPage)
+						.ToList();
+
+					// Create and return page object
+					return new Page<Book>(pageNumber, totalPages, itemsPerPage, data);
+				});
+			
 			RepositoryMock.Setup(repo => repo.FindById(It.IsAny<ulong>()))
 				.ReturnsAsync((ulong id) => _books
 					.Where(book => book.Id == id)
@@ -106,6 +124,35 @@ namespace LibraryManager.Services.Tests
 
 			// Verify that FindAll method on Repository was called
 			_fixture.RepositoryMock.Verify(repo => repo.FindAll(), Times.Once);
+		}
+
+		[Theory()]
+		[InlineData(5, 4)]
+		[InlineData(10, 2)]
+		[InlineData(20, 1)]
+		[InlineData(50, 1)]
+		public async Task GetPage_ShouldReturnPageOfData(int itemsPerPage, int expectedTotalPages)
+		{
+			// Define page number for retrieval
+			var pageNumber = 1;
+
+			// Get page of book data from service
+			var page = await _fixture.Service.GetPage(pageNumber, itemsPerPage);
+
+			// Expect that page data count is less than or equal to number of items for each page
+			Assert.True(page.Data.Count <= itemsPerPage);
+
+			// Expect that the total number of pages are accurate
+			Assert.StrictEqual(expectedTotalPages, page.TotalPages);
+
+			// Verify that FindPage method on Repository was called with parameters
+			_fixture.RepositoryMock.Verify(repo =>
+				repo.FindPage(
+					It.Is((int value) => value == pageNumber),
+					It.Is((int value) => value == itemsPerPage)
+				),
+				Times.Once
+			);
 		}
 
 		[Fact()]

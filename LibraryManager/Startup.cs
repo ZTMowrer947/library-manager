@@ -33,7 +33,9 @@ namespace LibraryManager
 
 			// Register repositories and services
 			services.AddScoped<IRepository<Book, ulong>, BookRepository>();
+			services.AddScoped<IPagedRepository<Book, ulong>, BookRepository>();
 			services.AddScoped<IService<Book, ulong>, BookService>();
+			services.AddScoped<IPagedService<Book, ulong>, BookService>();
 
 			services.AddControllersWithViews();
 			// In production, the Angular files will be served from this directory
