@@ -3,9 +3,14 @@
  */
 export class Book {
     /**
+     * The unique ID of the book.
+     */
+    public readonly id!: number;
+
+    /**
      * The title of the book.
      */
-    public readonly title: string;
+    public readonly title!: string;
 
     /**
      * The author of the book.
@@ -21,16 +26,4 @@ export class Book {
      * The year that the book was originally published.
      */
     public readonly year?: number;
-
-    public constructor(
-        title: string,
-        author: string,
-        genre?: string,
-        year?: number
-    ) {
-        this.title = title;
-        this.author = author;
-        this.genre = genre;
-        this.year = year;
-    }
 }
