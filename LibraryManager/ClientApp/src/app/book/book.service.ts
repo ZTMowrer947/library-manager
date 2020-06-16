@@ -6,6 +6,7 @@ import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Book } from './book';
+import { BookPage } from './book-page';
 
 // Mock book data
 const books = [
@@ -121,10 +122,9 @@ export class BookService {
     }
 
     public getList(): Observable<Book[]> {
-        return this.httpClient.get(`${this.apiUrl}/api/Books`).pipe(
-            map((body: any) => body.data),
-            map((bookData: any[]) => plainToClass(Book, bookData))
-        );
+        return this.httpClient
+            .get(`${this.apiUrl}/api/Books`)
+            .pipe(map((body) => plainToClass(BookPage, body).data));
     }
 
     public get(id: number): Observable<Book> {
