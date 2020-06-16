@@ -1,6 +1,9 @@
-/* You can add global styles to this file, and also import other style files */
+// You can add global styles to this file, and also import other style files
 
-/* Provide sufficient contrast against white background */
+// Import Bootstrap styles
+@import "~bootstrap/scss/bootstrap";
+
+// Provide sufficient contrast against white background
 a {
   color: #0366d6;
 }
