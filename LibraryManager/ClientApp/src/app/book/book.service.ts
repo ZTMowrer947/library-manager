@@ -1,7 +1,9 @@
 // Imports
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { plainToClass } from 'class-transformer';
 import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { Book } from './book';
 
@@ -112,11 +114,17 @@ const books = [
     providedIn: 'root',
 })
 export class BookService {
-    constructor() {}
+    public constructor(private httpClient: HttpClient) {}
+
+    private get apiUrl(): string {
+        return `${location.protocol}//${location.host}`;
+    }
 
     public getList(): Observable<Book[]> {
-        // Return book listing wrapped inside observable
-        return of(plainToClass(Book, books));
+        return this.httpClient.get(`${this.apiUrl}/api/Books`).pipe(
+            map((body: any) => body.data),
+            map((bookData: any[]) => plainToClass(Book, bookData))
+        );
     }
 
     public get(id: number): Observable<Book> {
