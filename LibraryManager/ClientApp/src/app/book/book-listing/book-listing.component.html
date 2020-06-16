@@ -1,0 +1,36 @@
+<h1>Books</h1>
+
+<header>
+    <p>
+        <a class="btn btn-primary" routerLink="/books/new">Create New Book</a>
+    </p>
+</header>
+
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Genre</th>
+            <th>Year</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let book of books">
+            <td>
+                <a [routerLink]="['books', book.id]">
+                    {{ book.title }}
+                </a>
+            </td>
+            <td>
+                {{ book.author }}
+            </td>
+            <td>
+                {{ book.genre }}
+            </td>
+            <td>
+                {{ book.year }}
+            </td>
+        </tr>
+    </tbody>
+</table>
