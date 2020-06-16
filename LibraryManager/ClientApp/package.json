@@ -67,7 +67,6 @@
         }
     },
     "lint-staged": {
-        "*.{js,json,css,scss,html}": "prettier --write",
-        "*.ts": "ng lint --fix"
+        "*.{js,json,css,scss,html}": "prettier --write"
     }
 }
