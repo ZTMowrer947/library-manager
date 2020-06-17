@@ -1,9 +1,9 @@
 // Imports
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { plainToClass } from 'class-transformer';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 import { Book } from './book';
 import { BookPage } from './book-page';
@@ -129,12 +129,19 @@ export class BookService {
     }
 
     public get(id: number): Observable<Book> {
-        // Attempt to find book with ID
-        const bookWithId = plainToClass(Book, books).find(
-            (book) => book.id === id
-        );
+        // Attempt to retrieve book from API
+        return this.httpClient.get(`${this.apiUrl}/api/Books/${id}`).pipe(
+            map((body) => plainToClass(Book, body)),
+            catchError((error: HttpErrorResponse) => {
+                // If error status is 404,
+                if (error.status === 404) {
+                    // Return undefined wrapped inside observable
+                    return of(undefined);
+                }
 
-        // Return book wrapped inside observable
-        return of(bookWithId);
+                // Otherwise, rethrow error
+                return throwError(error);
+            })
+        );
     }
 }
