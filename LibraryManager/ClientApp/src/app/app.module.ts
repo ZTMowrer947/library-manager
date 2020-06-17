@@ -7,20 +7,16 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { BookModule } from './book/book.module';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
 
 // Module
 @NgModule({
-    declarations: [AppComponent, CounterComponent, FetchDataComponent],
+    declarations: [AppComponent],
     imports: [
         BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
         HttpClientModule,
         FormsModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'books', pathMatch: 'full' },
-            { path: 'counter', component: CounterComponent },
-            { path: 'fetch-data', component: FetchDataComponent },
         ]),
         BookModule,
     ],
