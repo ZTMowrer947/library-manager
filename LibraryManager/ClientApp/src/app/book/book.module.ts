@@ -1,10 +1,10 @@
 // Imports
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 import { BookService } from './book.service';
 import { BookListingComponent } from './book-listing/book-listing.component';
-import { RouterModule } from '@angular/router';
 
 // Module
 @NgModule({

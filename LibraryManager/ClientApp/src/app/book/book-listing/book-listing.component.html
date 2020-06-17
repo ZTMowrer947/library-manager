@@ -3,7 +3,12 @@
 
     <header>
         <p>
-            <a class="btn btn-primary" routerLink="/books/new">Create New Book</a>
+            <a
+                class="btn btn-primary"
+                routerLink="/books/new"
+            >
+                Create New Book
+            </a>
         </p>
     </header>
 
@@ -19,7 +24,7 @@
         <tbody>
             <tr *ngFor="let book of bookPage.data">
                 <td>
-                    <a [routerLink]="['books', book.id]">
+                    <a [routerLink]="['/books', book.id]">
                         {{ book.title }}
                     </a>
                 </td>
@@ -35,4 +40,59 @@
             </tr>
         </tbody>
     </table>
+
+    <nav aria-label="Query results pages" *ngIf="bookPage.totalPages > 1">
+        <ul class="pagination">
+            <li
+                class="page-item"
+                [ngClass]="{ 'disabled': bookPage.prevPage === null }"
+            >
+                <ng-template #disabledPrev>
+                    <span class="page-link">Previous</span>
+                </ng-template>
+
+                <a
+                    class="page-link"
+                    routerLink="/books"
+                    [queryParams]="{ 'page': bookPage.prevPage }"
+                    *ngIf="bookPage.prevPage !== null; else disabledPrev"
+                >
+                    Previous
+                </a>
+            </li>
+            <li
+                class="page-item"
+                *ngFor="let page of pageRange"
+                [ngClass]="{ 'active': page === bookPage.page }"
+            >
+                <a
+                    class="page-link"
+                    routerLink="/books"
+                    [queryParams]="{ 'page': page }"
+                >
+                    {{ page }}
+                    <span class="sr-only" *ngIf="page === bookPage.page">
+                        (current)
+                    </span>
+                </a>
+            </li>
+            <li
+                class="page-item"
+                [ngClass]="{ 'disabled': bookPage.nextPage === null }"
+            >
+                <ng-template #disabledNext>
+                    <span class="page-link">Next</span>
+                </ng-template>
+
+                <a
+                    class="page-link"
+                    routerLink="/books"
+                    [queryParams]="{ 'page': bookPage.nextPage }"
+                    *ngIf="bookPage.nextPage !== null; else disabledNext"
+                >
+                    Next
+                </a>
+            </li>
+        </ul>
+    </nav>
 </ng-container>

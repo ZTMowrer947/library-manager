@@ -1,9 +1,11 @@
 // Imports
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import range from 'lodash/range';
+import { map, mergeMap } from 'rxjs/operators';
+
 import { BookService } from '../book.service';
 import { BookPage } from '../book-page';
-import { ActivatedRoute } from '@angular/router';
-import { map, mergeMap } from 'rxjs/operators';
 
 // Component
 @Component({
@@ -18,6 +20,10 @@ export class BookListingComponent implements OnInit {
         private activatedRoute: ActivatedRoute,
         private bookService: BookService
     ) {}
+
+    public get pageRange(): number[] {
+        return range(1, this.bookPage.totalPages + 1);
+    }
 
     public ngOnInit() {
         this.activatedRoute.queryParamMap
