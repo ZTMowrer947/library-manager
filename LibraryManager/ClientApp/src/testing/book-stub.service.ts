@@ -1,13 +1,13 @@
 // Imports
 import { Injectable } from '@angular/core';
 import { plainToClass } from 'class-transformer';
-import * as faker from 'faker';
 import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
+import { BookFakerService } from './book-faker.service';
 import { BookService } from '../app/book/book.service';
 import { Book } from '../app/book/book';
 import { BookPage } from '../app/book/book-page';
-import { map } from 'rxjs/operators';
 
 // Service
 @Injectable({
@@ -16,32 +16,9 @@ import { map } from 'rxjs/operators';
 export class BookStubService implements Partial<BookService> {
     private readonly books: Book[];
 
-    public constructor() {
-        // Initialize book array
-        this.books = [];
-
+    public constructor(private bookFaker: BookFakerService) {
         // Generate 20 random books
-        for (let i = 1; i <= 20; i++) {
-            // Generate fake book data
-            const bookData = {
-                id: i,
-                title: faker.random.words(3),
-                author: faker.name.findName(),
-                genre: faker.random.word(),
-                year: faker.date.recent().getUTCFullYear(),
-            };
-
-            // Transform data into Book instance
-            const book = plainToClass(Book, bookData);
-
-            // Append book to array
-            this.books.push(book);
-        }
-    }
-
-    public getList(): Observable<Book[]> {
-        // Wrap book listing inside observable
-        return of(this.books);
+        this.books = bookFaker.list(20);
     }
 
     public getPage(page: number): Observable<BookPage> {
