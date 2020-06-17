@@ -6,6 +6,8 @@ import { Observable, of } from 'rxjs';
 
 import { BookService } from '../app/book/book.service';
 import { Book } from '../app/book/book';
+import { BookPage } from '../app/book/book-page';
+import { map } from 'rxjs/operators';
 
 // Service
 @Injectable({
@@ -40,6 +42,40 @@ export class BookStubService implements Partial<BookService> {
     public getList(): Observable<Book[]> {
         // Wrap book listing inside observable
         return of(this.books);
+    }
+
+    public getPage(page: number): Observable<BookPage> {
+        // Calculate number of total pages
+        const totalPages = Math.ceil(this.books.length / 10);
+
+        // If page number is invalid, reset it to be within bounds
+        if (page > totalPages) {
+            page = totalPages;
+        } else if (page < 1) {
+            page = 1;
+        }
+
+        // Transform page number into page data
+        return of(page).pipe(
+            // Calculate starting and ending indices
+            map((pageNumber) => [(pageNumber - 1) * 10, pageNumber * 10]),
+
+            // Get books between indices
+            map(([start, end]) =>
+                this.books.filter((_, index) => index >= start && index < end)
+            ),
+
+            // Map book data into page data
+            map((data) => ({
+                page,
+                itemsPerPage: 10,
+                totalPages,
+                data,
+            })),
+
+            // Map page data into BookPage instance
+            map((pageData) => plainToClass(BookPage, pageData))
+        );
     }
 
     public get(id: number): Observable<Book> {

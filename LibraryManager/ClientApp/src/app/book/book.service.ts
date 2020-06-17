@@ -121,10 +121,11 @@ export class BookService {
         return `${location.protocol}//${location.host}`;
     }
 
-    public getList(): Observable<Book[]> {
+    public getPage(page: number): Observable<BookPage> {
+        // Retrieve page of book data from API
         return this.httpClient
-            .get(`${this.apiUrl}/api/Books`)
-            .pipe(map((body) => plainToClass(BookPage, body).data));
+            .get(`${this.apiUrl}/api/Books?page=${page}`)
+            .pipe(map((body) => plainToClass(BookPage, body)));
     }
 
     public get(id: number): Observable<Book> {
