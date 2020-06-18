@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { BookCreateViewmodel } from '../book-create-viewmodel';
@@ -20,8 +20,8 @@ export class NewBookComponent implements OnInit {
         private bookService: BookService
     ) {
         this.newBookForm = this.fb.group({
-            title: [''],
-            author: [''],
+            title: ['', Validators.required],
+            author: ['', Validators.required],
             genre: [''],
             year: [''],
         });
@@ -83,5 +83,8 @@ export class NewBookComponent implements OnInit {
     }
     public get year() {
         return this.newBookForm.get('year');
+    }
+    public get submittable() {
+        return this.newBookForm.valid;
     }
 }
