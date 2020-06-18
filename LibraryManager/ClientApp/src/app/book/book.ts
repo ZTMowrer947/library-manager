@@ -15,7 +15,7 @@ export class Book {
     /**
      * The author of the book.
      */
-    public readonly author: string;
+    public readonly author!: string;
 
     /**
      * The genre of the book.

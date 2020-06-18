@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { BookCreateViewmodel } from '../book-create-viewmodel';
 
 @Component({
     selector: 'app-new-book',
@@ -21,6 +22,23 @@ export class NewBookComponent implements OnInit {
     public ngOnInit() {}
 
     public onSubmit() {
-        console.log(this.newBookForm.value);
+        // Get form values
+        const formData = this.newBookForm.value;
+
+        // Normalize year
+        const formYear: number | null = formData.year;
+        const normalizedYear: number | undefined = formYear
+            ? Math.trunc(formYear)
+            : undefined;
+
+        // Generate book creation view model from form data
+        const viewModel: BookCreateViewmodel = {
+            title: formData.title.trim(),
+            author: formData.author.trim(),
+            genre: formData.author.trim() || undefined,
+            year: normalizedYear,
+        };
+
+        console.log(viewModel);
     }
 }
