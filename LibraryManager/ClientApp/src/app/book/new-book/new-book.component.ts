@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 import { BookCreateViewmodel } from '../book-create-viewmodel';
 import { BookService } from '../book.service';
+import { ApiValidationError } from '../../error/api-validation-error';
 
 @Component({
     selector: 'app-new-book',
@@ -51,6 +52,36 @@ export class NewBookComponent implements OnInit {
                 // When complete, redirect to home page
                 this.router.navigate(['books']);
             },
+            error: (err) => {
+                // If an error occurred,
+
+                // If it is a validation error,
+                if (err instanceof ApiValidationError) {
+                    // For each invalid field,
+                    Object.keys(err.errors).forEach((key) => {
+                        // Get error for field
+                        const error = err.errors[key];
+
+                        // Set error on field
+                        this.newBookForm.get(key).setErrors({
+                            serverError: error,
+                        });
+                    });
+                }
+            },
         });
+    }
+
+    public get title() {
+        return this.newBookForm.get('title');
+    }
+    public get author() {
+        return this.newBookForm.get('author');
+    }
+    public get genre() {
+        return this.newBookForm.get('genre');
+    }
+    public get year() {
+        return this.newBookForm.get('year');
     }
 }
