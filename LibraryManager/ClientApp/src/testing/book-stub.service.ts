@@ -1,8 +1,8 @@
 // Imports
 import { Injectable } from '@angular/core';
 import { plainToClass } from 'class-transformer';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, defer } from 'rxjs';
+import { defaultIfEmpty, filter, map, take } from 'rxjs/operators';
 
 import { BookFakerService } from './book-faker.service';
 import { BookService } from '../app/book/book.service';
@@ -18,22 +18,25 @@ export class BookStubService implements Partial<BookService> {
 
     public constructor(private bookFaker: BookFakerService) {
         // Generate 20 random books
-        this.books = bookFaker.list(20);
+        this.books = this.bookFaker.list(20);
     }
 
     public getPage(page: number): Observable<BookPage> {
         // Calculate number of total pages
         const totalPages = Math.ceil(this.books.length / 10);
 
-        // If page number is invalid, reset it to be within bounds
-        if (page > totalPages) {
-            page = totalPages;
-        } else if (page < 1) {
-            page = 1;
-        }
+        // Generate page of data using listing and page number
+        return defer(async () => {
+            // If page number is invalid, reset it to be within bounds
+            if (page > totalPages) {
+                page = totalPages;
+            } else if (page < 1) {
+                page = 1;
+            }
 
-        // Transform page number into page data
-        return of(page).pipe(
+            // Return selected page number
+            return page;
+        }).pipe(
             // Calculate starting and ending indices
             map((pageNumber) => [(pageNumber - 1) * 10, pageNumber * 10]),
 
@@ -56,10 +59,16 @@ export class BookStubService implements Partial<BookService> {
     }
 
     public get(id: number): Observable<Book> {
-        // Attempt to find book with ID
-        const bookWithId = this.books.find((book) => book.id === id);
+        // Pipe all books through observable
+        return defer(() => this.books).pipe(
+            // Filter out books that don't have the correct ID
+            filter((book) => book.id === id),
 
-        // Return book wrapped inside observable
-        return of(bookWithId);
+            // Default to undefined if no book matches
+            defaultIfEmpty(undefined),
+
+            // Only emit first result
+            take(1)
+        );
     }
 }

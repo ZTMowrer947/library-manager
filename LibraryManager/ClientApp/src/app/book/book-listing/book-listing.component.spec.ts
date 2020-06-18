@@ -1,5 +1,10 @@
 // Imports
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+    ComponentFixture,
+    TestBed,
+    fakeAsync,
+    tick,
+} from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Observable, PartialObserver } from 'rxjs';
 
@@ -54,7 +59,8 @@ describe('BookListingComponent', () => {
         const observer: PartialObserver<BookPage> = {
             next(expected) {
                 // Expect component to have been initalized with page from service
-                expect(expected).toStrictEqual(component.bookPage);
+                expect(component.bookPage).toStrictEqual(expected);
+                expect(component.bookPage).not.toBeNull();
 
                 // Finish test
                 done();
@@ -69,17 +75,23 @@ describe('BookListingComponent', () => {
         expected$.subscribe(observer);
     });
 
-    it('should display the details of the book data in a table', () => {
+    it('should display the details of the book data in a table', fakeAsync(() => {
+        // Perform tick to complete data retrieval
+        tick();
+
+        // Detect data changes
+        fixture.detectChanges();
+
         // Get HTML element for component
         const compiled: HTMLElement = fixture.nativeElement;
 
         // Get table element, expecting it to exist
         const table = compiled.querySelector('table');
-        expect(table).toBeDefined();
+        expect(table).not.toBeNull();
 
         // Get tbody element, expecting it to exist
         const tbody = table.querySelector('tbody');
-        expect(tbody).toBeDefined();
+        expect(tbody).not.toBeNull();
 
         // Get all table rows in tbody
         const tableRows = tbody.querySelectorAll('tr');
@@ -112,5 +124,5 @@ describe('BookListingComponent', () => {
                 book.year ? book.year.toString() : undefined
             );
         });
-    });
+    }));
 });
