@@ -2,11 +2,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { plainToClass } from 'class-transformer';
-import { Observable, of, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { Observable, of, throwError, EMPTY } from 'rxjs';
+import { map, catchError, switchMapTo } from 'rxjs/operators';
 
 import { Book } from './book';
 import { BookPage } from './book-page';
+import { BookCreateViewmodel } from './book-create-viewmodel';
+import { ApiValidationError } from '../error/api-validation-error';
 
 // Service
 @Injectable({
@@ -35,6 +37,45 @@ export class BookService {
                 if (error.status === 404) {
                     // Return undefined wrapped inside observable
                     return of(undefined);
+                }
+
+                // Otherwise, rethrow error
+                return throwError(error);
+            })
+        );
+    }
+
+    public create(bookData: BookCreateViewmodel): Observable<never> {
+        // Attempt to create book using API
+        return this.httpClient.post(`${this.apiUrl}/api/Books`, bookData).pipe(
+            // If successful, map to empty observable
+            switchMapTo(EMPTY),
+
+            // Catch errors
+            catchError((error: HttpErrorResponse) => {
+                // If response code is 400,
+                if (error.status === 400) {
+                    // Retrieve validation errors from body
+                    const validationErrors: Record<string, string[]> =
+                        error.error.errors;
+
+                    // Extract first error for each invalid property
+                    const normalizedErrors = Object.keys(
+                        validationErrors
+                    ).reduce((errorMap, key) => {
+                        return {
+                            ...errorMap,
+                            [key.toLowerCase()]: validationErrors[key][0],
+                        };
+                    }, {} as Record<string, string>);
+
+                    // Create ApiValidationError
+                    const validationError = new ApiValidationError(
+                        normalizedErrors
+                    );
+
+                    // Throw validation error
+                    return throwError(validationError);
                 }
 
                 // Otherwise, rethrow error
