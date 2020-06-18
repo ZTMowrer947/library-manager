@@ -1,0 +1,28 @@
+<h1>New Book</h1>
+
+<form method="post" (ngSubmit)="onSubmit()" [formGroup]="newBookForm">
+    <div class="form-row">
+        <div class="form-group col-sm-6 col-lg-4">
+            <label for="title">Title</label>
+            <input id="title" class="form-control" type="text" formControlName="title" />
+        </div>
+        <div class="form-group col-sm-6 col-lg-4">
+            <label for="author">Author</label>
+            <input id="author" class="form-control" type="text" formControlName="author" />
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-sm-6 col-lg-4">
+            <label for="genre">Genre</label>
+            <input id="genre" class="form-control" type="text" formControlName="genre" />
+        </div>
+        <div class="form-group col-sm-6 col-lg-4">
+            <label for="year">Year</label>
+            <input id="year" class="form-control" type="number" formControlName="year" />
+        </div>
+    </div>
+    <div class="btn-group">
+        <a class="btn btn-outline-danger" routerLink="/books">Cancel</a>
+        <button type="submit" class="btn btn-primary">Create Book</button>
+    </div>
+</form>

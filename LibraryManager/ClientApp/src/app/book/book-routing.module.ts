@@ -4,12 +4,18 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { BookDetailComponent } from './book-detail/book-detail.component';
 import { BookListingComponent } from './book-listing/book-listing.component';
+import { NewBookComponent } from './new-book/new-book.component';
 
 // Routes
 const routes: Routes = [
     {
         path: 'books',
         component: BookListingComponent,
+        pathMatch: 'full',
+    },
+    {
+        path: 'books/new',
+        component: NewBookComponent,
         pathMatch: 'full',
     },
     {
