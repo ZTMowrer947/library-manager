@@ -1,13 +1,15 @@
 // Imports
 import { Injectable } from '@angular/core';
 import { plainToClass } from 'class-transformer';
-import { Observable, defer } from 'rxjs';
+import { Observable, defer, EMPTY, throwError } from 'rxjs';
 import { defaultIfEmpty, filter, map, take } from 'rxjs/operators';
 
 import { BookFakerService } from './book-faker.service';
 import { BookService } from '../app/book/book.service';
 import { Book } from '../app/book/book';
 import { BookPage } from '../app/book/book-page';
+import { BookCreateViewmodel } from '../app/book/book-create-viewmodel';
+import { ApiValidationError } from '../app/error/api-validation-error';
 
 // Service
 @Injectable({
@@ -15,10 +17,20 @@ import { BookPage } from '../app/book/book-page';
 })
 export class BookStubService implements Partial<BookService> {
     private readonly books: Book[];
+    private nextId: number;
 
     public constructor(private bookFaker: BookFakerService) {
         // Generate 20 random books
         this.books = this.bookFaker.list(20);
+
+        // Calculate highest total ID
+        const highestId = this.books.reduce(
+            (prevHigh, book) => (prevHigh > book.id ? prevHigh : book.id),
+            1
+        );
+
+        // Use highest total to set next ID
+        this.nextId = highestId + 1;
     }
 
     public getPage(page: number): Observable<BookPage> {
@@ -70,5 +82,47 @@ export class BookStubService implements Partial<BookService> {
             // Only emit first result
             take(1)
         );
+    }
+
+    public create(bookData: BookCreateViewmodel): Observable<never> {
+        return defer(() => {
+            // Define validation error object
+            const validationErrors: Record<string, string> = {};
+
+            // Ensure title and author are non-empty
+            if (!bookData.title) {
+                validationErrors.title = 'Title is required.';
+            }
+
+            if (!bookData.author) {
+                validationErrors.author = 'Author is required';
+            }
+
+            // Check if there are any validation errors
+            const hasErrors = Object.keys(bookData).some(
+                (key) => key in validationErrors
+            );
+
+            // If there are no errors,
+            if (!hasErrors) {
+                // Transform book data into Book instance
+                const newBook = plainToClass(Book, {
+                    ...bookData,
+                    id: this.nextId++,
+                });
+
+                // Append book to array
+                this.books.push(newBook);
+
+                // Complete observable
+                return EMPTY;
+            }
+
+            // If there are errors, create ApiValidationError
+            const error = new ApiValidationError(validationErrors);
+
+            // Reject with error
+            return throwError(error);
+        });
     }
 }
