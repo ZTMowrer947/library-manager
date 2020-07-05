@@ -3,14 +3,19 @@
     "parserOptions": {
         "project": "./tsconfig.json",
         "sourceType": "module",
-        "ecmaVersion": 2019
+        "ecmaVersion": 2019,
+        "ecmaFeatures": {
+            "jsx": true
+        }
     },
     "extends": [
-        "airbnb-base",
+        "airbnb",
+        "airbnb/hooks",
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
         "plugin:prettier/recommended",
-        "prettier/@typescript-eslint"
+        "prettier/@typescript-eslint",
+        "prettier/react"
     ],
     "rules": {
         "no-unused-vars": "off",
@@ -27,7 +32,14 @@
                 "ts": "never",
                 "tsx": "never"
             }
-        ]
+        ],
+        "react/jsx-filename-extension": [
+            "error",
+            {
+                "extensions": [".js", ".jsx", ".tsx"]
+            }
+        ],
+        "react/prop-types": "off"
     },
     "settings": {
         "import/extensions": [".js", ".jsx", ".ts", ".tsx"],
