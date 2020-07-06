@@ -58,7 +58,7 @@
     },
     "overrides": [
         {
-            "files": ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[tj]s?(x)"],
+            "files": ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[tj]s?(x)", "**/__mocks__/**/*.[jt]s?(x)"],
             "extends": ["plugin:jest/recommended"],
             "env": {
                 "jest": true
