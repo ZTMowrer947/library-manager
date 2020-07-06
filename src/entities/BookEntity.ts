@@ -12,6 +12,10 @@ const BookEntity: EntitySchema<Book> = new EntitySchema({
             primary: true,
             generated: true,
         },
+        version: {
+            type: 'int',
+            version: true,
+        },
         title: {
             type: 'varchar',
             nullable: false,
