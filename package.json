@@ -6,10 +6,12 @@
     "start": "next start",
     "build": "next build",
     "dev": "next",
+    "db:seed:dev": "yarn development src/seeds/bookSeed.ts",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "test": "jest",
     "typecheck": "tsc -noEmit",
-    "typecheck:watch": "tsc -noEmit -w"
+    "typecheck:watch": "tsc -noEmit -w",
+    "development": "dotenv -c development -- ts-node -P tsconfig.tools.json"
   },
   "repository": {
     "type": "git",
@@ -62,6 +64,7 @@
     "jest": "^26.1.0",
     "lint-staged": "^10.2.11",
     "prettier": "^2.0.5",
+    "ts-node": "^8.10.2",
     "typescript": "~3.7.5"
   },
   "husky": {
