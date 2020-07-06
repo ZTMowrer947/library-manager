@@ -39,8 +39,7 @@
                 "extensions": [".js", ".jsx", ".tsx"]
             }
         ],
-        "react/prop-types": "off",
-        "no-underscore-dangle": "off"
+        "react/prop-types": "off"
     },
     "settings": {
         "import/extensions": [".js", ".jsx", ".ts", ".tsx"],
