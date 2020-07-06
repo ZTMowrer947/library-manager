@@ -25,12 +25,17 @@
     "bootstrap": "^4.5.0",
     "core-js": "3",
     "cross-env": "^7.0.2",
+    "dotenv": "^8.2.0",
+    "dotenv-cli": "^3.2.0",
     "next": "^9.4.4",
+    "pg": "^8.2.1",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.1",
     "react-dom": "^16.13.1",
+    "reflect-metadata": "^0.1.13",
     "regenerator-runtime": "^0.13.5",
-    "sass": "^1.26.9"
+    "sass": "^1.26.9",
+    "typeorm": "^0.2.25"
   },
   "devDependencies": {
     "@babel/plugin-proposal-nullish-coalescing-operator": "~7.10.1",
