@@ -32,7 +32,9 @@ const createBookHandler: NextDatabaseApiHandler = async (req, res) => {
 
     try {
         // Attempt to validate request body using schema
-        const bookData: BookCreateDto = await BookSchema.validate(req.body);
+        const bookData: BookCreateDto = await BookSchema.validate(req.body, {
+            abortEarly: false,
+        });
 
         // Create book using service
         const { version, ...bookDto } = await bookService.create(bookData);
