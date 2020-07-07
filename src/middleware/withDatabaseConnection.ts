@@ -2,7 +2,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Connection } from 'typeorm';
 
-import initializeDatabase from '../initializeDatabase';
+import initializeDatabase from '@/initializeDatabase';
 
 // Helper types
 interface NextDatabaseApiRequest extends NextApiRequest {

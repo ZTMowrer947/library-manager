@@ -1,6 +1,6 @@
 // Imports
-import withDatabaseConnection from '../../../middleware/withDatabaseConnection';
-import BookService from '../../../services/BookService';
+import withDatabaseConnection from '@/middleware/withDatabaseConnection';
+import BookService from '@/services/BookService';
 
 // Route handler
 const handler = withDatabaseConnection(async (req, res) => {

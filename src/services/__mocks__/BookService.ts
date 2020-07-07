@@ -1,6 +1,6 @@
 // Imports
-import Book from '../../models/Book';
-import BookCreateDto from '../../dto/BookCreateDto';
+import BookCreateDto from '@/dto/BookCreateDto';
+import Book from '@/models/Book';
 
 // Book data
 const mockBookData: Book[] = [

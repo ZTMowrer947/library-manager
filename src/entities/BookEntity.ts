@@ -1,7 +1,7 @@
 // Imports
 import { EntitySchema } from 'typeorm';
 
-import Book from '../models/Book';
+import Book from '@/models/Book';
 
 // Entity Schema
 const BookEntity: EntitySchema<Book> = new EntitySchema({

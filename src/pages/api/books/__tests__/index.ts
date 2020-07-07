@@ -3,14 +3,14 @@ import http from 'http';
 import { apiResolver } from 'next/dist/next-server/server/api-utils';
 import request from 'supertest';
 
-import handler from '..';
-import BookService from '../../../../services/BookService';
-import BookCreateDto from '../../../../dto/BookCreateDto';
-import BookDto from '../../../../dto/BookDto';
+import BookCreateDto from '@/dto/BookCreateDto';
+import BookDto from '@/dto/BookDto';
+import handler from '@/pages/api/books';
+import BookService from '@/services/BookService';
 
 // Jest Mocks
-jest.mock('../../../../services/BookService');
-jest.mock('../../../../middleware/withDatabaseConnection');
+jest.mock('@/services/BookService');
+jest.mock('@/middleware/withDatabaseConnection');
 
 // Test Suite
 describe('Book listing routes', () => {

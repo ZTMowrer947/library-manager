@@ -1,12 +1,12 @@
 // Imports
 import { ValidationError } from 'yup';
 
-import BookCreateDto from '../../../dto/BookCreateDto';
-import BookDto from '../../../dto/BookDto';
-import withDatabaseConnection from '../../../middleware/withDatabaseConnection';
-import type { NextDatabaseApiHandler } from '../../../middleware/withDatabaseConnection';
-import BookService from '../../../services/BookService';
-import BookSchema from '../../../validation/BookSchema';
+import BookCreateDto from '@/dto/BookCreateDto';
+import BookDto from '@/dto/BookDto';
+import withDatabaseConnection from '@/middleware/withDatabaseConnection';
+import type { NextDatabaseApiHandler } from '@/middleware/withDatabaseConnection';
+import BookService from '@/services/BookService';
+import BookSchema from '@/validation/BookSchema';
 
 // Route handlers
 const fetchListingHandler: NextDatabaseApiHandler<BookDto[]> = async (req, res) => {

@@ -1,11 +1,11 @@
 // Imports
 import { Connection } from 'typeorm';
 
-import BookService from '../BookService';
-import BookEntity from '../../entities/BookEntity';
-import initializeDatabase from '../../initializeDatabase';
-import Book from '../../models/Book';
-import BookCreateDto from '../../dto/BookCreateDto';
+import BookCreateDto from '@/dto/BookCreateDto';
+import BookEntity from '@/entities/BookEntity';
+import initializeDatabase from '@/initializeDatabase';
+import Book from '@/models/Book';
+import BookService from '@/services/BookService';
 
 // Test Suite
 describe('Book service', () => {
