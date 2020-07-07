@@ -1,5 +1,4 @@
 // Imports
-import 'reflect-metadata';
 import withDatabaseConnection from '../../../middleware/withDatabaseConnection';
 import BookService from '../../../services/BookService';
 
