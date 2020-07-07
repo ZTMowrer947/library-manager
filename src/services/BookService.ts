@@ -3,6 +3,7 @@ import { Connection, Repository } from 'typeorm';
 
 import BookEntity from '../entities/BookEntity';
 import Book from '../models/Book';
+import BookCreateDto from '../dto/BookCreateDto';
 
 // Service
 class BookService {
@@ -20,6 +21,14 @@ class BookService {
         const book = await this.repository.findOne(id);
 
         return book ?? null;
+    }
+
+    public async create(bookData: BookCreateDto): Promise<Book> {
+        // Create book
+        const book = await this.repository.save(bookData);
+
+        // Return newly created book data
+        return book;
     }
 }
 

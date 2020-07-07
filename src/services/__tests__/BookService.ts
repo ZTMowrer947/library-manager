@@ -5,6 +5,7 @@ import BookService from '../BookService';
 import BookEntity from '../../entities/BookEntity';
 import initializeDatabase from '../../initializeDatabase';
 import Book from '../../models/Book';
+import BookCreateDto from '../../dto/BookCreateDto';
 
 // Test Suite
 describe('Book service', () => {
@@ -62,6 +63,33 @@ describe('Book service', () => {
 
             // Expect attempt to retrieve book from service to resolve to null value
             await expect(service.get(id)).resolves.toBeNull();
+        });
+    });
+
+    describe('.create', () => {
+        it('should return the created book data', async () => {
+            // Define book input data
+            const bookData: BookCreateDto = {
+                title: "Testin' with Jest",
+                author: 'Zane Morris',
+                genre: 'Informational',
+                year: 2020,
+            };
+
+            // Create book through service
+            const newBook = await service.create(bookData);
+
+            // Expect created book to match input data
+            expect(newBook.title).toBe(bookData.title);
+            expect(newBook.author).toBe(bookData.author);
+            expect(newBook.genre).toBe(bookData.genre);
+            expect(newBook.year).toBe(bookData.year);
+
+            // Expect new book to be retrievable from database and to match created book
+            await expect(databaseConnection.manager.findOne<Book>(BookEntity, newBook.id)).resolves.toStrictEqual(newBook);
+
+            // Delete book from database
+            return databaseConnection.manager.delete<Book>(BookEntity, { id: newBook.id });
         });
     });
 });
