@@ -9,10 +9,10 @@ export interface NextDatabaseApiRequest extends NextApiRequest {
     db: Connection;
 }
 
-export type NextDatabaseApiHandler<T = any> = (req: NextDatabaseApiRequest, res: NextApiResponse<T>) => void | Promise<void>;
+export type NextDatabaseApiHandler<T = unknown> = (req: NextDatabaseApiRequest, res: NextApiResponse<T>) => void | Promise<void>;
 
 // Middleware
-function withDatabaseConnection<T = any>(handler: NextDatabaseApiHandler<T>): NextDatabaseApiHandler<T> {
+function withDatabaseConnection<T = unknown>(handler: NextDatabaseApiHandler<T>): NextDatabaseApiHandler<T> {
     return async (req, res) => {
         // Create database connection and attach to request
         req.db = await initializeDatabase();
