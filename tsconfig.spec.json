@@ -4,7 +4,11 @@
         "target": "ES2018",
         "lib": ["ESNext", "DOM", "DOM.Iterable"],
         "module": "CommonJS",
-        "types": ["jest"]
+        "types": ["jest"],
+        "baseUrl": "./",
+        "paths": {
+            "@/*": ["src/*"]
+        }
     },
     "include": ["./src/**/__tests__/**/*", "**/__mocks__/**/*", "next-env.d.ts"]
 }
