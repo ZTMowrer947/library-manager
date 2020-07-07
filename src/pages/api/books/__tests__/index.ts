@@ -1,10 +1,12 @@
 // Imports
 import http from 'http';
 import { apiResolver } from 'next/dist/next-server/server/api-utils';
-import request from 'supertest';
+import listen from 'test-listen';
+import fetch from 'isomorphic-unfetch';
 
 import BookCreateDto from '@/dto/BookCreateDto';
 import BookDto from '@/dto/BookDto';
+import Book from '@/models/Book';
 import handler from '@/pages/api/books';
 import BookService from '@/services/BookService';
 
@@ -16,8 +18,9 @@ jest.mock('@/middleware/withDatabaseConnection');
 describe('Book listing routes', () => {
     let service: BookService;
     let server: http.Server;
+    let url: string;
 
-    beforeAll(() => {
+    beforeAll(async () => {
         // Initailize book service
         // * This service is being mocked above, therefore connection object is not required
         service = new BookService(undefined as never);
@@ -30,6 +33,8 @@ describe('Book listing routes', () => {
                 previewModeSigningKey: '',
             });
         });
+
+        url = await listen(server);
     });
 
     afterAll((done) => {
@@ -46,21 +51,40 @@ describe('Book listing routes', () => {
                 return bookDto;
             });
 
-            // Make API response, expecting a 200 response
-            const response = await request(server).get('/api/books').expect(200);
+            // Make API request
+            const response = await fetch(`${url}/api/books`);
 
-            // Expect response body to match expected book listing
-            expect(response.body).toStrictEqual(expected);
+            // Retrieve response body
+            const body = (await response.json()) as Book[];
+
+            // Expect response to be OK
+            expect(response.ok).toBeTruthy();
+
+            // Expect response body to match book listing
+            expect(body).toStrictEqual(expected);
         });
     });
 
     describe('POST /api/books', () => {
         it('should respond with a 400 error if the request body is invalid', async () => {
-            // Make API response with empty body, expecting a 400 response
-            const response = await request(server).post('/api/books').send({}).expect(400);
+            // Make API request with empty request body
+            const response = await fetch(`${url}/api/books`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({}),
+            });
+
+            // Retrieve response body
+            const body = (await response.json()) as unknown;
+
+            // Expect response to not be OK and have 400 status
+            expect(response.ok).toBeFalsy();
+            expect(response.status).toBe(400);
 
             // Expect response body to contain errors property
-            expect(response.body).toHaveProperty('errors');
+            expect(body).toHaveProperty('errors');
         });
 
         it('should respond with a 201 status if the book was successfully created', async () => {
@@ -72,10 +96,20 @@ describe('Book listing routes', () => {
                 year: 2020,
             };
 
-            // Make API response with book data as request body, expecting a 201 response
-            const response = await request(server).post('/api/books').send(bookData).expect(201);
+            // Make API request with book data for request body
+            const response = await fetch(`${url}/api/books`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(bookData),
+            });
 
-            const newBook = response.body as BookDto;
+            // Retrieve response body
+            const newBook = (await response.json()) as BookDto;
+
+            // Expect response to be OK
+            expect(response.ok).toBeTruthy();
 
             // Expect book to be fetchable by ID
             await expect(service.get(newBook.id)).resolves.not.toBeNull();
@@ -84,15 +118,23 @@ describe('Book listing routes', () => {
             const expectedLocation = `/api/books/${newBook.id}`;
 
             // Expect location header be set as expected
-            expect(response.header).toHaveProperty('location', expectedLocation);
+            expect(response.headers.has('location')).toBeTruthy();
+            expect(response.headers.get('location')).toBe(expectedLocation);
         });
     });
 
     it('should respond with a 405 error when trying to use an unsupported method', async () => {
-        // Make API request with invalid method, expecting a 405 response
-        const response = await request(server).propfind('/api/books').expect(405);
+        // Make API request with invalid method
+        const response = await fetch(`${url}/api/books`, {
+            method: 'DELETE',
+        });
+
+        // Expect response to not be OK and have a 405 status
+        expect(response.ok).toBeFalsy();
+        expect(response.status).toBe(405);
 
         // Expect endpoint to only allow GET and POST request
-        expect(response.header).toHaveProperty('allow', 'GET, POST');
+        expect(response.headers.has('allow')).toBeTruthy();
+        expect(response.headers.get('allow')).toBe('GET, POST');
     });
 });
