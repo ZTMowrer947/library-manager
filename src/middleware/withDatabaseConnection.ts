@@ -5,11 +5,11 @@ import { Connection } from 'typeorm';
 import initializeDatabase from '../initializeDatabase';
 
 // Helper types
-export interface NextDatabaseApiRequest extends NextApiRequest {
+interface NextDatabaseApiRequest extends NextApiRequest {
     db: Connection;
 }
 
-export type NextDatabaseApiHandler<T = unknown> = (req: NextDatabaseApiRequest, res: NextApiResponse<T>) => void | Promise<void>;
+type NextDatabaseApiHandler<T = unknown> = (req: NextDatabaseApiRequest, res: NextApiResponse<T>) => void | Promise<void>;
 
 // Middleware
 function withDatabaseConnection<T = unknown>(handler: NextDatabaseApiHandler<T>): NextDatabaseApiHandler<T> {
@@ -29,3 +29,4 @@ function withDatabaseConnection<T = unknown>(handler: NextDatabaseApiHandler<T>)
 
 // Exports
 export default withDatabaseConnection;
+export type { NextDatabaseApiRequest, NextDatabaseApiHandler };

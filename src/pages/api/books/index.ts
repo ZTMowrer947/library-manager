@@ -3,7 +3,8 @@ import { ValidationError } from 'yup';
 
 import BookCreateDto from '../../../dto/BookCreateDto';
 import BookDto from '../../../dto/BookDto';
-import withDatabaseConnection, { NextDatabaseApiHandler } from '../../../middleware/withDatabaseConnection';
+import withDatabaseConnection from '../../../middleware/withDatabaseConnection';
+import type { NextDatabaseApiHandler } from '../../../middleware/withDatabaseConnection';
 import BookService from '../../../services/BookService';
 import BookSchema from '../../../validation/BookSchema';
 
