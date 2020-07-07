@@ -1,8 +1,9 @@
 // Imports
 import Book from '../../models/Book';
+import BookCreateDto from '../../dto/BookCreateDto';
 
 // Book data
-const bookData: Book[] = [
+const mockBookData: Book[] = [
     {
         id: 1,
         version: 1,
@@ -119,7 +120,9 @@ const bookData: Book[] = [
 
 // Service
 class BookService {
-    private readonly books = bookData;
+    private readonly books = mockBookData;
+
+    private nextId = this.books.length + 1;
 
     public async getList(): Promise<Book[]> {
         return Promise.resolve(this.books);
@@ -129,6 +132,24 @@ class BookService {
         return Promise.resolve(this.books)
             .then((books) => books.find((book) => book.id === id))
             .then((book) => book ?? null);
+    }
+
+    public async create(bookData: BookCreateDto): Promise<Book> {
+        // Create new book object
+        const newBook: Book = {
+            ...bookData,
+            version: 1,
+            id: this.nextId,
+        };
+
+        // Increment ID for next book creation
+        this.nextId += 1;
+
+        // Append book to array
+        this.books.push(newBook);
+
+        // Return newly created book
+        return Promise.resolve(newBook);
     }
 }
 
