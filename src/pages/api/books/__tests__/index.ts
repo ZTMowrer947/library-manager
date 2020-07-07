@@ -33,7 +33,11 @@ describe('Book listing routes', () => {
 
             // Create HTTP server from API handler
             const server = http.createServer(async (req, res) => {
-                return apiResolver(req, res, undefined, handler, undefined);
+                return apiResolver(req, res, undefined, handler, {
+                    previewModeId: '',
+                    previewModeEncryptionKey: '',
+                    previewModeSigningKey: '',
+                });
             });
 
             // Make API response, expecting a 200 response
@@ -51,7 +55,11 @@ describe('Book listing routes', () => {
         it('should respond with a 400 error if the request body is invalid', async () => {
             // Create HTTP server from API handler
             const server = http.createServer(async (req, res) => {
-                return apiResolver(req, res, undefined, handler, undefined);
+                return apiResolver(req, res, undefined, handler, {
+                    previewModeId: '',
+                    previewModeEncryptionKey: '',
+                    previewModeSigningKey: '',
+                });
             });
 
             // Make API response with empty body, expecting a 400 response
@@ -75,7 +83,11 @@ describe('Book listing routes', () => {
 
             // Create HTTP server from API handler
             const server = http.createServer(async (req, res) => {
-                return apiResolver(req, res, undefined, handler, undefined);
+                return apiResolver(req, res, undefined, handler, {
+                    previewModeId: '',
+                    previewModeEncryptionKey: '',
+                    previewModeSigningKey: '',
+                });
             });
 
             // Make API response with book data as request body, expecting a 201 response
@@ -100,7 +112,11 @@ describe('Book listing routes', () => {
     it('should respond with a 405 error when trying to use an unsupported method', async () => {
         // Create HTTP server from API handler
         const server = http.createServer(async (req, res) => {
-            return apiResolver(req, res, undefined, handler, undefined);
+            return apiResolver(req, res, undefined, handler, {
+                previewModeId: '',
+                previewModeEncryptionKey: '',
+                previewModeSigningKey: '',
+            });
         });
 
         // Make API request with invalid method, expecting a 405 response
