@@ -151,6 +151,36 @@ class BookService {
         // Return newly created book
         return Promise.resolve(newBook);
     }
+
+    public async update(book: Book, bookData: BookCreateDto): Promise<void> {
+        // Create copy of book with updated data
+        const updatedBook: Book = {
+            ...book,
+            version: book.version + 1,
+            title: bookData.title,
+            author: bookData.author,
+            genre: bookData.genre,
+            year: bookData.year,
+        };
+
+        // Find index of book
+        const bookIndex = this.books.findIndex((currentBook) => currentBook.id === updatedBook.id);
+
+        // Update book at index
+        this.books.splice(bookIndex, 1, updatedBook);
+
+        return Promise.resolve();
+    }
+
+    public async delete(book: Book): Promise<void> {
+        // Find index of book
+        const bookIndex = this.books.findIndex((currentBook) => currentBook.id === book.id);
+
+        // Delete book at index
+        this.books.splice(bookIndex, 1);
+
+        return Promise.resolve();
+    }
 }
 
 // Exports
