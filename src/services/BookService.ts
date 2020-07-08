@@ -30,6 +30,25 @@ class BookService {
         // Return newly created book data
         return book;
     }
+
+    public async update(book: Book, bookData: BookCreateDto): Promise<void> {
+        // Create updated copy of book data
+        const updatedBook: Book = {
+            ...book,
+            title: bookData.title,
+            author: bookData.author,
+            genre: bookData.genre,
+            year: bookData.year,
+        };
+
+        // Save updated book
+        await this.repository.save(updatedBook);
+    }
+
+    public async delete(book: Book): Promise<void> {
+        // Delete book
+        await this.repository.remove(book);
+    }
 }
 
 // Exports
