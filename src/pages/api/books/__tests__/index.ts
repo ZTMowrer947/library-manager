@@ -106,7 +106,8 @@ describe('Book listing routes', () => {
             expect(response.ok).toBeTruthy();
 
             // Expect book to be fetchable by ID
-            await expect(service.get(newBook.id)).resolves.not.toBeNull();
+            const retrievedBook = await service.get(newBook.id);
+            expect(retrievedBook).not.toBeNull();
 
             // Construct expected location header
             const expectedLocation = `/api/books/${newBook.id}`;
@@ -114,6 +115,10 @@ describe('Book listing routes', () => {
             // Expect location header be set as expected
             expect(response.headers.has('location')).toBeTruthy();
             expect(response.headers.get('location')).toBe(expectedLocation);
+
+            // Delete created book
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            await service.delete(retrievedBook!);
         });
     });
 
