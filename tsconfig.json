@@ -7,5 +7,5 @@
         }
     },
     "include": ["./src/**/*", "next-env.d.ts"],
-    "exclude": ["./src/**/__tests__/**/*", "**/__mocks__/**/*"]
+    "exclude": ["./src/**/__tests__/**/*", "**/__mocks__/**/*", "./src/testutils/**/*"]
 }

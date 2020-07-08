@@ -10,5 +10,5 @@
             "@/*": ["src/*"]
         }
     },
-    "include": ["./src/**/__tests__/**/*", "**/__mocks__/**/*", "next-env.d.ts"]
+    "include": ["./src/**/__tests__/**/*", "**/__mocks__/**/*", "./src/testutils/**/*", "next-env.d.ts"]
 }

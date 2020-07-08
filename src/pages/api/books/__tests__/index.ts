@@ -1,6 +1,5 @@
 // Imports
 import http from 'http';
-import { apiResolver } from 'next/dist/next-server/server/api-utils';
 import listen from 'test-listen';
 import fetch from 'isomorphic-unfetch';
 
@@ -9,6 +8,7 @@ import BookDto from '@/dto/BookDto';
 import Book from '@/models/Book';
 import handler from '@/pages/api/books';
 import BookService from '@/services/BookService';
+import setupTestServer from '@/testutils/setupTestServer';
 
 // Mock Setup
 jest.mock('@/services/BookService');
@@ -26,13 +26,7 @@ describe('Book listing routes', () => {
         service = new BookService(undefined as never);
 
         // Create HTTP server from API handler
-        server = http.createServer(async (req, res) => {
-            return apiResolver(req, res, undefined, handler, {
-                previewModeId: '',
-                previewModeEncryptionKey: '',
-                previewModeSigningKey: '',
-            });
-        });
+        server = setupTestServer(handler);
 
         url = await listen(server);
     });
@@ -52,7 +46,7 @@ describe('Book listing routes', () => {
             });
 
             // Make API request
-            const response = await fetch(`${url}/api/books`);
+            const response = await fetch(url);
 
             // Retrieve response body
             const body = (await response.json()) as Book[];
@@ -68,7 +62,7 @@ describe('Book listing routes', () => {
     describe('POST /api/books', () => {
         it('should respond with a 400 error if the request body is invalid', async () => {
             // Make API request with empty request body
-            const response = await fetch(`${url}/api/books`, {
+            const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -97,7 +91,7 @@ describe('Book listing routes', () => {
             };
 
             // Make API request with book data for request body
-            const response = await fetch(`${url}/api/books`, {
+            const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -125,7 +119,7 @@ describe('Book listing routes', () => {
 
     it('should respond with a 405 error when trying to use an unsupported method', async () => {
         // Make API request with invalid method
-        const response = await fetch(`${url}/api/books`, {
+        const response = await fetch(url, {
             method: 'DELETE',
         });
 
