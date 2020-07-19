@@ -2,4 +2,4 @@ coverage/
 dist/
 src/index.js
 gulpfile.js
-*.config.js
+*config.js
