@@ -30,6 +30,9 @@ const baseConfig = {
 
         // Client private key
         key: process.env.DB_TLS_KEY ? fs.readFileSync(process.env.DB_TLS_KEY) : undefined,
+
+        // Diffie-Hellman Parameters
+        dhparam: process.env.DB_TLS_DHPARAMS ? fs.readFileSync(process.env.DB_TLS_DHPARAMS) : undefined,
     },
 };
 
