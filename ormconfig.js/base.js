@@ -11,7 +11,7 @@ const baseConfig = {
 
     // Specify database host and port
     host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
+    port: Number.parseInt(process.env.DB_PORT || '5432'),
 
     // Specify database credentials
     username: process.env.DB_USER,
