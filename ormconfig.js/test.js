@@ -1,7 +1,6 @@
 // Imports
 const path = require('path');
 
-const baseConfig = require('./base');
 const { projectSourceDir, projectRootDir } = require('./paths');
 
 // Database paths
@@ -12,8 +11,6 @@ const entitiesDir = path.resolve(projectSourceDir, 'entities');
  */
 // TypeORM configuration for testing environments
 const testConfig = {
-    ...baseConfig,
-
     // Connection name
     name: 'test',
 
@@ -22,13 +19,6 @@ const testConfig = {
 
     // Use in-memory database
     database: ':memory:',
-
-    // Remove database credentials (not needed for SQLite)
-    username: undefined,
-    password: undefined,
-
-    // Disable TLS (not needed for SQLite)
-    ssl: undefined,
 
     // Sync database schema
     synchronize: true,
