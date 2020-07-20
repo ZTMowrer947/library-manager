@@ -1,23 +1,15 @@
-/* eslint-disable no-console */
 // Imports
-import initializeDatabase from '../initializeDatabase';
 import BookEntity from '../entities/BookEntity';
 import Book from '../models/Book';
 
-console.log('Seeding database...');
+import type { Seed } from './Seed';
 
-initializeDatabase()
-    .then((connection) => connection.getRepository<Book>(BookEntity))
-    .then(async (repository) => {
-        // Count books in repository
-        const bookCount = await repository.count();
-
-        // If there are any books in the database,
-        if (bookCount > 0) {
-            // Do nothing
-            console.log('Database already contains book data, no seeding required.');
-            return;
-        }
+// Seed
+const bookSeed: Seed = {
+    name: 'Book',
+    async run(connection) {
+        // Get book repository
+        const repository = connection.getRepository<Book>(BookEntity);
 
         // Define book data to seed database with
         const bookData: Partial<Book>[] = [
@@ -109,12 +101,8 @@ initializeDatabase()
 
         // Save book data
         await repository.save(bookData);
-    })
-    .then(() => {
-        console.log('Seeding done. Exiting...');
-        process.exit(0);
-    })
-    .catch((error: Error) => {
-        console.error(`Seeding error: ${error.stack ?? ''}`);
-        process.exit(1);
-    });
+    },
+};
+
+// Exports
+export default bookSeed;

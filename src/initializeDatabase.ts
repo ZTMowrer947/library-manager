@@ -22,8 +22,6 @@ const initializeDatabase = async (): Promise<Connection> => {
     // Get name of connection to create
     const name = selectConnectionName();
 
-    console.log(name);
-
     // Get base configuration options for that option
     const baseConfig = await getConnectionOptions(name);
 

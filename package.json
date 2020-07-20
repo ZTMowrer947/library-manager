@@ -6,13 +6,12 @@
     "start": "next start",
     "build": "next build",
     "dev": "next",
-    "db:seed:dev": "yarn development src/seeds/bookSeed.ts",
+    "db:seed:dev": "yarn development src/seeds/runner.ts",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "test": "jest",
     "typecheck": "tsc -noEmit",
     "typecheck:watch": "tsc -noEmit -w",
-    "development": "cross-env NODE_ENV=development ts-node -P tsconfig.tools.json",
-    "testing": "cross-env NODE_ENV=test ts-node -P tsconfig.tools.json"
+    "development": "cross-env NODE_ENV=development ts-node -P tsconfig.tools.json"
   },
   "repository": {
     "type": "git",
