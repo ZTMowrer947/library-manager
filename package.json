@@ -30,7 +30,7 @@
     "dotenv": "^8.2.0",
     "dotenv-cli": "^3.2.0",
     "isomorphic-unfetch": "^3.0.0",
-    "next": "^9.4.4",
+    "next": "^11.1.0",
     "pg": "^8.2.1",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.1",
