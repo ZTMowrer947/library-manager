@@ -1,6 +1,5 @@
 // Imports
-const Book = require("../models/Book");
-const { Op } = require("sequelize");
+const prisma = require('../lib/prisma');
 
 // Service
 class BookService {
@@ -11,7 +10,7 @@ class BookService {
 
         // Book find options
         const bookFindOptions = {
-            limit: pageLimit,
+            take: pageLimit,
         };
 
         let bookCount;
@@ -23,15 +22,15 @@ class BookService {
                 // Set conditions for prop being searched for
                 [propToSearchFor]: {
                     // Search term appears anywhere within book property
-                    [Op.like]: `%${search.toLowerCase()}%`,
+                    contains: search.toLowerCase(),
                 },
             };
 
             // Count total number of books matching search term
-            bookCount = await Book.count({ where: bookFindOptions.where });
+            bookCount = await prisma.book.count({ where: bookFindOptions.where });
         } else {
             // Otherwise, count total number of books in database
-            bookCount = await Book.count();
+            bookCount = await prisma.book.count();
         }
 
         // Add sorting order if provided
@@ -39,9 +38,9 @@ class BookService {
             // Trim "desc" from the end if present
             const sortProp = sortBy.substring(0, sortBy.indexOf("desc")) || sortBy;
 
-            bookFindOptions.order = [
+            bookFindOptions.orderBy = [
                 // Order in descending order if sort condition ends with "desc", ordering in ascending order otherwise
-                [sortProp, sortBy.endsWith("desc") ? "DESC" : "ASC"],
+                { [sortProp]: sortBy.endsWith("desc") ? "DESC" : "ASC" },
             ];
         }
 
@@ -55,49 +54,48 @@ class BookService {
         if (pageOffset > bookCount) pageOffset = 0;
 
         // Store offset in find options
-        bookFindOptions.offset = pageOffset;
+        bookFindOptions.skip = pageOffset;
 
         // Return page of books and total number of pages
-        return [await Book.findAll(bookFindOptions), pageCount];
+        return [await prisma.book.findMany(bookFindOptions), pageCount];
     }
 
     // Get single book by its ID
     async get(id) {
-        return Book.findByPk(id);
+        return prisma.book.findUnique(id);
     }
 
     // Create a new book
     async create(newBookData) {
-        return Book.create({
-            title: newBookData.title,
-            author: newBookData.author,
-            genre: newBookData.genre,
-            year: parseInt(newBookData.year),
+        return prisma.book.create({
+            data: {
+                title: newBookData.title,
+                    author: newBookData.author,
+                genre: newBookData.genre,
+                year: parseInt(newBookData.year),
+            }
         });
     }
 
     // Update a new book
     async update(book, updateBookData) {
-        // Update each book property if different
-        if (updateBookData.title !== book.title)
-            book.title = updateBookData.title;
-
-        if (updateBookData.author !== book.author)
-            book.author = updateBookData.author;
-
-        if (updateBookData.genre !== book.title)
-            book.genre = updateBookData.genre;
-
-        if (parseInt(updateBookData.year) !== book.title)
-            book.year = parseInt(updateBookData.year);
-
         // Save changes to database
-        return book.save();
+        return prisma.book.update({
+            data: {
+                title: updateBookData.title,
+                author: updateBookData.author,
+                genre: updateBookData.genre,
+                year: updateBookData.year,
+            },
+            where: {
+                id: book.id
+            }
+        })
     }
 
     async delete(book) {
         // Delete book
-        return book.destroy();
+        return prisma.book.delete({ where: { id: book.id }});
     }
 }
 
