@@ -40,7 +40,7 @@ class BookService {
 
             bookFindOptions.orderBy = [
                 // Order in descending order if sort condition ends with "desc", ordering in ascending order otherwise
-                { [sortProp]: sortBy.endsWith("desc") ? "DESC" : "ASC" },
+                { [sortProp]: sortBy.endsWith("desc") ? "desc" : "asc" },
             ];
         }
 
@@ -62,7 +62,7 @@ class BookService {
 
     // Get single book by its ID
     async get(id) {
-        return prisma.book.findUnique(id);
+        return prisma.book.findUnique({ where: { id } });
     }
 
     // Create a new book
@@ -85,7 +85,7 @@ class BookService {
                 title: updateBookData.title,
                 author: updateBookData.author,
                 genre: updateBookData.genre,
-                year: updateBookData.year,
+                year: parseInt(updateBookData.year),
             },
             where: {
                 id: book.id

@@ -77,7 +77,7 @@ router.use("/books/new", require("./newBook"));
 router.param("id", async (req, res, next, id) => {
     try {
         // Get book by id
-        const book = await req.bookService.get(id)
+        const book = await req.bookService.get(Number.parseInt(id))
 
         // If no book was found with this ID,
         if (!book) {
