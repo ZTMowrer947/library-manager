@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mowrer.Techdegree.LibraryManager.Api", "Mowrer.Techdegree.LibraryManager.Api\Mowrer.Techdegree.LibraryManager.Api.csproj", "{BBA81FA9-5F3F-40D4-84E1-4C2F5846A775}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mowrer.TechDegree.LibraryManager.Data", "Mowrer.TechDegree.LibraryManager.Data\Mowrer.TechDegree.LibraryManager.Data.csproj", "{C9BA901C-43F6-44A7-9729-AC2D639DE46D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{BBA81FA9-5F3F-40D4-84E1-4C2F5846A775}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBA81FA9-5F3F-40D4-84E1-4C2F5846A775}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBA81FA9-5F3F-40D4-84E1-4C2F5846A775}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9BA901C-43F6-44A7-9729-AC2D639DE46D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9BA901C-43F6-44A7-9729-AC2D639DE46D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9BA901C-43F6-44A7-9729-AC2D639DE46D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9BA901C-43F6-44A7-9729-AC2D639DE46D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
