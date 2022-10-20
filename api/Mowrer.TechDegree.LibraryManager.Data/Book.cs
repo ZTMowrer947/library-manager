@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mowrer.TechDegree.LibraryManager.Data;
@@ -22,10 +23,10 @@ public class Book
     [Column("year")]
     public int? Year { get; set; }
     
-    [Column("createdAt")]
+    [Column("createdAt", TypeName = "DATETIME")]
     public DateTime CreatedAt { get; set; }
     
-    [Column("updatedAt")]
+    [Column("updatedAt", TypeName = "DATETIME")]
     [Timestamp]
     public DateTime UpdatedAt { get; set; }
 }

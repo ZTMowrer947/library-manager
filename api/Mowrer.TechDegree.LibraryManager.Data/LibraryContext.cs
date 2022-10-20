@@ -10,33 +10,15 @@ public class LibraryContext : DbContext
     
     public DbSet<Book> Books { get; set; }
 
-    private void AddTimestamps()
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        var entities = ChangeTracker.Entries()
-            .Where(x => x.Entity is Book && x.State is EntityState.Added or EntityState.Modified);
+        modelBuilder.Entity<Book>()
+            .Property(b => b.CreatedAt)
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-        foreach (var entity in entities)
-        {
-            var now = DateTime.UtcNow;
-
-            if (entity.State == EntityState.Added)
-            {
-                ((Book)entity.Entity).CreatedAt = now;
-            }
-            ((Book)entity.Entity).UpdatedAt = now;
-        }
-    }
-
-
-    public override int SaveChanges()
-    {
-        AddTimestamps();
-        return base.SaveChanges();
-    }
-
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
-    {
-        AddTimestamps();
-        return base.SaveChangesAsync(cancellationToken);
+        modelBuilder.Entity<Book>()
+            .Property(b => b.UpdatedAt)
+            .HasDefaultValueSql("CURRENT_TIMESTAMP")
+            .ValueGeneratedOnAddOrUpdate();
     }
 }

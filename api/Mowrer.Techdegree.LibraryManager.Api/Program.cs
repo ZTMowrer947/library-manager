@@ -1,4 +1,8 @@
+using System.Globalization;
+using CsvHelper;
+using CsvHelper.Configuration;
 using Microsoft.EntityFrameworkCore;
+using Mowrer.Techdegree.LibraryManager.Api;
 using Mowrer.TechDegree.LibraryManager.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,6 +35,19 @@ using (var scope = app.Services.CreateScope())
 
     context.Database.EnsureDeleted();
     context.Database.EnsureCreated();
+
+    var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
+    {
+        PrepareHeaderForMatch = args => args.Header.ToLower()
+    };
+    using var reader = new StreamReader("Books.csv");
+    using var csv = new CsvReader(reader, csvConfig);
+
+    csv.Context.RegisterClassMap<BookCsvMap>();
+    var records = csv.GetRecords<Book>()!;
+
+    context.Books.AddRange(records);
+    context.SaveChanges();
 }
 
 app.UseHttpsRedirection();
