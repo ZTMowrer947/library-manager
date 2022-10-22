@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mowrer.Techdegree.LibraryMa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mowrer.TechDegree.LibraryManager.Data", "Mowrer.TechDegree.LibraryManager.Data\Mowrer.TechDegree.LibraryManager.Data.csproj", "{C9BA901C-43F6-44A7-9729-AC2D639DE46D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mowrer.Techdegree.LibraryManager.Testing", "Mowrer.Techdegree.LibraryManager.Testing\Mowrer.Techdegree.LibraryManager.Testing.csproj", "{018EB765-4F45-4A0A-993F-162B3EF3CF86}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{C9BA901C-43F6-44A7-9729-AC2D639DE46D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9BA901C-43F6-44A7-9729-AC2D639DE46D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9BA901C-43F6-44A7-9729-AC2D639DE46D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{018EB765-4F45-4A0A-993F-162B3EF3CF86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{018EB765-4F45-4A0A-993F-162B3EF3CF86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{018EB765-4F45-4A0A-993F-162B3EF3CF86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{018EB765-4F45-4A0A-993F-162B3EF3CF86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

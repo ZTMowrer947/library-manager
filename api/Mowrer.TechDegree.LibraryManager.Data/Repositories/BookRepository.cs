@@ -32,8 +32,12 @@ public sealed class BookRepository : IBookRepository, IDisposable
 
     public Book Update(Book book)
     {
-        _context.Books.Update(book);
+        var isTracked = _context.ChangeTracker.Entries<Book>().Any(entry => entry.Entity.Id == book.Id);
 
+        if (!isTracked)
+        {
+            _context.Books.Update(book);
+        }
         _context.SaveChanges();
 
         return book;

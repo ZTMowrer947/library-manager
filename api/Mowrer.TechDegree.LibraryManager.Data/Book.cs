@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Mowrer.TechDegree.LibraryManager.Data;
 
 [Table("Books")]
-public class Book
+public class Book : IEquatable<Book>
 {
     [Column("id")]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -29,4 +29,28 @@ public class Book
     [Column("updatedAt", TypeName = "DATETIME")]
     [Timestamp]
     public DateTime UpdatedAt { get; set; }
+
+    public bool Equals(Book? other)
+    {
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return Id == other.Id && Title == other.Title &&
+               Author == other.Author &&
+               Genre == other.Genre &&
+               Year == other.Year &&
+               CreatedAt.Equals(other.CreatedAt) &&
+               UpdatedAt.Equals(other.UpdatedAt);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        return obj.GetType() == GetType() && Equals((Book)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Id, Title, Author, Genre, Year, CreatedAt, UpdatedAt);
+    }
 }
