@@ -4,6 +4,7 @@ using CsvHelper.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Mowrer.Techdegree.LibraryManager.Api;
 using Mowrer.TechDegree.LibraryManager.Data;
+using Mowrer.TechDegree.LibraryManager.Data.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,8 @@ builder.Services.AddDbContext<LibraryContext>(options =>
     var connectionString = builder.Configuration.GetConnectionString("Library");
     options.UseSqlite(connectionString);
 });
+
+builder.Services.AddScoped<IBookRepository, BookRepository>();
 
 var app = builder.Build();
 
