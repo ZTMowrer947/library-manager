@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Mowrer.Techdegree.LibraryManager.Api;
 using Mowrer.TechDegree.LibraryManager.Data;
 using Mowrer.TechDegree.LibraryManager.Data.Repositories;
+using Mowrer.TechDegree.LibraryManager.Data.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,7 @@ builder.Services.AddDbContext<LibraryContext>(options =>
 });
 
 builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<IBookService, BookService>();
 
 var app = builder.Build();
 
