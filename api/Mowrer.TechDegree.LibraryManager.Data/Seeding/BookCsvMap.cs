@@ -1,7 +1,7 @@
 using CsvHelper.Configuration;
 using Mowrer.TechDegree.LibraryManager.Data;
 
-namespace Mowrer.Techdegree.LibraryManager.Api;
+namespace Mowrer.Techdegree.LibraryManager.Data.Seeding;
 
 public sealed class BookCsvMap: ClassMap<Book>
 {

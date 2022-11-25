@@ -36,6 +36,9 @@ public class BooksController : Controller
     [HttpPost]
     public IActionResult NewBook([FromBody] BookUpsertDto bookData)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+        
         var newBook = _service.Create(bookData);
 
         return CreatedAtAction(nameof(BookDetail), new { id = newBook.Id }, newBook);
@@ -48,6 +51,9 @@ public class BooksController : Controller
 
         if (currentBook == null)
             return NotFound();
+        
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
         var updatedBook = _service.Update(id, updateData);
 

@@ -23,7 +23,7 @@
     </ItemGroup>
 
 	<ItemGroup>
-      <None Update="..\Mowrer.Techdegree.LibraryManager.Api\Books.csv">
+      <None Update="..\Mowrer.Techdegree.LibraryManager.Data\Seeding\Books.csv">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>

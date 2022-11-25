@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Mowrer.Techdegree.LibraryManager.Api;
 using Mowrer.TechDegree.LibraryManager.Data;
 using Mowrer.TechDegree.LibraryManager.Data.Repositories;
+using Mowrer.TechDegree.LibraryManager.Data.Seeding;
 
 namespace Mowrer.Techdegree.LibraryManager.Testing.Data.Repositories;
 
@@ -30,17 +31,9 @@ public class BookRepositoryTest
         _context.Database.EnsureCreated();
         
         // Seed database
-        var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
-        {
-            PrepareHeaderForMatch = args => args.Header.ToLower()
-        };
-        using var reader = new StreamReader("Books.csv");
-        using var csv = new CsvReader(reader, csvConfig);
+        _seedData = BookSeedUtils.ExampleBooks;
 
-        csv.Context.RegisterClassMap<BookCsvMap>();
-        _seedData = csv.GetRecords<Book>()!.ToList();
-
-        _context.Books.AddRange(_seedData);
+        _context.AddRange(_seedData);
         _context.SaveChanges();
 
         _repository = new BookRepository(_context);

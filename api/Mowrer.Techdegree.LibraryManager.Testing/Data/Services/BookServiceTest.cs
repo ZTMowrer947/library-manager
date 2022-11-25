@@ -2,10 +2,10 @@ using System.Globalization;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Moq;
-using Mowrer.Techdegree.LibraryManager.Api;
 using Mowrer.TechDegree.LibraryManager.Data;
 using Mowrer.TechDegree.LibraryManager.Data.Dto;
 using Mowrer.TechDegree.LibraryManager.Data.Repositories;
+using Mowrer.TechDegree.LibraryManager.Data.Seeding;
 using Mowrer.TechDegree.LibraryManager.Data.Service;
 
 namespace Mowrer.Techdegree.LibraryManager.Testing.Data.Services;
@@ -22,21 +22,7 @@ public class BookServiceTest
     public void SetUp()
     {
         _service = new BookService(_repositoryMock.Object);
-        
-        var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
-        {
-            PrepareHeaderForMatch = args => args.Header.ToLower()
-        };
-        using var reader = new StreamReader("Books.csv");
-        using var csv = new CsvReader(reader, csvConfig);
-
-        csv.Context.RegisterClassMap<BookCsvMap>();
-        _mockLibrary = csv.GetRecords<Book>()!.Select((book, index) =>
-        {
-            book.Id = index + 1;
-
-            return book;
-        }).ToList();
+        _mockLibrary = BookSeedUtils.ExampleBooks;
         _nextId = _mockLibrary.Select(book => book.Id).Max() + 1;
     }
 
