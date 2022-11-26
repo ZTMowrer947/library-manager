@@ -1,6 +1,3 @@
-using System.Globalization;
-using CsvHelper;
-using CsvHelper.Configuration;
 using Moq;
 using Mowrer.TechDegree.LibraryManager.Data;
 using Mowrer.TechDegree.LibraryManager.Data.Dto;
@@ -32,6 +29,12 @@ public class BookServiceTest
         _repositoryMock.Reset();
     }
 
+    private void InitializeGetByIdMock()
+    {
+        _repositoryMock.Setup(repo => repo.Get(It.IsAny<int>()))
+            .Returns<int>(id => _mockLibrary.SingleOrDefault(book => book.Id == id));
+    }
+
     [Test]
     public void Get_WithNoArguments_ReturnsBookListing()
     {
@@ -39,7 +42,7 @@ public class BookServiceTest
 
         var expected = _mockLibrary.Select(book => new BookViewDto(book));
         var result = _service.Get();
-        
+
         Assert.Multiple(() =>
         {
             _repositoryMock.Verify(repo => repo.Get(), Times.Once);
@@ -50,8 +53,7 @@ public class BookServiceTest
     [Test]
     public void Get_WithIdArgument_ReturnsBookWithId()
     {
-        _repositoryMock.Setup(repo => repo.Get(It.IsAny<int>()))
-            .Returns<int>(id => _mockLibrary.SingleOrDefault(book => book.Id == id));
+        InitializeGetByIdMock();
 
         const int testId = 5;
 
@@ -68,13 +70,12 @@ public class BookServiceTest
     [Test]
     public void Get_WithIdArgument_ReturnsNullIfNotFound()
     {
-        _repositoryMock.Setup(repo => repo.Get(It.IsAny<int>()))
-            .Returns<int>(id => _mockLibrary.SingleOrDefault(book => book.Id == id));
+        InitializeGetByIdMock();
 
         var testId = _nextId + 153;
 
         var result = _service.Get(testId);
-        
+
         Assert.Multiple(() =>
         {
             _repositoryMock.Verify(repo => repo.Get(testId), Times.Once);
@@ -107,10 +108,10 @@ public class BookServiceTest
         {
             Id = _nextId
         };
-        
+
         // Act
         var result = _service.Create(data);
-        
+
         // Assert
         Assert.Multiple(() =>
         {
@@ -123,8 +124,7 @@ public class BookServiceTest
     public void Update_ModifiesBookInRepository()
     {
         // Arrange
-        _repositoryMock.Setup(repo => repo.Get(It.IsAny<int>()))
-            .Returns<int>(id => _mockLibrary.SingleOrDefault(book => book.Id == id));
+        InitializeGetByIdMock();
         _repositoryMock.Setup(repo => repo.Update(It.IsAny<Book>()))
             .Callback<Book>(book =>
             {
@@ -135,12 +135,12 @@ public class BookServiceTest
 
                 book.CreatedAt = _mockLibrary[idx].CreatedAt;
                 book.UpdatedAt = DateTime.UtcNow;
-                
+
                 _mockLibrary.RemoveAt(idx);
                 _mockLibrary.Insert(idx, book);
             })
             .Returns<Book>(book => _mockLibrary.Single(mBook => mBook.Equals(book)));
-        
+
         const int testId = 2;
 
         var updateData = new BookUpsertDto
@@ -158,7 +158,7 @@ public class BookServiceTest
         _service.Update(testId, updateData);
         var postUpdateResult = _repositoryMock.Object.Get(testId)!;
         var dtoResult = new BookViewDto(postUpdateResult);
-        
+
         // Assert
         Assert.Multiple(() =>
         {
@@ -172,19 +172,18 @@ public class BookServiceTest
     public void Delete_RemovedBookFromRepository()
     {
         // Arrange
-        _repositoryMock.Setup(repo => repo.Get(It.IsAny<int>()))
-            .Returns<int>(id => _mockLibrary.SingleOrDefault(book => book.Id == id));
+        InitializeGetByIdMock();
 
         _repositoryMock.Setup(repo => repo.Delete(It.IsAny<Book>()))
             .Callback<Book>(book => _mockLibrary.Remove(book));
 
         const int testId = 2;
-        
+
         // Act
         _service.Delete(testId);
 
         var postDeleteResult = _repositoryMock.Object.Get(testId);
-        
+
         // Assert
         Assert.Multiple(() =>
         {

@@ -13,7 +13,7 @@ public class BooksControllerTest
 {
     private Mock<IBookService> _serviceMock = new();
     private BooksController _controller;
-    
+
     private IList<Book> _mockLibrary;
     private int _nextId;
 
@@ -32,23 +32,75 @@ public class BooksControllerTest
         _serviceMock.Reset();
     }
 
+    private void InitializeGetByIdMock()
+    {
+        _serviceMock.Setup(service => service.Get(It.IsAny<int>()))
+            .Returns<int>(id => _mockLibrary
+                .Where(book => book.Id == id)
+                .Select(book => new BookViewDto(book))
+                .SingleOrDefault());
+    }
+
+    private void InitializeBookUpdateMock()
+    {
+        _serviceMock.Setup(service => service.Update(It.IsAny<int>(), It.IsAny<BookUpsertDto>()))
+            .Callback<int, BookUpsertDto>((id, updateData) =>
+            {
+                var book = updateData.ToModel();
+
+                var idx = _mockLibrary.Select((mBook, index) => (book: mBook, index))
+                    .Where(tuple => tuple.book.Id == id)
+                    .Select(tuple => tuple.index)
+                    .Single();
+
+                book.Id = _mockLibrary[idx].Id;
+                book.CreatedAt = _mockLibrary[idx].CreatedAt;
+                book.UpdatedAt = DateTime.UtcNow;
+
+                _mockLibrary.RemoveAt(idx);
+                _mockLibrary.Insert(idx, book);
+            })
+            .Returns<int, BookUpsertDto>((id, _) =>
+                _mockLibrary.Where(book => book.Id == id)
+                    .Select(book => new BookViewDto(book))
+                    .Single());
+    }
+
+    private void InitializeBookDeleteMock()
+    {
+        _serviceMock.Setup(service => service.Delete(It.IsAny<int>()))
+            .Callback<int>(id =>
+            {
+                var bookWithId = _mockLibrary.Single(book => book.Id == id);
+
+                _mockLibrary.Remove(bookWithId);
+            });
+    }
+
     [Test]
     public void BookList_YieldsBookList()
     {
-        Assume.That(_mockLibrary.Count, Is.AtLeast(1));
-        
+        // Assume
+        Assume.That(_mockLibrary, Is.Not.Empty);
+
+        // Arrange
         var expected = _mockLibrary.Select(book => new BookViewDto(book)).ToList();
-        
+
         _serviceMock.Setup(service => service.Get())
             .Returns(expected);
+
+        // Act
         var result = _controller.BookList();
-        
+
+        // Assert
+
+        // We assert this outside of the .Multiple to ensure we can safely cast it later if this passes
         Assert.That(result, Is.AssignableTo<OkObjectResult>());
-        
+
         Assert.Multiple(() =>
         {
             _serviceMock.Verify(service => service.Get(), Times.Once);
-            var castResult = (OkObjectResult)result;
+            var castResult = (OkObjectResult)result; // We need to do this to run the below assertion on the value
 
             Assert.That(castResult.Value, Is.EquivalentTo(expected));
         });
@@ -57,18 +109,18 @@ public class BooksControllerTest
     [Test]
     public void BookDetail_YieldsBookWithGivenId()
     {
-        Assume.That(_mockLibrary.Count, Is.AtLeast(1));
-        
-        var expectedBook = new BookViewDto(_mockLibrary.First());
-        
-        _serviceMock.Setup(service => service.Get(It.IsAny<int>()))
-            .Returns<int>(id => _mockLibrary
-                .Where(book => book.Id == id)
-                .Select(book => new BookViewDto(book))
-                .SingleOrDefault());
+        // Assume
+        Assume.That(_mockLibrary, Is.Not.Empty);
 
+        // Arrange
+        InitializeGetByIdMock();
+
+        var expectedBook = new BookViewDto(_mockLibrary.First());
+
+        // Act
         var result = _controller.BookDetail(expectedBook.Id);
-        
+
+        // Assert
         Assert.That(result, Is.AssignableTo<OkObjectResult>());
 
         Assert.Multiple(() =>
@@ -83,18 +135,18 @@ public class BooksControllerTest
     [Test]
     public void BookDetail_YieldsNotFoundIfNotInService()
     {
-        Assume.That(_mockLibrary.Count, Is.AtLeast(1));
-        
+        // Assume
+        Assume.That(_mockLibrary, Is.Not.Empty);
+
+        // Arrange
         var testId = _mockLibrary.Select(book => book.Id).Max() + 1;
 
-        _serviceMock.Setup(service => service.Get(It.IsAny<int>()))
-            .Returns<int>(id => _mockLibrary
-                .Where(book => book.Id == id)
-                .Select(book => new BookViewDto(book))
-                .SingleOrDefault());
+        InitializeGetByIdMock();
 
+        // Act
         var result = _controller.BookDetail(testId);
-        
+
+        // Assert
         Assert.Multiple(() =>
         {
             _serviceMock.Verify(service => service.Get(testId), Times.Once);
@@ -116,12 +168,12 @@ public class BooksControllerTest
         {
             Id = _nextId
         };
-        
+
         _serviceMock.Setup(service => service.Create(It.IsAny<BookUpsertDto>()))
             .Callback<BookUpsertDto>(bookDto =>
             {
                 var book = bookDto.ToModel();
-                
+
                 book.Id = _nextId;
                 book.CreatedAt = DateTime.UtcNow;
                 book.UpdatedAt = DateTime.UtcNow;
@@ -131,15 +183,15 @@ public class BooksControllerTest
             }).Returns(() => new BookViewDto(_mockLibrary.Last()));
 
         var result = _controller.NewBook(bookData);
-        
+
         Assert.That(result, Is.AssignableTo<CreatedAtActionResult>());
-        
+
         Assert.Multiple(() =>
         {
             _serviceMock.Verify(service => service.Create(It.IsAny<BookUpsertDto>()), Times.Once);
 
             var castResult = (CreatedAtActionResult)result;
-            
+
             Assert.That(castResult.Value, Is.EqualTo(expectedData));
         });
     }
@@ -148,40 +200,15 @@ public class BooksControllerTest
     public void UpdateBook_YieldsOkResultWithUpdatedBook()
     {
         const int testId = 2;
-     
-        // Assume
-        Assume.That(_mockLibrary, Has.Count.AtLeast(1));
-        Assume.That(_mockLibrary, Has.One.Property("Id").EqualTo(testId));
-        
-        // Arrange
-        _serviceMock.Setup(service => service.Get(It.IsAny<int>()))
-            .Returns<int>(id => _mockLibrary
-                .Where(book => book.Id == id)
-                .Select(book => new BookViewDto(book))
-                .SingleOrDefault());
-        
-        _serviceMock.Setup(service => service.Update(It.IsAny<int>(), It.IsAny<BookUpsertDto>()))
-            .Callback<int, BookUpsertDto>((id, updateData) =>
-            {
-                var book = updateData.ToModel();
-                
-                var idx = _mockLibrary.Select((mBook, index) => (book: mBook, index))
-                    .Where(tuple => tuple.book.Id == id)
-                    .Select(tuple => tuple.index)
-                    .Single();
 
-                book.Id = _mockLibrary[idx].Id;
-                book.CreatedAt = _mockLibrary[idx].CreatedAt;
-                book.UpdatedAt = DateTime.UtcNow;
-                
-                _mockLibrary.RemoveAt(idx);
-                _mockLibrary.Insert(idx, book);
-            })
-            .Returns<int, BookUpsertDto>((id, _) =>
-                _mockLibrary.Where(book => book.Id == id)
-                    .Select(book => new BookViewDto(book))
-                    .Single());
-        
+        // Assume
+        Assume.That(_mockLibrary, Is.Not.Empty);
+        Assume.That(_mockLibrary, Has.One.Property("Id").EqualTo(testId));
+
+        // Arrange
+        InitializeGetByIdMock();
+        InitializeBookUpdateMock();
+
         var updateData = new BookUpsertDto
         {
             Title = "Writing Tests with Moq, 2nd edition",
@@ -195,10 +222,10 @@ public class BooksControllerTest
 
         // Act
         var result = _controller.UpdateBook(testId, updateData);
-        
+
         // Assert
         Assert.That(result, Is.AssignableTo<OkObjectResult>());
-        
+
         Assert.Multiple(() =>
         {
             _serviceMock.Verify(service => service.Get(testId), Times.Once);
@@ -214,40 +241,15 @@ public class BooksControllerTest
     public void UpdateBook_YieldsNotFoundResultForNonexistentBook()
     {
         const int testId = 65536;
-     
-        // Assume
-        Assume.That(_mockLibrary, Has.Count.AtLeast(1));
-        Assume.That(_mockLibrary, Has.None.Property("Id").EqualTo(testId));
-        
-        // Arrange
-        _serviceMock.Setup(service => service.Get(It.IsAny<int>()))
-            .Returns<int>(id => _mockLibrary
-                .Where(book => book.Id == id)
-                .Select(book => new BookViewDto(book))
-                .SingleOrDefault());
-        
-        _serviceMock.Setup(service => service.Update(It.IsAny<int>(), It.IsAny<BookUpsertDto>()))
-            .Callback<int, BookUpsertDto>((id, updateData) =>
-            {
-                var book = updateData.ToModel();
-                
-                var idx = _mockLibrary.Select((mBook, index) => (book: mBook, index))
-                    .Where(tuple => tuple.book.Id == id)
-                    .Select(tuple => tuple.index)
-                    .Single();
 
-                book.Id = _mockLibrary[idx].Id;
-                book.CreatedAt = _mockLibrary[idx].CreatedAt;
-                book.UpdatedAt = DateTime.UtcNow;
-                
-                _mockLibrary.RemoveAt(idx);
-                _mockLibrary.Insert(idx, book);
-            })
-            .Returns<int, BookUpsertDto>((id, _) =>
-                _mockLibrary.Where(book => book.Id == id)
-                    .Select(book => new BookViewDto(book))
-                    .Single());
-        
+        // Assume
+        Assume.That(_mockLibrary, Is.Not.Empty);
+        Assume.That(_mockLibrary, Has.None.Property("Id").EqualTo(testId));
+
+        // Arrange
+        InitializeGetByIdMock();
+        InitializeBookUpdateMock();
+
         var updateData = new BookUpsertDto
         {
             Title = "Writing Tests with Moq, 2nd edition",
@@ -256,7 +258,7 @@ public class BooksControllerTest
 
         // Act
         var result = _controller.UpdateBook(testId, updateData);
-        
+
         // Assert
         Assert.Multiple(() =>
         {
@@ -271,31 +273,24 @@ public class BooksControllerTest
     public void DeleteBook_YieldsNoContentResultAndRemovesBookFromService()
     {
         const int testId = 2;
-        
+
+        // Assume
         Assume.That(_mockLibrary, Has.Count.AtLeast(1));
         Assume.That(_mockLibrary, Has.One.Property("Id").EqualTo(testId));
-        
-        _serviceMock.Setup(service => service.Get(It.IsAny<int>()))
-            .Returns<int>(id => _mockLibrary
-                .Where(book => book.Id == id)
-                .Select(book => new BookViewDto(book))
-                .SingleOrDefault());
 
-        _serviceMock.Setup(service => service.Delete(It.IsAny<int>()))
-            .Callback<int>(id =>
-            {
-                var bookWithId = _mockLibrary.Single(book => book.Id == id);
+        // Arrange
+        InitializeGetByIdMock();
+        InitializeBookDeleteMock();
 
-                _mockLibrary.Remove(bookWithId);
-            });
-
+        // Act
         var result = _controller.DeleteBook(testId);
 
+        // Assert
         Assert.Multiple(() =>
         {
             _serviceMock.Verify(service => service.Get(testId), Times.Once);
             _serviceMock.Verify(service => service.Delete(testId), Times.Once);
-            
+
             Assert.That(result, Is.AssignableTo<NoContentResult>());
         });
     }
@@ -304,31 +299,24 @@ public class BooksControllerTest
     public void DeleteBook_YieldsNotFoundResultForNonexistentBook()
     {
         const int testId = 65536;
-        
+
+        // Assume
         Assume.That(_mockLibrary, Has.Count.AtLeast(1));
         Assume.That(_mockLibrary, Has.None.Property("Id").EqualTo(testId));
-        
-        _serviceMock.Setup(service => service.Get(It.IsAny<int>()))
-            .Returns<int>(id => _mockLibrary
-                .Where(book => book.Id == id)
-                .Select(book => new BookViewDto(book))
-                .SingleOrDefault());
 
-        _serviceMock.Setup(service => service.Delete(It.IsAny<int>()))
-            .Callback<int>(id =>
-            {
-                var bookWithId = _mockLibrary.Single(book => book.Id == id);
+        // Arrange
+        InitializeGetByIdMock();
+        InitializeBookDeleteMock();
 
-                _mockLibrary.Remove(bookWithId);
-            });
-
+        // Act
         var result = _controller.DeleteBook(testId);
-        
+
+        // Assert
         Assert.Multiple(() =>
         {
             _serviceMock.Verify(service => service.Get(testId), Times.Once);
             _serviceMock.Verify(service => service.Delete(testId), Times.Never);
-            
+
             Assert.That(result, Is.AssignableTo<NotFoundResult>());
         });
     }
