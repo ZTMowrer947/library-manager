@@ -1,8 +1,4 @@
-using System.Globalization;
-using CsvHelper;
-using CsvHelper.Configuration;
 using Microsoft.EntityFrameworkCore;
-using Mowrer.Techdegree.LibraryManager.Api;
 using Mowrer.TechDegree.LibraryManager.Data;
 using Mowrer.TechDegree.LibraryManager.Data.Repositories;
 using Mowrer.TechDegree.LibraryManager.Data.Seeding;
@@ -29,7 +25,7 @@ public class BookRepositoryTest
         // Initialize connection and create tables
         _context.Database.OpenConnection();
         _context.Database.EnsureCreated();
-        
+
         // Seed database
         _seedData = BookSeedUtils.ExampleBooks;
 
@@ -49,9 +45,11 @@ public class BookRepositoryTest
     [Test]
     public void Get_WithNoArguments_ReturnsBookCollection()
     {
+        Assume.That(_seedData, Is.Not.Empty);
+
         var expected = _seedData;
         var result = _repository.Get();
-        
+
         Assert.That(result, Is.EquivalentTo(expected));
     }
 
@@ -60,19 +58,23 @@ public class BookRepositoryTest
     {
         const int id = 2;
 
+        Assume.That(_seedData, Has.One.Property("Id").EqualTo(id));
+
         var expected = _seedData.Single(book => book.Id == id);
         var result = _repository.Get(id);
-        
+
         Assert.That(result, Is.EqualTo(expected));
     }
 
     [Test]
     public void Get_WithIdArgument_ReturnsNullIfNotFound()
     {
-        var id = _seedData.Select(book => book.Id).Max() + 1;
+        Assume.That(_seedData, Is.Not.Empty);
+
+        var id = _seedData.Select(book => book.Id).Max() + 1; // Deriving an ID that cannot exist in the collection
 
         var result = _repository.Get(id);
-        
+
         Assert.That(result, Is.Null);
     }
 
@@ -86,7 +88,7 @@ public class BookRepositoryTest
         };
 
         var result = _repository.Create(newBook);
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(result.Id, Is.Positive);
@@ -115,10 +117,10 @@ public class BookRepositoryTest
             Author = newBook.Author,
             Year = 2019
         };
-        
+
         // Act
         var updatedBook = _repository.Update(updateData);
-        
+
         // Assert
         Assert.Multiple(() =>
         {
@@ -143,7 +145,7 @@ public class BookRepositoryTest
         _context.SaveChanges();
 
         var id = newBook.Id;
-        
+
         // Act
         _repository.Delete(newBook);
         var postDeleteResult = _context.Books.SingleOrDefault(book => book.Id == id);

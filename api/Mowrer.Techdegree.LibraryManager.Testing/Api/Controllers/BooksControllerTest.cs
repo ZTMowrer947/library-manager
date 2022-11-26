@@ -202,7 +202,6 @@ public class BooksControllerTest
         const int testId = 2;
 
         // Assume
-        Assume.That(_mockLibrary, Is.Not.Empty);
         Assume.That(_mockLibrary, Has.One.Property("Id").EqualTo(testId));
 
         // Arrange
@@ -243,7 +242,6 @@ public class BooksControllerTest
         const int testId = 65536;
 
         // Assume
-        Assume.That(_mockLibrary, Is.Not.Empty);
         Assume.That(_mockLibrary, Has.None.Property("Id").EqualTo(testId));
 
         // Arrange
@@ -275,7 +273,6 @@ public class BooksControllerTest
         const int testId = 2;
 
         // Assume
-        Assume.That(_mockLibrary, Has.Count.AtLeast(1));
         Assume.That(_mockLibrary, Has.One.Property("Id").EqualTo(testId));
 
         // Arrange
@@ -301,7 +298,6 @@ public class BooksControllerTest
         const int testId = 65536;
 
         // Assume
-        Assume.That(_mockLibrary, Has.Count.AtLeast(1));
         Assume.That(_mockLibrary, Has.None.Property("Id").EqualTo(testId));
 
         // Arrange

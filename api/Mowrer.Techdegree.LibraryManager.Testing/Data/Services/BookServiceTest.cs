@@ -38,6 +38,8 @@ public class BookServiceTest
     [Test]
     public void Get_WithNoArguments_ReturnsBookListing()
     {
+        Assume.That(_mockLibrary, Is.Not.Empty);
+
         _repositoryMock.Setup(repo => repo.Get()).Returns(_mockLibrary);
 
         var expected = _mockLibrary.Select(book => new BookViewDto(book));
@@ -53,9 +55,11 @@ public class BookServiceTest
     [Test]
     public void Get_WithIdArgument_ReturnsBookWithId()
     {
-        InitializeGetByIdMock();
-
         const int testId = 5;
+
+        Assume.That(_mockLibrary, Has.One.Property("Id").EqualTo(testId));
+
+        InitializeGetByIdMock();
 
         var expected = new BookViewDto(_mockLibrary.Single(book => book.Id == testId));
         var result = _service.Get(testId);
@@ -70,9 +74,11 @@ public class BookServiceTest
     [Test]
     public void Get_WithIdArgument_ReturnsNullIfNotFound()
     {
+        Assume.That(_mockLibrary, Is.Not.Empty);
+
         InitializeGetByIdMock();
 
-        var testId = _nextId + 153;
+        var testId = _nextId + 1;
 
         var result = _service.Get(testId);
 
@@ -123,6 +129,11 @@ public class BookServiceTest
     [Test]
     public void Update_ModifiesBookInRepository()
     {
+        const int testId = 2;
+
+        // Assume
+        Assume.That(_mockLibrary, Has.One.Property("Id").EqualTo(testId));
+
         // Arrange
         InitializeGetByIdMock();
         _repositoryMock.Setup(repo => repo.Update(It.IsAny<Book>()))
@@ -140,8 +151,6 @@ public class BookServiceTest
                 _mockLibrary.Insert(idx, book);
             })
             .Returns<Book>(book => _mockLibrary.Single(mBook => mBook.Equals(book)));
-
-        const int testId = 2;
 
         var updateData = new BookUpsertDto
         {
@@ -171,13 +180,16 @@ public class BookServiceTest
     [Test]
     public void Delete_RemovedBookFromRepository()
     {
+        const int testId = 2;
+
+        // Assume
+        Assume.That(_mockLibrary, Has.One.Property("Id").EqualTo(testId));
+
         // Arrange
         InitializeGetByIdMock();
 
         _repositoryMock.Setup(repo => repo.Delete(It.IsAny<Book>()))
             .Callback<Book>(book => _mockLibrary.Remove(book));
-
-        const int testId = 2;
 
         // Act
         _service.Delete(testId);
