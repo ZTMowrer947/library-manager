@@ -15,9 +15,10 @@ public static class BookSeedUtils
             {
                 PrepareHeaderForMatch = args => args.Header.ToLower()
             };
-            
-            var projectBase = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\..\\", "Mowrer.Techdegree.LibraryManager.Data");
-            
+
+            var projectBase = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\..\\",
+                "Mowrer.Techdegree.LibraryManager.Data");
+
             const string relFilePath = "Seeding\\Books.csv";
 
             var filePath = Path.GetFullPath(Path.Combine(projectBase, relFilePath));
@@ -26,15 +27,20 @@ public static class BookSeedUtils
             using var csv = new CsvReader(reader, csvConfig);
 
             csv.Context.RegisterClassMap<BookCsvMap>();
-            
-            return csv.GetRecords<Book>()!.Select((book, index) =>
+
+            return csv.GetRecords<Book>()!
+                .ToList();
+        }
+    }
+
+    public static IList<Book> ExampleBooksWithPresetIds =>
+        ExampleBooks
+            .Select((book, index) =>
             {
                 book.Id = index + 1;
 
                 return book;
             }).ToList();
-        }
-    }
 
     public static void EnsureSeeded(this LibraryContext @this)
     {

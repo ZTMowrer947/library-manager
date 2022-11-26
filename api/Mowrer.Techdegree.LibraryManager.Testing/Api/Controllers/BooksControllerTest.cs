@@ -22,7 +22,7 @@ public class BooksControllerTest
     {
         _controller = new BooksController(_serviceMock.Object);
 
-        _mockLibrary = BookSeedUtils.ExampleBooks;
+        _mockLibrary = BookSeedUtils.ExampleBooksWithPresetIds;
         _nextId = _mockLibrary.Select(book => book.Id).Max() + 1;
     }
 

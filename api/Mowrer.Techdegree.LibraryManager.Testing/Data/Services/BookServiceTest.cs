@@ -19,7 +19,7 @@ public class BookServiceTest
     public void SetUp()
     {
         _service = new BookService(_repositoryMock.Object);
-        _mockLibrary = BookSeedUtils.ExampleBooks;
+        _mockLibrary = BookSeedUtils.ExampleBooksWithPresetIds;
         _nextId = _mockLibrary.Select(book => book.Id).Max() + 1;
     }
 
