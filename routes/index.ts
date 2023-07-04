@@ -1,35 +1,30 @@
-// Imports
-const { Router } = require("express");
-const asyncHandler = require("express-async-handler");  // Handles Promise rejections by passing them to express error handlers
-const BookService = require("../services/BookService");
+import { Router } from 'express';
+import asyncHandler from 'express-async-handler';
+import BookService from "../services/BookService";
+import bookDetail from "./bookDetail";
+import newBook from './newBook';
 
-// Router setup
 const router = Router();
 
-// Middleware
-// Add book service to request
+// Attach book service to each request
 router.use((req, res, next) => {
-    // Instantiate new book service and attach to request object
-    req.bookService = new BookService();
+    (req as any).bookService = new BookService();
 
-    // Pass control to next middleware or route
     next();
 });
 
 // Routes
-// /: Index route
 router.get("/", (req, res) => {
-    // Redirect to /books
     res.redirect("/books");
 });
 
 // /books: Book listing
 router.get("/books", asyncHandler(async (req, res) => {
     // Get parameters from query string
-    let page = parseInt(req.query.page);
-    let searchTerm = req.query.search;
-    let propToSearchFor = req.query["search-for"];
-    let propToSortBy = req.query["sort-by"];
+    let page = parseInt(req.query.page?.toString() ?? '');
+    let searchTerm = req.query.search?.toString();
+    let propToSearchFor = req.query["search-for"]?.toString() ?? "title";
+    let propToSortBy = req.query["sort-by"]?.toString() ?? "";
 
     // Define array of valid props to search for and sort by
     const validPropsToSearchFor = ["title", "author", "genre", "year"];
@@ -38,16 +33,14 @@ router.get("/books", asyncHandler(async (req, res) => {
     // If page number is NaN (not a number) or is less than 1, reset to 1
     if (isNaN(page) || page < 1) page = 1;
 
-    // If prop to search for is invalid, reset to title
     if (!validPropsToSearchFor.includes(propToSearchFor)) propToSearchFor = "title";
 
-    // If sort prop is invalid, reset to no sorting
     if (!validSortProps.includes(propToSortBy)) {
         propToSortBy = "";
     }
 
     // Get list of books and total number of pages
-    const [books, pageCount] = await req.bookService.getList(page, searchTerm, propToSearchFor, propToSortBy);
+    const [books, pageCount] = await (req as any).bookService.getList(page, searchTerm, propToSearchFor, propToSortBy);
 
     // Store book data in locals
     res.locals.books = books;
@@ -71,13 +64,13 @@ router.get("/books", asyncHandler(async (req, res) => {
 }));
 
 // /books/new: Create a new book
-router.use("/books/new", require("./newBook"));
+router.use("/books/new", newBook);
 
 // Handle ID param
 router.param("id", async (req, res, next, id) => {
     try {
         // Get book by id
-        const book = await req.bookService.get(Number.parseInt(id))
+        const book = await (req as any).bookService.get(Number.parseInt(id))
 
         // If no book was found with this ID,
         if (!book) {
@@ -89,7 +82,7 @@ router.param("id", async (req, res, next, id) => {
         }
 
         // Attach book to request
-        req.book = book;
+        (req as any).book = book;
 
         // Pass control to next middleware or route
         next();
@@ -100,7 +93,7 @@ router.param("id", async (req, res, next, id) => {
 });
 
 // /books/:id: Get/Update book details
-router.use("/books/:id", require("./bookDetail"));
+router.use("/books/:id", bookDetail);
 
 // All other routes are a 404
 router.all("*", (req, res, next) => {
@@ -111,5 +104,4 @@ router.all("*", (req, res, next) => {
     next(new Error(`Route ${req.path} does not exist.`));
 });
 
-// Export
-module.exports = router;
+export default router;

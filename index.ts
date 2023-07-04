@@ -1,6 +1,6 @@
 // Imports
-const http = require("http");
-const app = require("./app");
+import http from "http";
+import app from './app';
 
 // HTTP Server Setup
 const server = http.createServer(app);

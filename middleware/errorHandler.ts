@@ -1,8 +1,8 @@
 // Imports
-const { STATUS_CODES } = require("http");
+import type { ErrorRequestHandler } from 'express'
 
 // Error handler
-const errorHandler = (error, req, res, next) => {
+const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
     // If headers have already been sent,
     if (res.headersSent) {
         // Pass error to next error handler
@@ -35,4 +35,4 @@ const errorHandler = (error, req, res, next) => {
 }
 
 // Export
-module.exports = errorHandler;
+export default errorHandler;

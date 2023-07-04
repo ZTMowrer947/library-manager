@@ -1,15 +1,13 @@
-// Imports
-const prisma = require('../lib/prisma');
+import { Book } from "@prisma/client";
+import prisma from '../lib/prisma';
 
 // Service
 class BookService {
     // Get list of books
     async getList(page = 1, search = "", propToSearchFor = "title", sortBy = "") {
-        // Set limit of records for each page
         const pageLimit = 10;
 
-        // Book find options
-        const bookFindOptions = {
+        const bookFindOptions: any = {
             take: pageLimit,
         };
 
@@ -19,9 +17,7 @@ class BookService {
         if (search) {
             // Add WHERE condition
             bookFindOptions.where = {
-                // Set conditions for prop being searched for
                 [propToSearchFor]: {
-                    // Search term appears anywhere within book property
                     contains: search.toLowerCase(),
                 },
             };
@@ -39,21 +35,16 @@ class BookService {
             const sortProp = sortBy.substring(0, sortBy.indexOf("desc")) || sortBy;
 
             bookFindOptions.orderBy = [
-                // Order in descending order if sort condition ends with "desc", ordering in ascending order otherwise
                 { [sortProp]: sortBy.endsWith("desc") ? "desc" : "asc" },
             ];
         }
 
-        // Calculate total number of pages
         const pageCount = Math.ceil(bookCount / pageLimit);
-
-        // Calculate offset of records
         let pageOffset = (page - 1) * pageLimit;
 
         // Reset offset to 0 if page offset exceeds book count
         if (pageOffset > bookCount) pageOffset = 0;
 
-        // Store offset in find options
         bookFindOptions.skip = pageOffset;
 
         // Return page of books and total number of pages
@@ -61,12 +52,12 @@ class BookService {
     }
 
     // Get single book by its ID
-    async get(id) {
+    async get(id: Book['id']) {
         return prisma.book.findUnique({ where: { id } });
     }
 
     // Create a new book
-    async create(newBookData) {
+    async create(newBookData: any) {
         return prisma.book.create({
             data: {
                 title: newBookData.title,
@@ -78,8 +69,7 @@ class BookService {
     }
 
     // Update a new book
-    async update(book, updateBookData) {
-        // Save changes to database
+    async update(book: Book, updateBookData: any) {
         return prisma.book.update({
             data: {
                 title: updateBookData.title,
@@ -93,11 +83,11 @@ class BookService {
         })
     }
 
-    async delete(book) {
-        // Delete book
+    // Delete the provided book
+    async delete(book: Book) {
         return prisma.book.delete({ where: { id: book.id }});
     }
 }
 
 // Export
-module.exports = BookService;
+export default BookService;

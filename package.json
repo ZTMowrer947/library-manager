@@ -2,10 +2,10 @@
     "name": "library-manager",
     "version": "0.0.0",
     "description": "Treehouse FSJS Techdegree Unit 8 Project: A SQL-based Library Manager",
-    "main": "index.js",
+    "main": "index.ts",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "nodemon -w models -w services -w routes -w . -e js ."
+        "start": "nodemon -w models -w services -w routes -w . -e js,ts --exec ts-node ."
     },
     "repository": {
         "type": "git",
