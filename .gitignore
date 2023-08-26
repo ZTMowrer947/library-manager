@@ -106,3 +106,5 @@ dist
 # IDE Config files
 .vscode/
 .idea/
+
+library.db
