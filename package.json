@@ -6,6 +6,7 @@
   "scripts": {
     "build": "babel -d dist --extensions .ts src",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "lint:prettier": "prettier --write src/**/*",
     "lint:eslint": "eslint src",
     "typecheck": "tsc -outDir dist",
     "typecheck:watch": "pnpm typecheck -w"
@@ -23,7 +24,9 @@
     "@typescript-eslint/parser": "^6.4.1",
     "core-js": "^3.32.1",
     "eslint": "^8.48.0",
+    "eslint-config-prettier": "^9.0.0",
     "nodemon": "^3.0.1",
+    "prettier": "^3.0.2",
     "typescript": "~5.1.6"
   }
 }
