@@ -23,6 +23,10 @@
     "@babel/core": "^7.22.11",
     "@babel/preset-env": "^7.22.10",
     "@babel/preset-typescript": "^7.22.11",
+    "@types/koa": "^2.13.8",
+    "@types/koa-mount": "^4.0.2",
+    "@types/koa-static": "^4.0.2",
+    "@types/koa__router": "^12.0.0",
     "@types/node": "^20.5.6",
     "@typescript-eslint/eslint-plugin": "^6.4.1",
     "@typescript-eslint/parser": "^6.4.1",
@@ -34,5 +38,14 @@
     "nodemon": "^3.0.1",
     "prettier": "^3.0.2",
     "typescript": "~5.1.6"
+  },
+  "dependencies": {
+    "@koa/router": "^12.0.0",
+    "@ladjs/koa-views": "^9.0.0",
+    "handlebars": "^4.7.8",
+    "koa": "^2.14.2",
+    "koa-body": "^6.0.1",
+    "koa-mount": "^4.0.0",
+    "koa-static": "^5.0.0"
   }
 }
