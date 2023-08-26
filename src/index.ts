@@ -21,6 +21,11 @@ app.use(
     map: {
       hbs: 'handlebars',
     },
+    options: {
+      partials: {
+        layout: 'layout',
+      },
+    },
   }),
 );
 
