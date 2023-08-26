@@ -1,0 +1,12 @@
+{
+  "name": "library-manager",
+  "version": "3.0.0",
+  "type": "module",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "ZTMowrer947",
+  "license": "MIT"
+}

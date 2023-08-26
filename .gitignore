@@ -105,3 +105,4 @@ dist
 
 # IDE Config files
 .vscode/
+.idea/
