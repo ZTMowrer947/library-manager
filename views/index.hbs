@@ -21,126 +21,24 @@
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <td>
-          <a href="/books/1">A Brief History of Time</a>
-        </td>
-        <td>Stephen Hawking</td>
-        <td>Non Fiction</td>
-        <td>1988</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="/books/2">Armada</a>
-        </td>
-        <td>Ernest Cline</td>
-        <td>Science Fiction</td>
-        <td>2015</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="/books/3">Emma</a>
-        </td>
-        <td>Jane Austen</td>
-        <td>Classic</td>
-        <td>1815</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="/books/4">Frankenstein</a>
-        </td>
-        <td>Mary Shelley</td>
-        <td>Horror</td>
-        <td>1818</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="/books/5">Harry Potter and the Chamber of Secrets</a>
-        </td>
-        <td>J.K. Rowling</td>
-        <td>Fantasy</td>
-        <td>1998</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="/books/6">Harry Potter and the Deathly Hallows</a>
-        </td>
-        <td>J.K. Rowling</td>
-        <td>Fantasy</td>
-        <td>2007</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="/books/7">Harry Potter and the Goblet of Fire</a>
-        </td>
-        <td>J.K. Rowling</td>
-        <td>Fantasy</td>
-        <td>2000</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="/books/8">Harry Potter and the Half-Blood Prince</a>
-        </td>
-        <td>J.K. Rowling</td>
-        <td>Fantasy</td>
-        <td>2005</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="/books/9">Harry Potter and the Order of the Phoenix</a>
-        </td>
-        <td>J.K. Rowling</td>
-        <td>Fantasy</td>
-        <td>2003</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="/books/10">Harry Potter and the Philosopher's Stone</a>
-        </td>
-        <td>J.K. Rowling</td>
-        <td>Fantasy</td>
-        <td>1997</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="/books/11">Harry Potter and the Prisoner of Azkaban</a>
-        </td>
-        <td>J.K. Rowling</td>
-        <td>Fantasy</td>
-        <td>1999</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="/books/12">Pride and Prejudice</a>
-        </td>
-        <td>Jane Austen</td>
-        <td>Classic</td>
-        <td>1813</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="/books/13">Ready Player One</a>
-        </td>
-        <td>Ernest Cline</td>
-        <td>Science Fiction</td>
-        <td>2011</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="/books/14">The Martian</a>
-        </td>
-        <td>Andy Weir</td>
-        <td>Science Fiction</td>
-        <td>2014</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="/books/15">The Universe in a Nutshell</a>
-        </td>
-        <td>Stephen Hawking</td>
-        <td>Non Fiction</td>
-        <td>2001</td>
-      </tr>
+        {{#each books}}
+          <tr>
+            <td>
+              <a href="/books/{{this.id}}">{{this.title}}</a>
+            </td>
+            <td>{{this.author}}</td>
+            <td>
+              {{#if this.genre}}
+                {{this.genre}}
+              {{/if}}
+            </td>
+            <td>
+              {{#if this.year}}
+                {{this.year}}
+              {{/if}}
+            </td>
+          </tr>
+        {{/each}}
       </tbody>
     </table>
   {{/inline}}

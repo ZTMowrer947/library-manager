@@ -1,4 +1,5 @@
 import Router from '@koa/router';
+import prisma from '@/lib/prisma.js';
 
 const bookRouter = new Router({
   prefix: '/books',
@@ -8,7 +9,17 @@ const bookRouter = new Router({
 
 // GET /books: Book listing
 bookRouter.get('/', async (ctx) => {
-  await ctx.render('index', { title: 'Books' });
+  const books = await prisma.book.findMany({
+    select: {
+      id: true,
+      title: true,
+      author: true,
+      genre: true,
+      year: true,
+    },
+  });
+
+  await ctx.render('index', { title: 'Books', books });
 });
 
 // GET /books/new: Book creation form
