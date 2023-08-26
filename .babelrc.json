@@ -1,15 +1,28 @@
 {
   "presets": [
-    ["@babel/preset-env", {
-      "targets": {
-        "node": "18.0",
-        "esmodules": true
-      },
-      "corejs": "3.22",
-      "useBuiltIns": "usage",
-      "modules": false
-    }],
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "18.0",
+          "esmodules": true
+        },
+        "corejs": "3.22",
+        "useBuiltIns": "usage",
+        "modules": false
+      }
+    ],
 
     "@babel/preset-typescript"
+  ],
+  "plugins": [
+    [
+      "babel-plugin-module-resolver",
+      {
+        "alias": {
+          "@": "./src"
+        }
+      }
+    ]
   ]
 }

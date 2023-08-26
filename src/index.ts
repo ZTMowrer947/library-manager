@@ -4,7 +4,7 @@ import Koa from 'koa';
 import { koaBody } from 'koa-body';
 import mount from 'koa-mount';
 import kStatic from 'koa-static';
-import routes from './routes/index.js';
+import routes from '@/routes/index.js';
 
 const app = new Koa();
 
