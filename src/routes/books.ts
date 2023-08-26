@@ -22,22 +22,22 @@ bookRouter.post('/new', (ctx) => {
 });
 
 // GET /books/:id: Book update form
-bookRouter.get('/books/:id', (ctx) => {
+bookRouter.get('/:id', (ctx) => {
   ctx.throw(503);
 });
 
 // POST /books/:id: Book update
-bookRouter.post('/books/:id', (ctx) => {
+bookRouter.post('/:id', (ctx) => {
   ctx.throw(503);
 });
 
 // GET /books/:id/delete: Book deletion confirmation
-bookRouter.get('/books/:id/delete', (ctx) => {
+bookRouter.get('/:id/delete', (ctx) => {
   ctx.throw(503);
 });
 
 // POST /books/:id/delete: Book deletion
-bookRouter.post('/books/:id/delete', (ctx) => {
+bookRouter.post('/:id/delete', (ctx) => {
   ctx.throw(503);
 });
 
