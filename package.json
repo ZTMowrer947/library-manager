@@ -4,8 +4,10 @@
   "type": "module",
   "description": "",
   "scripts": {
-    "build": "tsc -outDir dist",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "babel -d dist --extensions .ts src",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "typecheck": "tsc -outDir dist",
+    "typecheck:watch": "pnpm typecheck -w"
   },
   "keywords": [],
   "author": "ZTMowrer947",
