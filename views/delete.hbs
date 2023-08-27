@@ -1,0 +1,36 @@
+{{#> layout }}
+  {{#* inline "extraHead" }}
+  {{/inline}}
+
+  {{#* inline "extraScripts" }}
+  {{/inline}}
+
+  {{#* inline "content"}}
+    <h1>Confirm Deletion</h1>
+
+    <p class="warning">
+      <strong>WARNING! Once you delete a book, it cannot be undone.</strong>
+    </p>
+
+    <p>If you want to delete the book &quot;{{ book.title }}&quot; anyway, enter its title below to confirm the deletion.</p>
+
+    <form method="post">
+      {{# if error }}
+        <h2 class="error">Hold up!</h2>
+        <ul class="error">
+          <li>{{ error }}</li>
+        </ul>
+      {{/if}}
+
+      <p>
+        <label for="title">Title</label>
+        <input name="title" type="text" id="title" />
+      </p>
+
+      <div class="button-group">
+        <a class="button button-red" href="/books/{{ book.id }}">Cancel</a>
+        <input type="submit" value="DELETE" />
+      </div>
+    </form>
+  {{/inline}}
+{{/layout}}

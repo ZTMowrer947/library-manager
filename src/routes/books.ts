@@ -119,13 +119,29 @@ bookByIdRouter.post('/:id', validateSchema(BookSchema), async (ctx) => {
 });
 
 // GET /books/:id/delete: Book deletion confirmation
-bookByIdRouter.get('/:id/delete', (ctx) => {
-  ctx.throw(503);
+bookByIdRouter.get('/:id/delete', async (ctx) => {
+  await ctx.render('delete', {
+    title: 'Confirm Deletion',
+    book: ctx.state.book,
+  });
 });
 
 // POST /books/:id/delete: Book deletion
-bookByIdRouter.post('/:id/delete', (ctx) => {
-  ctx.throw(503);
+bookByIdRouter.post('/:id/delete', async (ctx) => {
+  // Verify that provided title matches book title
+  if (ctx.request.body.title?.trim() === ctx.state.book.title) {
+    await prisma.book.delete({
+      where: bookHasId(ctx.state.book.id),
+    });
+
+    ctx.redirect('/');
+  } else {
+    await ctx.render('delete', {
+      title: 'Confirm Deletion',
+      book: ctx.state.book,
+      error: 'Entered title does not match',
+    });
+  }
 });
 
 bookRouter.use(bookByIdRouter.routes());
