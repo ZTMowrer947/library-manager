@@ -1,5 +1,5 @@
 import Router from '@koa/router';
-import { create, StructError } from 'superstruct';
+import { StructError } from 'superstruct';
 
 import prisma from '@/lib/prisma.js';
 import BookSchema from '@/schemas/book.js';
@@ -57,12 +57,9 @@ bookRouter.get('/new', async (ctx) => {
 // POST /books/new: Book creation
 bookRouter.post('/new', validateSchema(BookSchema), async (ctx) => {
   if (ctx.state.parsedBody) {
-    // Attempt to coerce body into book input structure
-    const bookData = create(ctx.request.body, BookSchema);
-
     // Proceed with book creation
     await prisma.book.create({
-      data: createBook(bookData),
+      data: createBook(ctx.state.parsedBody),
     });
 
     ctx.redirect('/books');
