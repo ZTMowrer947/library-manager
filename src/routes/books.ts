@@ -1,5 +1,9 @@
 import Router from '@koa/router';
+import { create, StructError } from 'superstruct';
+
 import prisma from '@/lib/prisma.js';
+import BookSchema from '@/schemas/book.js';
+import createBook from '@/lib/query-helpers/createBook.js';
 
 const bookRouter = new Router({
   prefix: '/books',
@@ -23,13 +27,46 @@ bookRouter.get('/', async (ctx) => {
 });
 
 // GET /books/new: Book creation form
-bookRouter.get('/new', (ctx) => {
-  ctx.throw(503);
+bookRouter.get('/new', async (ctx) => {
+  await ctx.render('new', { title: 'New Book' });
 });
 
 // POST /books/new: Book creation
-bookRouter.post('/new', (ctx) => {
-  ctx.throw(503);
+bookRouter.post('/new', async (ctx) => {
+  try {
+    // Attempt to coerce body into book input structure
+    const bookData = create(ctx.request.body, BookSchema);
+
+    // Proceed with book creation
+    await prisma.book.create({
+      data: createBook(bookData),
+    });
+
+    ctx.redirect('/books');
+  } catch (err) {
+    if (err instanceof StructError) {
+      // Validation failed, so we'll now gather an array of error messages for failed fields
+      const errors: string[] = [];
+
+      for (const failure of err.failures()) {
+        let message: string;
+        if (Number.isNaN(failure.value)) {
+          message = `${failure.key} must be numeric`;
+        } else if (failure.refinement === 'nonempty') {
+          message = `${failure.key} is required`;
+        } else {
+          message = failure.message;
+        }
+
+        errors.push(message);
+      }
+
+      // Re-render view
+      await ctx.render('new', { title: 'New Book', errors });
+    } else {
+      throw err;
+    }
+  }
 });
 
 // GET /books/:id: Book update form

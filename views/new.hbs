@@ -1,0 +1,44 @@
+{{#> layout }}
+  {{#* inline "extraHead" }}
+  {{/inline}}
+
+  {{#* inline "extraScripts" }}
+  {{/inline}}
+
+  {{#* inline "content" }}
+    <h1>New Book</h1>
+    <form method="POST">
+      {{#if errors}}
+        <h2 class="error">Hold Up!</h2>
+        <ul>
+          {{#each errors as |error|}}
+            <li class="error">{{ error }}</li>
+          {{/each}}
+        </ul>
+      {{/if}}
+
+      <p>
+        <label for="title">Title</label>
+        <input name="title" type="text" id="title" />
+      </p>
+      <p>
+        <label for="author">Author</label>
+        <input name="author" type="text" id="author" />
+      </p>
+      <p>
+        <label for="genre">Genre</label>
+        <input name="genre" type="text" id="genre" />
+      </p>
+      <p>
+        <label for="year">Year</label>
+        <input name="year" type="text" id="year" />
+      </p>
+      <p>
+        <input type="submit" value="Create New Book" />
+      </p>
+      <p>
+        <a class="button" href="/books">Cancel</a>
+      </p>
+    </form>
+  {{/inline}}
+{{/layout}}
