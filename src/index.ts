@@ -5,8 +5,20 @@ import { koaBody } from 'koa-body';
 import mount from 'koa-mount';
 import kStatic from 'koa-static';
 import routes from '@/routes/index.js';
+import errorNormalizer from '@/lib/middleware/errorNormalizer.js';
+import errorHandler from '@/lib/middleware/errorHandler.js';
+import { isHttpError } from 'http-errors';
 
 const app = new Koa();
+
+// Error handling
+app.use(errorNormalizer);
+app.use(errorHandler);
+app.on('error', (err) => {
+  if (isHttpError(err) && !err.expose && err.status !== 404 && process.env.NODE_ENV !== 'production') {
+    console.error(err);
+  }
+});
 
 // Paths
 const viewsPath = join(process.cwd(), 'views');

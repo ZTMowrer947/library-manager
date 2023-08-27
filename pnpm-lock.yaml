@@ -17,6 +17,9 @@ dependencies:
   handlebars:
     specifier: ^4.7.8
     version: 4.7.8
+  http-errors:
+    specifier: ^2.0.0
+    version: 2.0.0
   koa:
     specifier: ^2.14.2
     version: 2.14.2
@@ -49,6 +52,9 @@ devDependencies:
   '@babel/preset-typescript':
     specifier: ^7.22.11
     version: 7.22.11(@babel/core@7.22.11)
+  '@types/http-errors':
+    specifier: ^2.0.1
+    version: 2.0.1
   '@types/koa':
     specifier: ^2.13.8
     version: 2.13.8
