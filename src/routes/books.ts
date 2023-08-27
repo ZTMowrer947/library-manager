@@ -1,9 +1,10 @@
 import Router from '@koa/router';
-import { create, StructError } from 'superstruct';
+import { create } from 'superstruct';
 
 import prisma from '@/lib/prisma.js';
 import BookSchema from '@/schemas/book.js';
 import createBook from '@/lib/query-helpers/createBook.js';
+import validateSchema from '@/lib/middleware/validateSchema.js';
 
 const bookRouter = new Router({
   prefix: '/books',
@@ -32,8 +33,8 @@ bookRouter.get('/new', async (ctx) => {
 });
 
 // POST /books/new: Book creation
-bookRouter.post('/new', async (ctx) => {
-  try {
+bookRouter.post('/new', validateSchema(BookSchema), async (ctx) => {
+  if (ctx.state.parsedBody) {
     // Attempt to coerce body into book input structure
     const bookData = create(ctx.request.body, BookSchema);
 
@@ -43,29 +44,25 @@ bookRouter.post('/new', async (ctx) => {
     });
 
     ctx.redirect('/books');
-  } catch (err) {
-    if (err instanceof StructError) {
-      // Validation failed, so we'll now gather an array of error messages for failed fields
-      const errors: string[] = [];
+  } else {
+    // Validation failed, so we'll now gather an array of error messages for failed fields
+    const errors: string[] = [];
 
-      for (const failure of err.failures()) {
-        let message: string;
-        if (Number.isNaN(failure.value)) {
-          message = `${failure.key} must be numeric`;
-        } else if (failure.refinement === 'nonempty') {
-          message = `${failure.key} is required`;
-        } else {
-          message = failure.message;
-        }
-
-        errors.push(message);
+    for (const failure of ctx.state.validationErrors?.failures() ?? []) {
+      let message: string;
+      if (Number.isNaN(failure.value)) {
+        message = `${failure.key} must be numeric`;
+      } else if (failure.refinement === 'nonempty') {
+        message = `${failure.key} is required`;
+      } else {
+        message = failure.message;
       }
 
-      // Re-render view
-      await ctx.render('new', { title: 'New Book', errors });
-    } else {
-      throw err;
+      errors.push(message);
     }
+
+    // Re-render view
+    await ctx.render('new', { title: 'New Book', errors });
   }
 });
 
