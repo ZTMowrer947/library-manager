@@ -22,9 +22,9 @@ const bookRouter = new Router({
 // Helpers
 function getErrorMessages(err?: StructError): string[] {
   // Gather an array of error messages for failed fields
-  const errors: string[] = [];
+  const failures = err?.failures() ?? [];
 
-  for (const failure of err?.failures() ?? []) {
+  return failures.map((failure) => {
     let message: string;
     if (Number.isNaN(failure.value)) {
       message = `${failure.key} must be numeric`;
@@ -34,10 +34,8 @@ function getErrorMessages(err?: StructError): string[] {
       message = failure.message;
     }
 
-    errors.push(message);
-  }
-
-  return errors;
+    return message;
+  });
 }
 
 // Routes
